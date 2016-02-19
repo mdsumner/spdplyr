@@ -30,8 +30,9 @@ sptable.SpatialLinesDataFrame <- function(x, ...) {
 
 #' @export
 #' @rdname sptable
+#' @importFrom dplyr bind_cols
 sptable.SpatialPointsDataFrame <- function(x, ...) {
-  mat2d_f(.pointsGeom(x, ...))
+  bind_cols(mat2d_f(.pointsGeom(x, ...)), x@data)
 }
 
 ## TODO multipoints
@@ -58,7 +59,7 @@ spFromTable <- function(x, crs, ...) {
   ## raster::geom form
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame
-  dat <- dat[, -match(names(dat), geomnames()[[target]])]
+  dat <- dat[, -match(geomnames()[[target]], names(dat))]
   if (ncol(dat) == 0L) dat$ID <- seq(nrow(dat))
 
   gom <- switch(target,
@@ -82,7 +83,12 @@ reverse_geomLine <- function(x, d, proj) {
 }
 loopPartsLine<- function(a) Lines(lapply(split(a, a$part), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
 
-reverse_geomPoint <- function(a, d, proj) stop("not implemented")
+reverse_geomPoint <- function(a, d, proj) {
+ # stop("not implemented")
+  ## the decomposition is not yet applied for Multipoints . . .
+ ## if (length(unique(a$object)) > 1) warning("no support for Multipoints yet")
+ SpatialPointsDataFrame(SpatialPoints(as.matrix(a[, c("x", "y")])), d, proj4string = CRS(proj))
+}
 
 detectSpClass <- function(x) {
   #names(sptable(wrld_simpl))
