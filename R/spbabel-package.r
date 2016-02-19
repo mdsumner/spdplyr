@@ -1,7 +1,7 @@
-#' Convert between Spatial objects in native and table form.
+#' Convert between Spatial objects.
 #'
 #'
-#' The sptable package provides functions to convert a Spatial object to a single table and vice versa.
+#' The spbabel package provides functions to convert a Spatial object to a single table and vice versa.
 #'
 #' @section I. Conversion:
 #' \tabular{ll}{
@@ -9,6 +9,6 @@
 #'  \code{\link{spFromTable}} \tab create Spatial object from table \cr
 #'  }
 #'
-#' @name sptable-package
+#' @name spbabel-package
 #' @docType package
 NULL

@@ -1,9 +1,9 @@
-Package: sptable
+Package: spbabel
 Type: Package
-Title: Convert Data Between Spatial and Tablular Forms
+Title: Convert Data Between Spatial and Other
 Version: 0.1.0
 Authors@R: person("Michael D.","Sumner", role = c("aut", "cre"), email = "mdsumner@gmail.com")
-Description: Functions to convert from Spatial*DataFrame classes to tabular form. The table form follows the output of the `geom` function from the `raster` package.
+Description: Functions to convert from Spatial*DataFrame classes and other forms. The table form follows the output of the `geom` function from the `raster` package.
 License: GPL-3
 LazyData: TRUE
 Depends:
