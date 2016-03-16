@@ -20,5 +20,3 @@ Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and 
 Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes.
 
 (See `mdsumner/gris` for normalizing further to unique vertices and storing parts and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
-
-See

@@ -34,4 +34,4 @@ Complicating factors are the rownames of sp and the requirement for them both on
 
 (See `mdsumner/gris` for normalizing further to unique vertices and storing parts and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
 
-See 
+
