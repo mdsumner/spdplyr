@@ -8,6 +8,10 @@ Not ready for use.
 
 Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: <https://gist.github.com/holstius/58818dc9bbb88968ec0b>
 
+This package `spbabel` and these packages should be subsumed partly in the overall scheme:
+
+<https://github.com/mdsumner/dplyrodbc> <https://github.com/mdsumner/manifoldr>
+
 Approach
 --------
 
