@@ -48,20 +48,21 @@ mat2d_f <- function(x) {
 #'
 #' @param x data_frame as created by \code{\link{sptable}}
 #' @param crs projection, defaults to \code{NA_character_}
-#' @param ... not used
+#' @param attr remaining data from the attributes
 #'
 #' @return Spatial*
 #' @export
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
-spFromTable <- function(x, crs, ...) {
+spFromTable <- function(x, crs, attr = NULL, ...) {
   if (missing(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame
   dat <- dat[, -match(geomnames()[[target]], names(dat))]
-  if (ncol(dat) == 0L) dat$ID <- seq(nrow(dat))
-
+  
+  ## this is rough and ready, needs proper matching checks
+  dat <- cbind(dat, attr)  
   gom <- switch(target,
          SpatialPolygonsDataFrame = reverse_geomPoly(x, dat, crs),
          SpatialLinesDataFrame = reverse_geomLine(x, dat, crs),
@@ -72,7 +73,8 @@ spFromTable <- function(x, crs, ...) {
 
 reverse_geomPoly <- function(x, d, proj) {
   objects <- split(x, x$object)
-  SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopPartsPoly), proj4string = CRS(proj)), d)
+  ## match.ID should be replaced by method to carry the original rownames somehow
+  SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopPartsPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
 loopPartsPoly <- function(a) Polygons(lapply(split(a, a$part), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
 
