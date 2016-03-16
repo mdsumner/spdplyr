@@ -10,6 +10,8 @@
 #' library(dplyr)
 #' library(spbabel)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
 #' w2 <- wrld_simpl %>% mutate(NAME = "allthesame")
+#' 
+#' ## how to pipe a reprojection? some special formula syntax for ~x+y ?? ~lon+lat ??
 mutate_.Spatial_DataFrame <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
   pr4 <- proj4string(.data)
