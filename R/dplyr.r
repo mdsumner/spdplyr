@@ -48,7 +48,12 @@ filter_.Spatial <- function(.data, ...) {
     stop("no data to filter for a %s", class(.data))
   }
   rnames <- as.character(seq(nrow(.data)))
-  dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
+  if (inherits(.data, "SpatialMultiPointsDataFrame")) {
+    dat <- filter_(as_data_frame(.data@data), ...)
+  } else {
+   dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
+  }
+
   asub <- rnames %in% row.names(dat)
   .data[asub, ]
 }
@@ -73,6 +78,7 @@ slice_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to slice for a %s", class(.data))
   }
+  dat <-  as_data_frame(as.data.frame(.data))
   dat$order <- seq(nrow(dat))
   dat <- slice_(dat, ...)
   .data[dat$order, ]
