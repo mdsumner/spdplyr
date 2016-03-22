@@ -5,6 +5,7 @@
 \alias{sptable.SpatialLinesDataFrame}
 \alias{sptable.SpatialPointsDataFrame}
 \alias{sptable.SpatialPolygonsDataFrame}
+\alias{sptable<-}
 \title{Convert from Spatial*DataFrame to table.}
 \usage{
 sptable(x, ...)
@@ -14,11 +15,17 @@ sptable(x, ...)
 \method{sptable}{SpatialLinesDataFrame}(x, ...)
 
 \method{sptable}{SpatialPointsDataFrame}(x, ...)
+
+sptable(object) <- value
 }
 \arguments{
 \item{x}{\code{\link[sp]{Spatial}} object}
 
 \item{...}{ignored}
+
+\item{object}{Spatial object}
+
+\item{value}{modified sptable version of object}
 }
 \value{
 \code{\link[dplyr]{tbl_df}} data_frame with columns
@@ -27,6 +34,8 @@ sptable(x, ...)
  \item SpatialLinesDataFrame "object" "part"   "cump"   "x"      "y"
  \item SpatialPointsDataFrame  "cump"   "object" "x"      "y"
 }
+
+Spatial object
 }
 \description{
 Input can be a \code{\link[sp]{SpatialPolygonsDataFrame}}, \code{\link[sp]{SpatialLinesDataFrame}} or a \code{\link[sp]{SpatialPointsDataFrame}}.

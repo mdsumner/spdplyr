@@ -42,7 +42,18 @@ mat2d_f <- function(x) {
 }
 
 
-
+#' @rdname sptable
+#' @param object Spatial object
+#' @param value modified sptable version of object
+#'
+#' @return Spatial object
+#' @export
+#'
+#' @examples
+"sptable<-" <-
+  function(object, value) {
+    spFromTable(value, proj4string(object), as.data.frame(object))
+  }
 
 #' Convert from dplyr tbl form to Spatial*DataFrame.
 #'

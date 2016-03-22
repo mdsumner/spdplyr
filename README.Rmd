@@ -52,12 +52,27 @@ x <- wrld_simpl %>% mutate(lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -
 plot(x); text(coordinates(x), label = x$NAME, cex = 0.6)
 ```
 
+use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
+
+```{r}
+## standard dplyr on this S4 class
+w2 <- filter(wrld_simpl, NAME == "Australia")
+plot(w2, col = "grey")
+
+## modify the geometry on this object
+sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
+
+plot(w2, add = TRUE)
+```
 
 ## TODO
 
 Create idioms for modifying the geometry with dplyr verbs and/or piping. 
 
 Consider whether `summarise` is a sensible for Spatial. 
+
+Can we do geometry manipulations like `sptable(w2) <- sptable(w2) %>% mutate(object = part, part = 1)` and sensibly restore the attributes on the way? Just copy the value outs?
+
 
 Implement `sample_n` and `sample_frac`. 
 

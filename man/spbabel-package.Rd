@@ -3,11 +3,25 @@
 \docType{package}
 \name{spbabel-package}
 \alias{spbabel-package}
-\title{Convert between Spatial objects.}
+\title{A basis for converting between different types of spatial objects.}
 \description{
-The spbabel package provides functions to convert a Spatial object to a single table and vice versa.
+The spbabel package provides methods for the dplyr verbs and functions to round-trip a Spatial object to a single table and back.
 }
-\section{I. Conversion}{
+\section{I. dplyr verbs}{
+
+ \tabular{ll}{
+  \code{\link[dplyr]{filter}} \tab  filter   \cr
+  \code{\link[dplyr]{slice}} \tab   slice   \cr
+  \code{\link[dplyr]{arrange}} \tab arrange   \cr
+  \code{\link[dplyr]{select}} \tab  select   \cr
+  \code{\link[dplyr]{rename}} \tab  rename   \cr
+  \code{\link[dplyr]{distinct}} \tab distinct  \cr
+  \code{\link[dplyr]{mutate}} \tab   mutate  \cr
+  \code{\link[dplyr]{transmute}} \tab transmute \cr
+ }
+}
+
+\section{II. Conversion}{
 
 \tabular{ll}{
  \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
