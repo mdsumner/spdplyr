@@ -47,14 +47,15 @@ filter_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to filter for a %s", class(.data))
   }
-  rnames <- as.character(seq(nrow(.data)))
+  .data$rnames <- as.character(seq(nrow(.data)))
+  #print(rnames)
   if (inherits(.data, "SpatialMultiPointsDataFrame")) {
     dat <- filter_(as_data_frame(.data@data), ...)
   } else {
    dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
   }
-
-  asub <- rnames %in% row.names(dat)
+#print(row.names(dat))
+  asub <- .data$rnames %in% dat$rnames
   .data[asub, ]
 }
 
