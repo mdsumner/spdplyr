@@ -36,8 +36,8 @@ library(maptools)
 #> Checking rgeos availability: TRUE
 data(wrld_simpl)
 
-x <- wrld_simpl %>% mutate(lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -40) %>% select(NAME)
-plot(x); text(coordinates(x), label = x$NAME, cex = 0.6)
+x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -20, lon > 60) %>% select(NAME)
+plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
 ```
 
 ![](README-unnamed-chunk-4-1.png)<!-- -->
