@@ -68,6 +68,13 @@ test_that("arrange works", {
 })
 
 
+
+test_that("select works", {
+  expect_that(names(select_(poly1, "ISO2", "NAME")), equals(c("ISO2", "NAME")))
+  expect_that(names(select_(line1, "ISO2", "NAME")), equals(c("ISO2", "NAME")))
+
+})
+
 # filter() (and slice())
 # arrange()
 # select() (and rename())
@@ -76,6 +83,14 @@ test_that("arrange works", {
 # summarise()
 # sample_n() and sample_frac()
 
-test_that("select works", {
-  #expect_that(names(select(poly1, "ISO2", "NAME")), equals("ISO2", "NAME"))
+test_that("distinct works", {
+          expect_that(nrow(distinct(poly1, REGION)), equals(6L))
+  expect_that(distinct(poly1, REGION), is_a("SpatialPolygonsDataFrame"))
+  
+          })
+
+test_that("mutate works", {
+  expect_silent(mutate(poly1, NAME = "all same", AREA = row_number()))
+  expect_silent(transmute(line1, Country= NAME, LON = 100))
+  expect_that(transmute(line1, Country= NAME, LON = 100), is_a("SpatialLinesDataFrame"))
 })

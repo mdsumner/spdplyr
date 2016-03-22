@@ -90,7 +90,7 @@ select_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to select for a %s", class(.data))
   }
- dat <-  select(as_data_frame(as.data.frame(.data)), ...)
+ dat <-  select_(as_data_frame(as.data.frame(.data)), ...)
  .data[, names(dat)]
 }
   
