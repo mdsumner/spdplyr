@@ -1,7 +1,10 @@
 #' Mutate for Spatial
 #' 
-#' mutate . . .
-#' 
+#' @param .data 
+#' @param ... 
+#' @param .dots 
+#'
+#' @rdname spdplyr
 #' @export
 #' @examples 
 #' library(sp)
@@ -9,22 +12,105 @@
 #' data(wrld_simpl)
 #' library(dplyr)
 #' library(spbabel)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
-#' w2 <- wrld_simpl %>% mutate(NAME = "allthesame")
+#' library(raster)  
+#' wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number())
 #' 
-#' ## how to pipe a reprojection? some special formula syntax for ~x+y ?? ~lon+lat ??
-mutate_.Spatial_DataFrame <-  function(.data, ..., .dots) {
+mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  pr4 <- proj4string(.data)
-  dgeom <- sptable(.data)
-  dat <- as.data.frame(.data)
-  spFromTable(mutate_(dgeom, .dots = dots), crs = pr4, attr = dat)
+
+  if (.hasSlot(.data, "data")) {
+    dat <- mutate_(as.data.frame(.data), .dots = dots)
+  } else {
+    stop("no data to mutate for a %s", class(.data))
+  }
+  .data@data <- dat
+  .data
 }
 
+#' @rdname spdplyr
 #' @export
-mutate_.SpatialPolygonsDataFrame <- mutate_.Spatial_DataFrame
+transmute_.Spatial <-  function(.data, ..., .dots) {
+  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
+  if (.hasSlot(.data, "data")) {
+    dat <- transmute_(as.data.frame(.data), .dots = dots)
+  } else {
+    stop("no data to mutate for a %s", class(.data))
+  }
+ .data@data <- dat
+  .data
+}
+
+
+#' @rdname spdplyr
 #' @export
-mutate_.SpatialLinesDataFrame <- mutate_.Spatial_DataFrame
+filter_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to filter for a %s", class(.data))
+  }
+  rnames <- as.character(seq(nrow(.data)))
+  dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
+  asub <- rnames %in% row.names(dat)
+  .data[asub, ]
+}
+
+
+#' @rdname spdplyr
 #' @export
-mutate_.SpatialPointsDataFrame <- mutate_.Spatial_DataFrame
+arrange_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to arrange for a %s", class(.data))
+  }
+  dat <- as_data_frame(as.data.frame(.data))
+  dat$order <- seq(nrow(dat))
+  dat <- arrange_(dat, ...)
+  .data[dat$order, ]
+}
+
+
+#' @rdname spdplyr
 #' @export
-mutate_.SpatialMultiPointsDataFrame <- mutate_.Spatial_DataFrame
+slice_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to slice for a %s", class(.data))
+  }
+  dat$order <- seq(nrow(dat))
+  dat <- slice_(dat, ...)
+  .data[dat$order, ]
+}
+
+#' @rdname spdplyr
+#' @export
+select_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to select for a %s", class(.data))
+  }
+ dat <-  select(as_data_frame(as.data.frame(.data)), ...)
+ .data[, names(dat)]
+}
+  
+#' @rdname spdplyr
+#' @export
+rename_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to rename for a %s", class(.data))
+  }
+  onames <- names(.data)
+  dat <-  rename_(as_data_frame(as.data.frame(.data)), ...)
+  names(.data) <- names(dat)
+  .data
+}
+
+
+
+#' @rdname spdplyr
+#' @export
+distinct_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data for distinct for a %s", class(.data))
+  }
+  orownames <- rownames(.data)
+  .data$order <- seq(nrow(.data))
+  dat <- distinct_(as_data_frame(as.data.frame(.data)), ...)
+  .data[dat$order, ]
+}
+
