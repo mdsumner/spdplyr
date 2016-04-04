@@ -64,7 +64,7 @@ I also tried store list of Polygons() in the column, that's kind of simple but y
 
 Nested data frames are much easier, I find it more natural to use two-level nesting, but you could go further to store more information on individual pieces, their area, winding, etc. You could also just store the fortify-table at one level nesting, more to experiment with.
 
-*Still, nesting cannot provide deduplication of vertices - so I still need the "outer" view that gris provides.*
+*See gris for deduplication of vertices - we cannot do that with nesting afaics.*
 
 Usage
 -----
