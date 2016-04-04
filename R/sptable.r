@@ -52,7 +52,8 @@ mat2d_f <- function(x) {
 #' @examples
 "sptable<-" <-
   function(object, value) {
-    spFromTable(value, proj4string(object), as.data.frame(object))
+       spFromTable(value, proj4string(object), as.data.frame(object))
+
   }
 
 #' Convert from dplyr tbl form to Spatial*DataFrame.
@@ -65,12 +66,24 @@ mat2d_f <- function(x) {
 #' @export
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
-spFromTable <- function(x, crs, attr = NULL, ...) {
+spFromTable <- function(x, crs, attr = NULL, ..., quiet = FALSE) {
   if (missing(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame
-  dat <- dat[, -match(geomnames()[[target]], names(dat))]
+  
+  dat <- dat[, -match(names(dat), geomnames()[[target]])]
+  
+  n_object <- length(unique(x$object))
+  n_attribute <- nrow(attr)
+  if (is.null(n_attribute)) n_attribute <- n_object
+  if (!n_object == n_attribute){
+    
+    spFromTable(value, proj4string(object), as.data.frame(object))
+  } else {
+    if (!quiet) warning("modifications removed the relation between object and data, using a dummy data frame of attributes")
+    attr <- data.frame(id = seq(n_object))
+  }
   
   ## this is rough and ready, needs proper matching checks
   dat <- cbind(dat, attr)  
