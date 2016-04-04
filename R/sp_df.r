@@ -1,6 +1,17 @@
-tSp <- function(x) {
+#' sp_df to store the list of Polygons in a column
+#'
+#' @param x 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' x <- sp_df(wrld_simpl)
+#' as_Spatial.sp_df(d)
+sp_df <- function(x) {
   tab <- as_data_frame(as.data.frame(x))
   tab$Spatial <- geometry(wrld_simpl)
+  attr(tab, "crs") <- proj4string(x)
   class(tab) <- c("sp_df", class(tab))
   tab
 }
@@ -51,7 +62,15 @@ ncol.sp_df <- function(x) {
 }
 as_Spatial.sp_df <- function(x, ...) {
   df <- as.data.frame(x)
-  sp <- x$Spatial
-  ## etc. etc. 
+  sp <- x[["Spatial"]]
+  .detectSpatial(class(sp))(sp, df, proj4string = CRS(attr(x, "crs")), match.ID = FALSE)
+   
 }
 
+.detectSpatial <- function(x) {
+  switch(x, 
+         SpatialPoints = SpatialPointsDataFrame,
+         SpatialMultipoints = SpatialMultiPointsDataFrame,
+         SpatialLines = SpatialLinesDataFrame, 
+         SpatialPolygons = SpatialPolygonsDataFrame)
+}
