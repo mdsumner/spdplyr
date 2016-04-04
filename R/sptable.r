@@ -139,8 +139,6 @@ geomnames <- function() {
       objlist[[i]] <- cbind(i, do.call(rbind, ps))
       cnt <- cnt+nsubobs
     }
-  
-
   obs <- do.call(rbind, objlist)
   colnames(obs) <- c('object', 'part', 'cump', 'hole', 'x', 'y')
   rownames(obs) <- NULL

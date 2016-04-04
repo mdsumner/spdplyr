@@ -9,6 +9,7 @@ LazyData: TRUE
 Depends:
     dplyr,
     sp
+Imports: tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
