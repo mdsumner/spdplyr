@@ -31,6 +31,8 @@ devtools::install_github("mdsumner/spbabel")
 
 Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y). 
 
+This example shows raw round-tripping, just to prove it mostly works. 
+
 ```{r}
 library(spbabel)
 library(maptools)
@@ -38,7 +40,12 @@ data(wrld_simpl)
 xa <- as_nested_df(wrld_simpl)
 ## method for plotting this nsp_df (nested sp df) shows round-trip back to Spatial
 plot(xa, col = grey(seq(0, 1, length = 246)))
+```
 
+
+Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'. 
+
+```{r}
 library(dplyr)
 library(tidyr)
 

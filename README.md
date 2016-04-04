@@ -18,6 +18,8 @@ Experimental
 
 Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y).
 
+This example shows raw round-tripping, just to prove it mostly works.
+
 ``` r
 library(spbabel)
 #> Loading required package: sp
@@ -31,8 +33,9 @@ plot(xa, col = grey(seq(0, 1, length = 246)))
 
 ![](README-unnamed-chunk-3-1.png)<!-- -->
 
-``` r
+Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'.
 
+``` r
 library(dplyr)
 library(tidyr)
 
@@ -77,7 +80,7 @@ library(spbabel)
 quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
 ```
 
-![](README-unnamed-chunk-4-1.png)<!-- -->
+![](README-unnamed-chunk-5-1.png)<!-- -->
 
 We can use polygons and lines objects as well.
 
@@ -89,7 +92,7 @@ x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(
 plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
 ```
 
-![](README-unnamed-chunk-5-1.png)<!-- -->
+![](README-unnamed-chunk-6-1.png)<!-- -->
 
 use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system).
 
@@ -104,7 +107,7 @@ sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
 plot(w2, add = TRUE)
 ```
 
-![](README-unnamed-chunk-6-1.png)<!-- -->
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 TODO
 ----
