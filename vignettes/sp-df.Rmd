@@ -1,0 +1,97 @@
+---
+title: "Spatial data frames"
+author: "Michael Sumner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial data frames}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## How to dplyr with Spatial? 
+
+This has been discussed here: 
+
+https://github.com/ropensci/unconf16/issues/22
+
+I'm also working on a completely database-ready form of spatial objects here: 
+
+https://github.com/mdsumner/gris
+
+It's not clear to me yet whether we should have just one, or all, or many of these approaches . . .  I was not aware of nested data frames though, so exploring that as well. 
+
+Here I refer to the *Spatial Family* as the packages sp, raster, rgdal and rgeos. Together these provide very comprehensive support for read and write, coordinate system transformation, extraction and analysis with spatial data, and topological and geometric operations. 
+
+## What options are there? 
+
+We could serialize to WKT and store this in a column, but that means we still need to write classes for the objects and for the column type, so we can dispatch to the already defined methods in the Spatial Family. We could serialize to WKB, but that means we are storing objects in a list in a data frame which adds another level of complexity.  This requires constantly serializing/de-serializing between WKT/WKB and Spatial form. One advantage here is that this is how a database (and GDAL) will understand the geometry, both for read and write. 
+
+To leverage the power of the Spatial Family we really need easy conversion to the exising Spatial classes. There are three main options that I can see: 
+
+1. Vertex-table-centric: Store the full vertex table with object, 'piece', hole-status, ring ordering and coordinates in one table. Use the object ID to join to other attributes. This is the `ggplot2::fortify` approach.
+2. Data-table-centric: store the object attributes with a link to the geometric information. This could be done by serializing to a column, but still we need conversions and classing to form high-level operations. 
+3. Create a new object with multiple tables, at least two for objects and vertices (ggplot2) and up to 6 for vertices, branches, objects and link-tables (gris). 
+
+
+## The problem with ggplot2
+
+The main issue with the `ggplot2::fortify model` is that it currently doesn't support multiple holes in one polygon. This is not a problem for multi-part line object or for a multi-point object, but since ggplot2 uses gridPoly rather than gridPath this means we cannot get complex holy polygons. The plotting currently fools you by not showing the border, which you would see tracing correctly around a single-hole. We get topological artefacts if this is tried with more than one hole. 
+
+This could be fixed using `geom_holygon` as here: but this is not officially supported yet. My guess is this will stay that way until ggvis takes over. Ggvis is another reason I think that 1) is not the right way forward. 
+
+The raster package also has function `geom` for the 1) case above, but this creates a matrix rather than a data frame and uses slightly different terms for the object, 'piece', hole, and coordinates. 
+
+## The problem with spbabel
+
+The spbabel package also does a similar task to fortify with the function `sptable`, with the process being reversable with `spFromTable`. The problem here is that we need to store the coordinate system and topological type with the table, and since we don't record the crs or the type per object that requires more thought. Once in a set of tables, there's no reason not to mix lines, points, and areas in one table - and the same goes for coordinate systems. The graphics device knows its coordinate system so like in a GIS we can throw any kind of object at it, and it computes the transformation on the fly and draws it the right way.  
+
+## The problem with recursive objects
+
+Sp stores all the geometry in recursive lists of matrices. This means we are stuck to the data type of all vertices (i.e. we cannot have integer, or date-time vertices) and we cannot have 3 or more coordinate attributes without writing new classes of objects.  We also have to write specific object-aware methods that recurse the objects in the right way. This problem also exists for the fortify model, we have two tables and we either summarize / work in vertex-centric mode and join back to objects, or in object-centric mode and join back to vertices. 
+
+Since we have to have multiple tables (or matrices), why not allow them all to be full data frames with any data on them. If I plot or analyse with them, I can nominate that this is "x" and "y" geometrically, or "x", "y" and "time". The geometry is  more flexible rather than be ing locked down on the object. The entities in vector Spatial data are objects, branches (or parts/pieces), and vertices. We can store attributes with the branches (am I a hole?) and we can also normalize to unique vertices if needed with a vertex-link branches table. Why? We need this for running triangulations on the vertices, or on providing shared-edit and other topologically constrained oeprations. 
+
+I think all of these options are important, and we should have easy tools for transferring between them.
+
+
+## convert Spatial to a sp_df / tbl_df with the Spatial column
+x <- tSp(wrld_simpl)
+x %>% filter(NAME == "Australia")
+
+
+## Work with nested data frames
+
+
+```{r}
+library(tidyr)
+library(maptools)
+library(dplyr)
+data(wrld_simpl)
+```
+
+To directly nest the geometry  from sp we can work from the top, group by object and cumulative part, then again group by object and nest again. 
+
+```{r}
+library(ggplot2)
+x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(cump, object) %>% nest %>%  group_by(object) %>% nest)
+```
+
+Unfinished. 
+```{r, eval = FALSE}
+vertices <- function(x) {
+  unnest(unnest(x))
+}
+## plot function
+plotspdf <- function(x, ...) {
+  plot(spbabel::spFromTable(vertices(x)))
+}
+
+plotspdf(x)
+
+```
