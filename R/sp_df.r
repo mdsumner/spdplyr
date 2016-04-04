@@ -6,8 +6,8 @@
 #' @export
 #'
 #' @examples
-#' x <- sp_df(wrld_simpl)
-#' as_Spatial.sp_df(d)
+#' #x <- sp_df(wrld_simpl)
+#' #as_Spatial.sp_df(d)
 sp_df <- function(x) {
   tab <- as_data_frame(as.data.frame(x))
   tab$Spatial <- geometry(wrld_simpl)
