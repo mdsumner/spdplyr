@@ -37,10 +37,61 @@ This example shows raw round-tripping, just to prove it mostly works.
 library(spbabel)
 library(maptools)
 data(wrld_simpl)
-xa <- as_nested_df(wrld_simpl)
+xa <- nestify(wrld_simpl)
 ## method for plotting this nsp_df (nested sp df) shows round-trip back to Spatial
-plot(xa, col = grey(seq(0, 1, length = 246)))
+plot(xa, col = grey(seq(0, 1, length = nrow(xa))))
+
+## ggplot2
+library(ggplot2)
+library(tidyr)
+
+## custom stat for this nested "nsp_df" object
+ggplot(xa) + stat_nested()
+ 
 ```
+
+This example shows we can pipeline in simple ways. 
+
+Filter out by country NAME. 
+
+```{r}
+library(dplyr)
+
+xa %>% filter(NAME %in% c("Australia", "New Zealand")) %>% 
+ ggplot() + stat_nested()
+
+```
+
+Extract the full vertices table (with all object attributes dropped), filter-join on any objects that have holes and pick one to plot. 
+
+(Here the cascade of un-nesting should extract the branch-level metadata, i.e. winding order, hole-status, area, etc.)
+
+Using `geom_holygon` we can get true polypaths. 
+
+```{r}
+xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
+  filter(row_number() == 17) %>% ggplot() + geom_holygon() 
+
+
+sptable(subset(wrld_simpl, NAME == "Armenia"))
+armenia <- xa %>% filter(NAME == "Armenia") 
+
+ggplot(armenia, aes(x, y, group = cump, fill = factor(hole))) + stat_nested()
+```
+
+
+Much more to do . . . 
+
+
+```{r}
+## how to pass down object for faceting . . .
+#xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
+#   ggplot() + stat_nested() + facet_grid(cump)
+
+
+
+```
+
 
 
 Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'. 
