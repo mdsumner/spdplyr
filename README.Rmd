@@ -151,6 +151,16 @@ sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
 plot(w2, add = TRUE)
 ```
 
+We can also restructure objects. 
+
+```{r}
+## explode (disaggregate) objects to individual polygons
+## here each part becomes and object, and each object only has one part
+w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
+```
+
+
+
 ## TODO
 
 Create idioms for modifying the geometry with dplyr verbs and/or piping. 
