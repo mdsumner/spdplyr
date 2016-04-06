@@ -1,7 +1,7 @@
 
 #' Two level nesting, branches and objects
 #'
-#' @param x Spatial*DataFrame
+#' @param data Spatial*DataFrame
 #'
 #' @return nested data frame
 #' @export
@@ -9,23 +9,25 @@
 #' @examples
 #' library(maptools)
 #' data(wrld_simpl)
-#' x <- as_nested_df(wrld_simpl)
+#' x <- nest(wrld_simpl)
 #' x %>% select(Object, ISO3) %>% unnest %>% unnest
 #' plot(x, grey(seq(0, 1, length = nrow(x))))
-nestify <- function(x) {
-  y <- bind_cols(as.data.frame(x), 
-            spbabel::sptable(x) %>% 
-              group_by(cump, object) %>% 
-              nest(.key = "Branch") %>%  
-              group_by(object) %>% nest(.key = "Object"))
-  attr(y, "crs") <- proj4string(x)
+nest_.Spatial <- function(data, ...) {
+  sptab <-  sptable(data) %>% 
+    group_by(cump, object) %>% 
+    nest_(key_col = "Branch") %>%  
+    group_by(object) %>% nest_(key_col = "Object")
+  
+  attrd <- as_data_frame(as.data.frame(data))
+  y <- bind_cols(attrd, sptab)
+  attr(y, "crs") <- proj4string(data)
   class(y) <- c("nsp_df", class(y))
   y
 }
 
 
 from_nested_df <- function(x) {
-  spbabel::spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)])
+  spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)])
 }
 
 

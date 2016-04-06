@@ -1,4 +1,10 @@
+# spbabel dev
+
+* added nesting for Spatial 
+
 # spbabel 0.1.0
+
+* added nesting for Spatial [in progress]
 
 * added a replacement function `sptable<-`
 

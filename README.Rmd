@@ -37,7 +37,7 @@ This example shows raw round-tripping, just to prove it mostly works.
 library(spbabel)
 library(maptools)
 data(wrld_simpl)
-xa <- nestify(wrld_simpl)
+xa <- nest(wrld_simpl)
 ## method for plotting this nsp_df (nested sp df) shows round-trip back to Spatial
 plot(xa, col = grey(seq(0, 1, length = nrow(xa))))
 

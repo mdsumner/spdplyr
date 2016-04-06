@@ -77,7 +77,7 @@ data(wrld_simpl)
 
 To directly nest the geometry  from sp we can work from the top, group by object and cumulative part, then again group by object and nest again. 
 
-```{r}
+```{r,eval=FALSE}
 library(ggplot2)
 x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(cump, object) %>% nest %>%  group_by(object) %>% nest)
 ```

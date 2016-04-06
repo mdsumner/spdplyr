@@ -4,7 +4,7 @@
 \alias{spFromTable}
 \title{Convert from dplyr tbl form to Spatial*DataFrame.}
 \usage{
-spFromTable(x, crs, attr = NULL, ...)
+spFromTable(x, crs, attr = NULL, ..., quiet = FALSE)
 }
 \arguments{
 \item{x}{data_frame as created by \code{\link{sptable}}}
