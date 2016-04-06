@@ -19,13 +19,13 @@ sptable <- function(x, ...) {
 #' @export
 #' @rdname sptable
 sptable.SpatialPolygonsDataFrame <- function(x, ...) {
-  mat2d_f(.polysGeom(x, ...))
+  mat2d_f(.gobbleGeom(x, ...))
 }
 
 #' @export
 #' @rdname sptable
 sptable.SpatialLinesDataFrame <- function(x, ...) {
-  mat2d_f(.linesGeom(x, ...))
+  mat2d_f(.gobbleGeom(x, ...))
 }
 
 #' @export
@@ -158,7 +158,7 @@ geomnames <- function() {
          )
 }
 ## adapted from raster package R/geom.R
-.polysGeom <-   function(x,  ...) {
+.gobbleGeom <-   function(x,  ...) {
   gx <- geometry(x)
   typ <- switch(class(gx), 
                 SpatialPolygons = "poly", 
@@ -194,40 +194,6 @@ geomnames <- function() {
 }
 
 
-.linesGeom <-  function(x,  ...) {
-  gx <- geometry(x)
-  typ <- switch(class(gx), 
-                SpatialPolygons = "poly", 
-                SpatialLines = "line")
-  nobs <- length(geometry(x))
-  objlist <- vector("list", nobs)
-  cnt <- 0L
-for (i in seq(nobs)) {
-      nsubobs <- .nsubobs(x, i, typ) ## 
-      ps <- lapply(1:nsubobs, function(j) {
-        coords <- .coordsIJ(x, i, j, typ)
-        nr <- nrow(coords)
-        lst <- list(part = rep(j, nr), 
-                   branch = rep(j + cnt, nr), 
-                   hole = rep(.holes(x, i, j, typ), nr), 
-                   order = seq(nr),
-                   x = coords[,1], 
-                   y = coords[,2])
-        as_data_frame(lst[!sapply(lst, is.null)])
-      
-      }
-      )
-      psd <- do.call(bind_rows, ps)
-      objlist[[i]] <- bind_cols(data_frame(object = rep(i, nrow(psd))), psd)
-      cnt <- cnt + nsubobs
-    }
-  
-  obs <- do.call(bind_rows, objlist)
-  #colnames(obs) <- c('object', 'part', 'branch', 'x', 'y')
-  rownames(obs) <- NULL
-
-  return (obs)
-}
 
 
 
