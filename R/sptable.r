@@ -100,14 +100,14 @@ reverse_geomPoly <- function(x, d, proj) {
   ## match.ID should be replaced by method to carry the original rownames somehow
   SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopPartsPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
-loopPartsPoly <- function(a) Polygons(lapply(split(a, a$part), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
+loopPartsPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
 
 
 reverse_geomLine <- function(x, d, proj) {
   objects <- split(x, x$object)
   SpatialLinesDataFrame(SpatialLines(lapply(objects, loopPartsLine), proj4string = CRS(proj)), d)
 }
-loopPartsLine<- function(a) Lines(lapply(split(a, a$part), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
+loopPartsLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
 
 reverse_geomPoint <- function(a, d, proj) {
  # stop("not implemented")
@@ -132,8 +132,8 @@ detectSpClass <- function(x) {
 }
 
 geomnames <- function() {
-  list(SpatialPolygonsDataFrame = c("object", "part", "branch", "hole", "order", "x", "y"),
-       SpatialLinesDataFrame = c("object", "part", "branch", "order", "x", "y"),
+  list(SpatialPolygonsDataFrame = c("object",  "branch", "hole",  "x", "y"),
+       SpatialLinesDataFrame = c("object",  "branch",  "x", "y"),
        SpatialPointsDataFrame = c("branch", "object", "x", "y"))
 }
 

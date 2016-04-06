@@ -27,7 +27,44 @@ Spbabel can be installed directly from github:
 devtools::install_github("mdsumner/spbabel")
 ```
 
-## Experimental
+## Embedded nesting
+
+Still working on the terminology here, does "embedding" make sense? 
+
+This approach stores a single table at the top level, but it only stores the tables that we need - it's not a recursive object with a table split across rows. This means we can still normalize across objects (unique vertices), and apply operations on the entire set of rows (e.g. all vertices) without unnesting or recursing.  Yes this also means shared topology. 
+
+Here is an example of "embedding". 
+
+```{r}
+library(spbabel)
+library(maptools)
+data(wrld_simpl)
+world <- db_df(wrld_simpl)
+
+world$Table
+
+```
+
+How to reconstitute these objects? 
+
+```{r}
+nam <- c("Australia", "New Zealand")
+library(dplyr)
+Objects <- function(x) x$Table$Object
+Branches <- function(x) x$Table$Branch
+Coords <- function(x) x$Table$Coord
+
+(countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam) )
+
+countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
+
+spFromTable(countries, attr = countryObjects, quiet = TRUE)
+```
+
+## Recursive nesting
+
+
+I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for parts, and tables of parts for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
 
 Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y). 
 

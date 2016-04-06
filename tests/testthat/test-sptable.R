@@ -27,4 +27,27 @@ test_that("sptable structure is sound", {
 })
 
 
-  
+nam <- c("Australia", "New Zealand")
+library(dplyr)
+Objects <- function(x) x$Table$Object
+Branches <- function(x) x$Table$Branch
+Coords <- function(x) x$Table$Coord
+
+
+
+library(spbabel)
+library(maptools)
+data(wrld_simpl)
+world <- db_df(wrld_simpl)
+
+
+context("embedding works")
+test_that("round trip embedding works", {
+  expect_that(Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam), is_a("tbl_df"))
+})
+
+countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam)
+countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
+test_that("round trip embedding works", {
+  expect_that(spFromTable(countries, attr = countryObjects, quiet = TRUE), is_a("SpatialPolygonsDataFrame"))
+})

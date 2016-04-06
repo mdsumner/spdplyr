@@ -13,8 +13,116 @@ Spbabel can be installed directly from github:
 devtools::install_github("mdsumner/spbabel")
 ```
 
-Experimental
-------------
+Embedded nesting
+----------------
+
+Still working on the terminology here, does "embedding" make sense?
+
+This approach stores a single table at the top level, but it only stores the tables that we need - it's not a recursive object with a table split across rows. This means we can still normalize across objects (unique vertices), and apply operations on the entire set of rows (e.g. all vertices) without unnesting or recursing. Yes this also means shared topology.
+
+Here is an example of "embedding".
+
+``` r
+library(spbabel)
+#> Loading required package: sp
+library(maptools)
+#> Checking rgeos availability: TRUE
+data(wrld_simpl)
+world <- db_df(wrld_simpl)
+
+world$Table
+#> $Coord
+#> Source: local data frame [26,264 x 3]
+#> 
+#>             x        y branch
+#>         (dbl)    (dbl)  (int)
+#> 1  -61.686668 17.02444      1
+#> 2  -61.887222 17.10527      1
+#> 3  -61.794449 17.16333      1
+#> 4  -61.686668 17.02444      1
+#> 5  -61.729172 17.60861      2
+#> 6  -61.853058 17.58305      2
+#> 7  -61.873062 17.70389      2
+#> 8  -61.729172 17.60861      2
+#> 9    2.963610 36.80222      3
+#> 10   4.785832 36.89472      3
+#> ..        ...      ...    ...
+#> 
+#> $Branch
+#> Source: local data frame [3,768 x 3]
+#> 
+#>    branch  hole object
+#>     (int) (lgl)  (int)
+#> 1       1 FALSE      1
+#> 2       2 FALSE      1
+#> 3       3 FALSE      2
+#> 4       4 FALSE      3
+#> 5       5 FALSE      3
+#> 6       6 FALSE      3
+#> 7       7 FALSE      3
+#> 8       8 FALSE      3
+#> 9       9 FALSE      4
+#> 10     10 FALSE      5
+#> ..    ...   ...    ...
+#> 
+#> $Object
+#> Source: local data frame [246 x 12]
+#> 
+#>      FIPS   ISO2   ISO3    UN                NAME   AREA  POP2005 REGION
+#>    (fctr) (fctr) (fctr) (int)              (fctr)  (int)    (dbl)  (int)
+#> 1      AC     AG    ATG    28 Antigua and Barbuda     44    83039     19
+#> 2      AG     DZ    DZA    12             Algeria 238174 32854159      2
+#> 3      AJ     AZ    AZE    31          Azerbaijan   8260  8352021    142
+#> 4      AL     AL    ALB     8             Albania   2740  3153731    150
+#> 5      AM     AM    ARM    51             Armenia   2820  3017661    142
+#> 6      AO     AO    AGO    24              Angola 124670 16095214      2
+#> 7      AQ     AS    ASM    16      American Samoa     20    64051      9
+#> 8      AR     AR    ARG    32           Argentina 273669 38747148     19
+#> 9      AS     AU    AUS    36           Australia 768230 20310208      9
+#> 10     BA     BH    BHR    48             Bahrain     71   724788    142
+#> ..    ...    ...    ...   ...                 ...    ...      ...    ...
+#> Variables not shown: SUBREGION (int), LON (dbl), LAT (dbl), object (int)
+```
+
+How to reconstitute these objects?
+
+``` r
+nam <- c("Australia", "New Zealand")
+library(dplyr)
+Objects <- function(x) x$Table$Object
+Branches <- function(x) x$Table$Branch
+Coords <- function(x) x$Table$Coord
+
+(countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam) )
+#> Source: local data frame [2 x 2]
+#> 
+#>          NAME object
+#>        (fctr)  (int)
+#> 1   Australia      9
+#> 2 New Zealand    160
+
+countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
+#> Joining by: "object"
+#> Joining by: "branch"
+
+spFromTable(countries, attr = countryObjects, quiet = TRUE)
+#> class       : SpatialPolygonsDataFrame 
+#> features    : 2 
+#> extent      : -178.6131, 179.0769, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)
+#> coord. ref. : NA 
+#> variables   : 2
+#> Source: local data frame [2 x 2]
+#> 
+#>           dat    id
+#>        (fctr) (int)
+#> 1   Australia     1
+#> 2 New Zealand     2
+```
+
+Recursive nesting
+-----------------
+
+I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for parts, and tables of parts for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
 
 Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y).
 
@@ -23,16 +131,14 @@ This example shows raw round-tripping, just to prove it mostly works.
 ``` r
 library(tidyr)
 library(spbabel)
-#> Loading required package: sp
 library(maptools)
-#> Checking rgeos availability: TRUE
 data(wrld_simpl)
 xa <- nest(wrld_simpl)
 ## method for plotting this nsp_df (nested sp df) shows round-trip back to Spatial
 plot(xa, col = grey(seq(0, 1, length = nrow(xa))))
 ```
 
-![](README-unnamed-chunk-3-1.png)<!-- -->
+![](README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
 
@@ -44,7 +150,7 @@ library(tidyr)
 ggplot(xa) + stat_nested()
 ```
 
-![](README-unnamed-chunk-3-2.png)<!-- -->
+![](README-unnamed-chunk-5-2.png)<!-- -->
 
 This example shows we can pipeline in simple ways.
 
@@ -57,7 +163,7 @@ xa %>% filter(NAME %in% c("Australia", "New Zealand")) %>%
  ggplot() + stat_nested()
 ```
 
-![](README-unnamed-chunk-4-1.png)<!-- -->
+![](README-unnamed-chunk-6-1.png)<!-- -->
 
 Extract the full vertices table (with all object attributes dropped), filter-join on any objects that have holes and pick one to plot.
 
@@ -71,7 +177,7 @@ xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(obje
 #> Joining by: "object"
 ```
 
-![](README-unnamed-chunk-5-1.png)<!-- -->
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 
@@ -97,7 +203,7 @@ armenia <- xa %>% filter(NAME == "Armenia")
 ggplot(armenia, aes(x, y, group = branch, fill = factor(hole))) + stat_nested()
 ```
 
-![](README-unnamed-chunk-5-2.png)<!-- -->
+![](README-unnamed-chunk-7-2.png)<!-- -->
 
 Much more to do . . .
 
@@ -154,7 +260,7 @@ library(spbabel)
 quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
 ```
 
-![](README-unnamed-chunk-8-1.png)<!-- -->
+![](README-unnamed-chunk-10-1.png)<!-- -->
 
 We can use polygons and lines objects as well.
 
@@ -166,7 +272,7 @@ x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(
 plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
 ```
 
-![](README-unnamed-chunk-9-1.png)<!-- -->
+![](README-unnamed-chunk-11-1.png)<!-- -->
 
 use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system).
 
@@ -184,7 +290,7 @@ sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
 plot(w2, add = TRUE)
 ```
 
-![](README-unnamed-chunk-10-1.png)<!-- -->
+![](README-unnamed-chunk-12-1.png)<!-- -->
 
 We can also restructure objects.
 
