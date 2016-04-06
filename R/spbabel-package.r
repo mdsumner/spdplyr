@@ -1,8 +1,11 @@
 #' A basis for converting between different types of spatial objects.
 #'
-#'
-#' The spbabel package provides methods for the dplyr verbs and functions to round-trip a Spatial object to a single table and back.
-#'
+#'# @importFrom utils 
+#' @aliases NULL
+#' @details The spbabel package provides methods for the dplyr verbs and functions to round-trip a Spatial object to a single table and back.
+#' The \code{db_df} class provides a "database table" way to store tables in a single object, the "tables" table. 
+#' 
+#' The \code{nsp_df} class provides a "nested spatial" way to store the parts and child vertices of Spatial objects in one table, either all as tables or with the list of Spatial objects in a list. 
 #' @section I. dplyr verbs:
 #'  \tabular{ll}{
 #'   \code{\link[dplyr]{filter}} \tab  filter   \cr
@@ -18,6 +21,9 @@
 #' \tabular{ll}{
 #'  \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
 #'  \code{\link{spFromTable}} \tab create Spatial object from table \cr
+#'  \code{\link{sp_df}} \tab store the Spatial part on the table
+#'  \code{\link{nest}} \tab create a nested spatial table
+#'  \code{\link{db_df}} \tab create a table of tables
 #'  }
 #'
 #' @name spbabel-package
@@ -38,3 +44,6 @@ NULL
 #' @docType data
 #' @rdname mpoint1
 NULL
+
+
+
