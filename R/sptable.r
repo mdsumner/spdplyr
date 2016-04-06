@@ -6,9 +6,9 @@
 #'
 #' @return \code{\link[dplyr]{tbl_df}} data_frame with columns
 #' \itemize{
-#'  \item SpatialPolygonsDataFrame "object" "part"   "cump"   "hole"   "x"      "y"
-#'  \item SpatialLinesDataFrame "object" "part"   "cump"   "x"      "y"
-#'  \item SpatialPointsDataFrame  "cump"   "object" "x"      "y"
+#'  \item SpatialPolygonsDataFrame "object" "part"   "branch"   "hole"   "x"      "y"
+#'  \item SpatialLinesDataFrame "object" "part"   "branch"   "x"      "y"
+#'  \item SpatialPointsDataFrame  "branch"   "object" "x"      "y"
 #' }
 #' @export
 #'
@@ -118,11 +118,11 @@ reverse_geomPoint <- function(a, d, proj) {
 
 detectSpClass <- function(x) {
   #names(sptable(wrld_simpl))
-  #[1] "object" "part"   "cump"   "hole"   "x"      "y"
+  #[1] "object" "part"   "branch"   "hole"   "x"      "y"
   #names(sptable(as(wrld_simpl, "SpatialLinesDataFrame")))
-  #"object" "part"   "cump"   "x"      "y"
+  #"object" "part"   "branch"   "x"      "y"
   #names(sptable(as(as(wrld_simpl, "SpatialLinesDataFrame"), "SpatialPointsDataFrame")))
-  # "cump"   "object" "x"      "y"
+  # "branch"   "object" "x"      "y"
   gn <-geomnames()
   if (all(gn$SpatialPolygonsDataFrame %in% names(x))) return("SpatialPolygonsDataFrame")
   if (all(gn$SpatialLinesDataFrame %in% names(x))) return("SpatialLinesDataFrame")
@@ -132,9 +132,9 @@ detectSpClass <- function(x) {
 }
 
 geomnames <- function() {
-  list(SpatialPolygonsDataFrame = c("object", "part", "cump", "hole", "x", "y"),
-       SpatialLinesDataFrame = c("object", "part", "cump", "x", "y"),
-       SpatialPointsDataFrame = c("cump", "object", "x", "y"))
+  list(SpatialPolygonsDataFrame = c("object", "part", "branch", "hole", "x", "y"),
+       SpatialLinesDataFrame = c("object", "part", "branch", "x", "y"),
+       SpatialPointsDataFrame = c("branch", "object", "x", "y"))
 }
 
 ## adapted from raster package R/geom.R
@@ -153,7 +153,7 @@ geomnames <- function() {
       cnt <- cnt+nsubobs
     }
   obs <- do.call(rbind, objlist)
-  colnames(obs) <- c('object', 'part', 'cump', 'hole', 'x', 'y')
+  colnames(obs) <- c('object', 'part', 'branch', 'hole', 'x', 'y')
   rownames(obs) <- NULL
 
  
@@ -176,7 +176,7 @@ for (i in 1:nobs) {
     }
   
   obs <- do.call(rbind, objlist)
-  colnames(obs) <- c('object', 'part', 'cump', 'x', 'y')
+  colnames(obs) <- c('object', 'part', 'branch', 'x', 'y')
   rownames(obs) <- NULL
 
   return (obs)
@@ -196,6 +196,6 @@ for (i in 1:nobs) {
 
   }
   xy <- cbind(br, br, xy)
-  colnames(xy) <- c('cump', 'object', 'x', 'y')
+  colnames(xy) <- c('branch', 'object', 'x', 'y')
   return(xy)
 }

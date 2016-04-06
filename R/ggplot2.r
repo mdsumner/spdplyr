@@ -119,7 +119,7 @@ fortify.nsp_df <- function(model, data, ...) {
 #' @export
 #'
 #' @examples
-ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = cump,  fill = cump), ..., environment = parent.frame()) {
+ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = branch,  fill = branch), ..., environment = parent.frame()) {
   ggplot(fortify.nsp_df(data, ...), mapping, environment = environment)
 }
 
@@ -128,7 +128,7 @@ ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = cump,  fill
 #                           # required_aes = c("x", "y"),
 #                            default_aes = aes(x = "x", y = "y", 
 #                                              fill = "grey", col = "black", 
-#                                              group = "cump", fill = "object"),
+#                                              group = "branch", fill = "object"),
 #                            draw_key = draw_key_polygon,
 #                            
 #                            draw_group = function(data, panel_scales, coord) {
@@ -165,7 +165,7 @@ ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = cump,  fill
 #                              # draw_key = draw_key_polygon,
 #                              default_aes = aes(x = "x", y = "y", 
 #                                                 col = "black", 
-#                                                group = "cump", fill = "grey", alpha = 1),
+#                                                group = "branch", fill = "grey", alpha = 1),
 #                              draw_key = draw_key_polygon,
 #                              draw_panel= function(data, panel_scales, coord) {
 #                                print(data)
@@ -202,9 +202,9 @@ ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = cump,  fill
 # }
 # 
 # # ggplot.nsp_df <- function (data = NULL, mapping = aes(), ..., environment = parent.frame()) {
-# #   NextMethod("ggplot", unnest(unnest(data)), mapping = aes(x, y, group = cump, fill = object))
+# #   NextMethod("ggplot", unnest(unnest(data)), mapping = aes(x, y, group = branch, fill = object))
 # # }
 # ggplot(xa[, c("NAME", "object", "Object")]) + 
-# #+ aes(x, y, group = cump, fill = object) 
+# #+ aes(x, y, group = branch, fill = object) 
 #  geom_simple_path()
 # 

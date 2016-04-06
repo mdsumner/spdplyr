@@ -14,7 +14,7 @@
 #' plot(x, grey(seq(0, 1, length = nrow(x))))
 nest_.Spatial <- function(data, ...) {
   sptab <-  sptable(data) %>% 
-    group_by(cump, object) %>% 
+    group_by(branch, object) %>% 
     nest_(key_col = "Branch") %>%  
     group_by(object) %>% nest_(key_col = "Object")
   

@@ -76,7 +76,7 @@ xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(obje
 sptable(subset(wrld_simpl, NAME == "Armenia"))
 armenia <- xa %>% filter(NAME == "Armenia") 
 
-ggplot(armenia, aes(x, y, group = cump, fill = factor(hole))) + stat_nested()
+ggplot(armenia, aes(x, y, group = branch, fill = factor(hole))) + stat_nested()
 ```
 
 
@@ -86,7 +86,7 @@ Much more to do . . .
 ```{r}
 ## how to pass down object for faceting . . .
 #xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
-#   ggplot() + stat_nested() + facet_grid(cump)
+#   ggplot() + stat_nested() + facet_grid(branch)
 
 
 

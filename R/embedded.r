@@ -38,8 +38,8 @@ db_df.list <- function(x, ...) {
 db_df.Spatial <- function(x, ...) {
   sptab <-  sptable(x) 
   attrd <- as_data_frame(as.data.frame(x))
-  x <- list(Coord = select_(sptab, "x", "y", "cump"), 
-       Branch = select_(distinct_(sptab, "cump"), "cump", "hole", "object"), 
+  x <- list(Coord = select_(sptab, "x", "y", "branch"), 
+       Branch = select_(distinct_(sptab, "branch"), "branch", "hole", "object"), 
        Object = bind_cols(attrd, select_(distinct_(sptab, "object"), "object")))
   
   db_df(x)

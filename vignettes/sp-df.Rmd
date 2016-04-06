@@ -79,7 +79,7 @@ To directly nest the geometry  from sp we can work from the top, group by object
 
 ```{r,eval=FALSE}
 library(ggplot2)
-x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(cump, object) %>% nest %>%  group_by(object) %>% nest)
+x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(branch, object) %>% nest %>%  group_by(object) %>% nest)
 ```
 
 Unfinished. 
