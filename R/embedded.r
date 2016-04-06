@@ -1,5 +1,14 @@
 #' Nested tables without recursion :)
 #'
+#' @return 
+#' For Spatial, a data frame with columns
+#' \itemize{
+#'  \item \code{object} \tab object ID \code{integer}
+#'  \item \code{part} \tab part counter within object \code{integer}
+#'  \item \code{branch} \tab global part ID \code{integer}
+#'  \item \code{hole} \tab hole status island or hole? \code{logical}
+#'  \item \code{x} \tab 
+#' }
 #' @param x 
 #' @param ... 
 #'
@@ -10,7 +19,6 @@
 db_df <- function(x, ...) {
   UseMethod("db_df")
 }
-
 
 #' Create a data frame from a list. 
 #'
@@ -31,7 +39,6 @@ db_df.list <- function(x, ...) {
 #' @param x 
 #' @param ... 
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -41,7 +48,6 @@ db_df.Spatial <- function(x, ...) {
   x <- list(Coord = select_(sptab, "x", "y", "branch"), 
        Branch = select_(distinct_(sptab, "branch"), "branch", "hole", "object"), 
        Object = bind_cols(attrd, select_(distinct_(sptab, "object"), "object")))
-  
   db_df(x)
 }
 

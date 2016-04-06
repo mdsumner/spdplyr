@@ -11,6 +11,16 @@ db_df(x, ...)
 
 \item{...}{}
 }
+\value{
+For Spatial, a data frame with columns
+\itemize{
+ \item \code{object} \tab object ID \code{integer}
+ \item \code{part} \tab part counter within object \code{integer}
+ \item \code{branch} \tab global part ID \code{integer}
+ \item \code{hole} \tab hole status island or hole? \code{logical}
+ \item \code{x} \tab 
+}
+}
 \description{
 Nested tables without recursion :)
 }
