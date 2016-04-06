@@ -72,7 +72,7 @@ spFromTable <- function(x, crs, attr = NULL, ..., quiet = FALSE) {
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame
   
-  dat <- dat[, -match(names(dat), geomnames()[[target]])]
+  dat <- dat[, setdiff(names(dat), spbabel:::geomnames()[[target]])]
   
   n_object <- length(unique(x$object))
   n_attribute <- nrow(attr)
@@ -132,8 +132,8 @@ detectSpClass <- function(x) {
 }
 
 geomnames <- function() {
-  list(SpatialPolygonsDataFrame = c("object", "part", "branch", "hole", "x", "y"),
-       SpatialLinesDataFrame = c("object", "part", "branch", "x", "y"),
+  list(SpatialPolygonsDataFrame = c("object", "part", "branch", "hole", "order", "x", "y"),
+       SpatialLinesDataFrame = c("object", "part", "branch", "order", "x", "y"),
        SpatialPointsDataFrame = c("branch", "object", "x", "y"))
 }
 
@@ -158,6 +158,7 @@ geomnames <- function() {
          )
 }
 ## adapted from raster package R/geom.R
+## generalized on Polygon and Line
 .gobbleGeom <-   function(x,  ...) {
   gx <- geometry(x)
   typ <- switch(class(gx), 

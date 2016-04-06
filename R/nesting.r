@@ -27,7 +27,7 @@ nest_.Spatial <- function(data, ...) {
 
 
 from_nested_df <- function(x) {
-  spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)])
+  spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)], quiet = TRUE)
 }
 
 

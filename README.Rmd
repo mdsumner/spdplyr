@@ -34,6 +34,7 @@ Recent discussion resulted in a "nested data frame" approach, I've applied that 
 This example shows raw round-tripping, just to prove it mostly works. 
 
 ```{r}
+library(tidyr)
 library(spbabel)
 library(maptools)
 data(wrld_simpl)

@@ -1,10 +1,10 @@
 # spbabel dev
 
+* working on embedded tables, with disparate tables per row rather than hierarchical
+
 * added nesting for Spatial 
 
 # spbabel 0.1.0
-
-* added nesting for Spatial [in progress]
 
 * added a replacement function `sptable<-`
 
