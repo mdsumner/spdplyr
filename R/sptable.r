@@ -151,6 +151,12 @@ geomnames <- function() {
          poly = x@polygons[[i]]@Polygons)
 )
 }
+.holes <- function(x, i, j, type) {
+  switch(type, 
+         line = NULL, 
+         poly = x@polygons[[i]]@Polygons[[j]]@hole
+         )
+}
 ## adapted from raster package R/geom.R
 .polysGeom <-   function(x,  ...) {
   gx <- geometry(x)
@@ -161,17 +167,18 @@ geomnames <- function() {
   objlist <- vector("list", nobs)
   cnt <- 0L
   for (i in seq(nobs)) {
-      nsubobs <- .nsubobs(x, i, typ) ## length(x@polygons[[i]]@Polygons)
+      nsubobs <- .nsubobs(x, i, typ) 
       ps <- lapply(1:nsubobs,
                    function(j) {
                      coords <- .coordsIJ(x, i, j, typ)
                      nr <- nrow(coords)
-                     data_frame(part = rep(j, nr), 
-                                branch = rep(j+cnt, nr), 
-                                hole = rep(x@polygons[[i]]@Polygons[[j]]@hole, nr), 
-                                order = seq(nr),
-                                x = coords[,1], 
-                                y = coords[,2])
+                     lst <- list(part = rep(j, nr), 
+                                 branch = rep(j + cnt, nr), 
+                                 hole = rep(.holes(x, i, j, typ), nr), 
+                                 order = seq(nr),
+                                 x = coords[,1], 
+                                 y = coords[,2])
+                     as_data_frame(lst[!sapply(lst, is.null)])
                    }
       )
       psd <- do.call(bind_rows, ps)
@@ -179,7 +186,7 @@ geomnames <- function() {
       cnt <- cnt + nsubobs
     }
   obs <- do.call(bind_rows, objlist)
-  ##colnames(obs) <- c('object', 'branch', 'hole', 'part', 'x', 'y')
+  
   rownames(obs) <- NULL
 
  
@@ -196,19 +203,17 @@ geomnames <- function() {
   objlist <- vector("list", nobs)
   cnt <- 0L
 for (i in seq(nobs)) {
-      #nsubobs <- length(x@lines[[i]]@Lines)
       nsubobs <- .nsubobs(x, i, typ) ## 
       ps <- lapply(1:nsubobs, function(j) {
-        #cbind(j, j+cnt, x@lines[[i]]@Lines[[j]]@coords))
-        #coords <- x@lines[[i]]@Lines[[j]]@coords
         coords <- .coordsIJ(x, i, j, typ)
         nr <- nrow(coords)
-        data_frame(part = rep(j, nr), 
-                   branch = rep(j+cnt, nr), 
-                   #hole = rep(x@polygons[[i]]@Polygons[[j]]@hole, nr), 
+        lst <- list(part = rep(j, nr), 
+                   branch = rep(j + cnt, nr), 
+                   hole = rep(.holes(x, i, j, typ), nr), 
                    order = seq(nr),
                    x = coords[,1], 
-                   y = coords[,2]) 
+                   y = coords[,2])
+        as_data_frame(lst[!sapply(lst, is.null)])
       
       }
       )
