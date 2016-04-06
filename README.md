@@ -1,8 +1,10 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-spbabel
--------
+    ## Warning: package 'dplyr' was built under R version 3.2.4
 
-Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and spurned on by helpful ropensci discussions.
+spbabel: bisque or bouillon?
+============================
+
+Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions.
 
 Installation
 ------------
@@ -119,6 +121,15 @@ spFromTable(countries, attr = countryObjects, quiet = TRUE)
 #> 2 New Zealand     2
 ```
 
+Why do this?
+------------
+
+I want these things:
+
+-   flexibility in the number and type/s of attribute stored as "coordinates", x, y, lon, lat, z, time, temperature, etc.
+-   shared vertices
+-   ability to store points, lines and areas together, sharing topology where appropriate
+
 Recursive nesting
 -----------------
 
@@ -130,6 +141,7 @@ This example shows raw round-tripping, just to prove it mostly works.
 
 ``` r
 library(tidyr)
+#> Warning: package 'tidyr' was built under R version 3.2.4
 library(spbabel)
 library(maptools)
 data(wrld_simpl)
