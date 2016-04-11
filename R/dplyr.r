@@ -61,6 +61,7 @@ filter_.Spatial <- function(.data, ...) {
 
 
 #' @rdname spdplyr
+#' @importFrom dplyr arrange_ distinct_ rename_ select_ slice_ filter_ transmute_ mutate_ 
 #' @export
 arrange_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
