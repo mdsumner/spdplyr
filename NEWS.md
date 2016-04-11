@@ -1,5 +1,7 @@
 # spbabel dev
 
+* added methods for ptransform, needs tests
+
 * working on embedded tables, with disparate tables per row rather than hierarchical
 
 * added nesting for Spatial 
