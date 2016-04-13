@@ -9,7 +9,7 @@ LazyData: TRUE
 Depends:
     dplyr,
     sp
-Imports: tidyr
+Imports: ggplot2, scales, tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,

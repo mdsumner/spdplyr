@@ -1,5 +1,6 @@
 # spbabel dev
 
+* remove ptransform - maybe use reproj instead, wip
 * added methods for ptransform, needs tests
 
 * working on embedded tables, with disparate tables per row rather than hierarchical
