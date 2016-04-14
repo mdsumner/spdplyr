@@ -17,11 +17,10 @@ knitr::opts_chunk$set(
 library(dplyr)
 ```
 
-
-
 # spbabel: bisque or bouillon?
 
 Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
+
 
 ## Installation
 
@@ -30,6 +29,14 @@ Spbabel can be installed directly from github:
 ```{r,eval=FALSE}
 devtools::install_github("mdsumner/spbabel")
 ```
+
+# What is the spatial babel for? 
+
+Spatial data in the `sp` package have a formal definition  that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. https://github.com/edzer/sfr
+
+
+
+
 
 ## Embedded nesting
 

@@ -1,39 +1,37 @@
----
-output:
-  md_document:
-    variant: markdown_github
----
-
 [![Travis-CI Build Status](https://travis-ci.org/mdsumner/spbabel.svg?branch=master)](https://travis-ci.org/mdsumner/spbabel)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+spbabel: bisque or bouillon?
+============================
 
+Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions.
 
+Installation
+------------
 
-# spbabel: bisque or bouillon?
+Spbabel can be installed directly from github:
 
-Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
-
-## Installation
-
-Spbabel can be installed directly from github: 
-
-
-```r
+``` r
 devtools::install_github("mdsumner/spbabel")
 ```
 
-## Embedded nesting
+What is the spatial babel for?
+==============================
 
-Still working on the terminology here, does "embedding" make sense? 
+Spatial data in the `sp` package have a formal definition that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. <https://github.com/edzer/sfr>
 
-This approach stores a single table at the top level, but it only stores the tables that we need - it's not a recursive object with a table split across rows. This means we can still normalize across objects (unique vertices), and apply operations on the entire set of rows (e.g. all vertices) without unnesting or recursing.  Yes this also means shared topology. 
+Embedded nesting
+----------------
 
-Here is an example of "embedding". 
+Still working on the terminology here, does "embedding" make sense?
 
+This approach stores a single table at the top level, but it only stores the tables that we need - it's not a recursive object with a table split across rows. This means we can still normalize across objects (unique vertices), and apply operations on the entire set of rows (e.g. all vertices) without unnesting or recursing. Yes this also means shared topology.
 
-```r
+Here is an example of "embedding".
+
+``` r
 library(spbabel)
+#> Loading required package: sp
 library(maptools)
 #> Checking rgeos availability: TRUE
 data(wrld_simpl)
@@ -93,10 +91,9 @@ world$Table
 #> Variables not shown: SUBREGION (int), LON (dbl), LAT (dbl), object (int)
 ```
 
-How to reconstitute these objects? 
+How to reconstitute these objects?
 
-
-```r
+``` r
 nam <- c("Australia", "New Zealand")
 library(dplyr)
 Objects <- function(x) x$Table$Object
@@ -129,26 +126,25 @@ spFromTable(countries, attr = countryObjects, quiet = TRUE)
 #> 2 New Zealand     2
 ```
 
-## Why do this? 
+Why do this?
+------------
 
-I want these things: 
+I want these things:
 
-* flexibility in the number and type/s of attribute stored as "coordinates", x, y, lon, lat, z, time, temperature, etc.
-* shared vertices
-* ability to store points, lines and areas together, sharing topology where appropriate
+-   flexibility in the number and type/s of attribute stored as "coordinates", x, y, lon, lat, z, time, temperature, etc.
+-   shared vertices
+-   ability to store points, lines and areas together, sharing topology where appropriate
 
-
-## Recursive nesting
-
+Recursive nesting
+-----------------
 
 I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for parts, and tables of parts for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
 
-Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y). 
+Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y).
 
-This example shows raw round-tripping, just to prove it mostly works. 
+This example shows raw round-tripping, just to prove it mostly works.
 
-
-```r
+``` r
 library(tidyr)
 library(spbabel)
 library(maptools)
@@ -158,9 +154,9 @@ xa <- nest(wrld_simpl)
 plot(xa, col = grey(seq(0, 1, length = nrow(xa))))
 ```
 
-![plot of chunk unnamed-chunk-5](figure/README-unnamed-chunk-5-1.png)
+![](figure/README-unnamed-chunk-5-1.png)<!-- -->
 
-```r
+``` r
 
 ## ggplot2
 library(ggplot2)
@@ -170,38 +166,36 @@ library(tidyr)
 ggplot(xa) + stat_nested()
 ```
 
-![plot of chunk unnamed-chunk-5](figure/README-unnamed-chunk-5-2.png)
+![](figure/README-unnamed-chunk-5-2.png)<!-- -->
 
-This example shows we can pipeline in simple ways. 
+This example shows we can pipeline in simple ways.
 
-Filter out by country NAME. 
+Filter out by country NAME.
 
-
-```r
+``` r
 library(dplyr)
 
 xa %>% filter(NAME %in% c("Australia", "New Zealand")) %>% 
  ggplot() + stat_nested()
 ```
 
-![plot of chunk unnamed-chunk-6](figure/README-unnamed-chunk-6-1.png)
+![](figure/README-unnamed-chunk-6-1.png)<!-- -->
 
-Extract the full vertices table (with all object attributes dropped), filter-join on any objects that have holes and pick one to plot. 
+Extract the full vertices table (with all object attributes dropped), filter-join on any objects that have holes and pick one to plot.
 
 (Here the cascade of un-nesting should extract the branch-level metadata, i.e. winding order, hole-status, area, etc.)
 
-Using `geom_holygon` we can get true polypaths. 
+Using `geom_holygon` we can get true polypaths.
 
-
-```r
+``` r
 xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
   filter(row_number() == 17) %>% ggplot() + geom_holygon() 
 #> Joining by: "object"
 ```
 
-![plot of chunk unnamed-chunk-7](figure/README-unnamed-chunk-7-1.png)
+![](figure/README-unnamed-chunk-7-1.png)<!-- -->
 
-```r
+``` r
 
 
 sptable(subset(wrld_simpl, NAME == "Armenia"))
@@ -225,26 +219,19 @@ armenia <- xa %>% filter(NAME == "Armenia")
 ggplot(armenia, aes(x, y, group = branch, fill = factor(hole))) + stat_nested()
 ```
 
-![plot of chunk unnamed-chunk-7](figure/README-unnamed-chunk-7-2.png)
+![](figure/README-unnamed-chunk-7-2.png)<!-- -->
 
+Much more to do . . .
 
-Much more to do . . . 
-
-
-
-```r
+``` r
 ## how to pass down object for faceting . . .
 #xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
 #   ggplot() + stat_nested() + facet_grid(branch)
-
 ```
 
+Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'.
 
-
-Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'. 
-
-
-```r
+``` r
 library(dplyr)
 library(tidyr)
 
@@ -267,21 +254,20 @@ xa %>% select(Object, ISO3) %>% unnest() %>% unnest()
 #> ..    ...    ...   ...   ...   ...        ...      ...
 ```
 
-Questions: how do we protect special columns, like "Object" - and how do we ensure they are recorded when unnested? Same goes for PROJ.4 string, here I use an attribute. 
+Questions: how do we protect special columns, like "Object" - and how do we ensure they are recorded when unnested? Same goes for PROJ.4 string, here I use an attribute.
 
-I also tried store list of Polygons() in the column, that's kind of simple but you need S3 methods for everything - this is is `sp-df.r`. 
+I also tried store list of Polygons() in the column, that's kind of simple but you need S3 methods for everything - this is is `sp-df.r`.
 
-Nested data frames are much easier, I find it more natural to use two-level nesting, but you could go further to store more information on individual pieces, their area, winding, etc. You could also just store the fortify-table at one level nesting, more to experiment with. 
+Nested data frames are much easier, I find it more natural to use two-level nesting, but you could go further to store more information on individual pieces, their area, winding, etc. You could also just store the fortify-table at one level nesting, more to experiment with.
 
 *See gris for deduplication of vertices - we cannot do that with nesting afaics.*
 
+Usage
+-----
 
-## Usage
+Apply pipeline modifications to the attribute data of `sp` objects with dplyr verbs.
 
-Apply pipeline modifications to the attribute data of `sp` objects with dplyr verbs. 
-
-
-```r
+``` r
 data(quakes)
 library(sp)
 coordinates(quakes) <- ~long+lat
@@ -290,12 +276,11 @@ library(spbabel)
 quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
 ```
 
-![plot of chunk unnamed-chunk-10](figure/README-unnamed-chunk-10-1.png)
+![](figure/README-unnamed-chunk-10-1.png)<!-- -->
 
-We can use polygons and lines objects as well. 
+We can use polygons and lines objects as well.
 
-
-```r
+``` r
 library(maptools)
 data(wrld_simpl)
 
@@ -303,12 +288,11 @@ x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(
 plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/README-unnamed-chunk-11-1.png)
+![](figure/README-unnamed-chunk-11-1.png)<!-- -->
 
-use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
+use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system).
 
-
-```r
+``` r
 ## standard dplyr on this S4 class
 w2 <- filter(wrld_simpl, NAME == "Australia")
 plot(w2, col = "grey")
@@ -322,12 +306,11 @@ sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
 plot(w2, add = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-12](figure/README-unnamed-chunk-12-1.png)
+![](figure/README-unnamed-chunk-12-1.png)<!-- -->
 
-We can also restructure objects. 
+We can also restructure objects.
 
-
-```r
+``` r
 ## explode (disaggregate) objects to individual polygons
 ## here each part becomes and object, and each object only has one part
 w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
@@ -336,39 +319,34 @@ w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4s
 #> data frame of attributes
 ```
 
+TODO
+----
 
+Create idioms for modifying the geometry with dplyr verbs and/or piping.
 
-## TODO
-
-Create idioms for modifying the geometry with dplyr verbs and/or piping. 
-
-Consider whether `summarise` is a sensible for Spatial. 
+Consider whether `summarise` is a sensible for Spatial.
 
 Can we do geometry manipulations like `sptable(w2) <- sptable(w2) %>% mutate(object = part, part = 1)` and sensibly restore the attributes on the way? Just copy the value outs?
 
+Implement `sample_n` and `sample_frac`.
 
-Implement `sample_n` and `sample_frac`. 
+Implement the joins.
 
-Implement the joins. 
+Approach
+--------
 
+Create methods for the dplyr verbs: filter, mutate, arrange, select etc.
 
-## Approach
+This is part of an overall effort to normalize Spatial data in R, to create a system that can be stored in a database.
 
-Create methods for the dplyr verbs: filter, mutate, arrange, select etc. 
+Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and round trip them. This is modelled on `raster::geom rather` than `ggplot2::fortify`, but perhaps only since I use raster constantly and ggplot2 barely ever.
 
-This is part of an overall effort to normalize Spatial data in R, to create a system that can be stored in a database. 
-
-Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and round trip them. This is modelled on `raster::geom rather` than `ggplot2::fortify`, but perhaps only since I use raster constantly and ggplot2 barely ever. 
-
-Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes. 
+Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes.
 
 (See `mdsumner/gris` for normalizing further to unique vertices and storing parts and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
 
+Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: <https://gist.github.com/holstius/58818dc9bbb88968ec0b>
 
+This package `spbabel` and these packages should be subsumed partly in the overall scheme:
 
-Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: https://gist.github.com/holstius/58818dc9bbb88968ec0b
-
-This package `spbabel` and these packages should be subsumed partly in the overall scheme: 
-
-https://github.com/mdsumner/dplyrodbc
-https://github.com/mdsumner/manifoldr
+<https://github.com/mdsumner/dplyrodbc> <https://github.com/mdsumner/manifoldr>
