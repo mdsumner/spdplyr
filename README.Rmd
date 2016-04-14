@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 library(dplyr)
 ```
 
+
+
 # spbabel: bisque or bouillon?
 
 Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
