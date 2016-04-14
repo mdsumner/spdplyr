@@ -13,5 +13,6 @@ Imports: ggplot2, scales, tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
+    maptools,
     rmarkdown
 VignetteBuilder: knitr
