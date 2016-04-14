@@ -32,8 +32,10 @@ devtools::install_github("mdsumner/spbabel")
 
 # What is the spatial babel for? 
 
-Spatial data in the `sp` package have a formal definition  that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. https://github.com/edzer/sfr
+Spatial data in the `sp` package have a formal definition  (extending class `Spatial`) that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. https://github.com/edzer/sfr
 
+In GIS we have Objects linked to a table of attributes, one row of a table for each Object. An Object is a shape defined by potentially complex *geometry*, and importantly the geometry is an *inherent* property of the shape while the attribute data is simply 
+Internally Spatial objects are composed of lists of lists of matrices, with two levels of structure for the geometry for each each line or polygon object. An individual matrix is an ordered set of connected vertices defining a single linear path. If the path is closed it is a polygon "ring", and the order of the coordinates (clockwise or anti-clockwise reflects its status as an "island" or a "hole"). The formal base-level classes `Line` and `Polygon` store this path for the corresponding type, (these types cannot be mixed in a composite object).  An object may be composed of one or more linear paths of either type, and these are collected together as `Lines` and `Polygons`. So, a single `Line` or `Polygon` corresponds to a piece (connected line, island or hole), and a single `Lines` or `Polygons` object corresponds to  The formal definition of 
 
 
 
