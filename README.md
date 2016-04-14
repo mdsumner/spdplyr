@@ -1,6 +1,6 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-    ## Warning: package 'dplyr' was built under R version 3.2.4
+[![Travis-CI Build Status](https://travis-ci.org/mdsumner/spbabel.svg?branch=master)](https://travis-ci.org/mdsumner/spbabel)
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 spbabel: bisque or bouillon?
 ============================
 
@@ -141,7 +141,6 @@ This example shows raw round-tripping, just to prove it mostly works.
 
 ``` r
 library(tidyr)
-#> Warning: package 'tidyr' was built under R version 3.2.4
 library(spbabel)
 library(maptools)
 data(wrld_simpl)
