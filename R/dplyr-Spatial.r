@@ -122,3 +122,36 @@ distinct_.Spatial <- function(.data, ...) {
   .data[dat$order, ]
 }
 
+
+# decided this is a non-starter
+#  - a good reason to stop and do this with another scheme
+# #' @rdname spdplyr
+# #' @export
+# group_by_.Spatial <- function(.data, ...) {
+#   if (!.hasSlot(.data, "data")) {
+#     stop("no data for distinct for a %s", class(.data))
+#   }
+#   orownames <- row.names(.data)
+#   dat <- group_by_(as_data_frame(as.data.frame(.data)), ...)
+#   groupatts <- attributes(dat)
+#   groupatts$class <- "data.frame"
+#   groupatts$row.names <- orownames
+#   dat <- as.data.frame(dat)
+#  
+#   attributes(dat) <- groupatts
+#   .data@data <- dat
+#   .data
+# }
+# 
+# 
+# #' @rdname spdplyr
+# #' @export
+# summarise_.Spatial <- function(.data, ...) {
+#   if (!.hasSlot(.data, "data")) {
+#     stop("no data for distinct for a %s", class(.data))
+#   }
+#   
+#   dat <- .data@data
+#   class(dat) <- 
+#   
+# }
