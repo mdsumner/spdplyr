@@ -2,7 +2,8 @@
 #' Two level nesting, branches and objects
 #'
 #' @param data Spatial*DataFrame
-#'
+#' @param ... unused
+#' @name nsp_df
 #' @return nested data frame
 #' @export
 #' @importFrom tidyr nest unnest
@@ -36,17 +37,8 @@ vertices <- function(x) {
 }
 
 
-#' Title
-#'
-#' @param x 
-#' @param i 
-#' @param j 
-#' @param ... 
-#'
-#' @return
 #' @export
-#'
-#' @examples
+#' @rdname nsp_df
 `[.nsp_df` <- function(x, i, j, ...) {
   d <- NextMethod("[", x)
   if (!is.null(d[["Object"]]) & is.list(d[["Object"]])) {
@@ -56,20 +48,16 @@ vertices <- function(x) {
   d
 }
 
+#' @importFrom dplyr as.tbl
+#' @export
+#' @rdname nsp_df
 as.tbl.nsp <- function(x, ...) {
   class(x) <- setdiff("nsp_df", class(x))
   x
 }
 
-#' Title
-#'
-#' @param .data 
-#' @param ... 
-#' @param .dots 
-#'
-#' @return
 #' @export
-#'
+#' @rdname nsp_df
 #' @examples
 #' \dontrun{
 #' xa <- nestify(wrld_simpl)
@@ -84,14 +72,9 @@ filter_.nsp_df <- function (.data, ..., .dots) {
 }
 
 
-#' Plot nested Spatial
-#'
-#' @param x 
-#' @param ... 
-#'
-#' @return \code{NULL}
 #' @export
-#'
+#' @method 
+#' @rdname nsp_df
 plot.nsp_df <- function(x, ...) {
   x <- from_nested_df(x)
   plot(x, ...)

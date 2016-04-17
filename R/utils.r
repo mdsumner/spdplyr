@@ -9,7 +9,9 @@ has_names <- function(x) {
 
 
 
-
+#' @importFrom sp bbox proj4string 
+#' @importFrom dplyr tbl_df group_by
+#' @importFrom ggplot2 aes ggplot 
 .print_Spatial <- 
 function (x, ...) 
 {
@@ -90,7 +92,8 @@ function (x, ...)
   }
 }
 
-## from raster
+#' @title sp methods
+#' @name sp-methods
 #' @export
 setMethod("show", "SpatialPolygonsDataFrame", 
           function(object) {
@@ -99,6 +102,7 @@ setMethod("show", "SpatialPolygonsDataFrame",
           
           )
 
+#' @rdname sp-methods
 #' @export
 setMethod("show", "SpatialLinesDataFrame", 
           function(object) {
@@ -106,12 +110,15 @@ setMethod("show", "SpatialLinesDataFrame",
           }
 )
 
+#' @rdname sp-methods
 #' @export
 setMethod("show", "SpatialPointsDataFrame", 
           function(object) {
             .print_Spatial(object)
           }
           )
+
+#' @rdname sp-methods
 #' @export
 setMethod ('print' , 'Spatial', 
            function(x, ...) {

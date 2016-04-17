@@ -10,7 +10,7 @@
 #' #as_Spatial.sp_df(d)
 sp_df <- function(x) {
   tab <- as_data_frame(as.data.frame(x))
-  tab$Spatial <- geometry(wrld_simpl)
+  tab$Spatial <- geometry(x)
   attr(tab, "crs") <- proj4string(x)
   class(tab) <- c("sp_df", class(tab))
   tab
@@ -67,6 +67,7 @@ as_Spatial.sp_df <- function(x, ...) {
    
 }
 
+#' @importFrom sp SpatialMultiPointsDataFrame
 .detectSpatial <- function(x) {
   switch(x, 
          SpatialPoints = SpatialPointsDataFrame,

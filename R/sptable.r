@@ -61,18 +61,17 @@ mat2d_f <- function(x) {
 #' @param x data_frame as created by \code{\link{sptable}}
 #' @param crs projection, defaults to \code{NA_character_}
 #' @param attr remaining data from the attributes
-#'
+#' @param ... unused
 #' @return Spatial*
 #' @export
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
-spFromTable <- function(x, crs, attr = NULL, ..., quiet = FALSE) {
+spFromTable <- function(x, crs, attr = NULL, ...) {
   if (missing(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame
   
-  dat <- dat[, setdiff(names(dat), spbabel:::geomnames()[[target]])]
   
   n_object <- length(unique(x$object))
   n_attribute <- nrow(attr)
@@ -81,7 +80,7 @@ spFromTable <- function(x, crs, attr = NULL, ..., quiet = FALSE) {
     
     spFromTable(value, proj4string(object), as.data.frame(object))
   } else {
-    if (!quiet) warning("modifications removed the relation between object and data, using a dummy data frame of attributes")
+   # if (!quiet) warning("modifications removed the relation between object and data, using a dummy data frame of attributes")
     attr <- data.frame(id = seq(n_object))
   }
   
@@ -159,6 +158,8 @@ geomnames <- function() {
 }
 ## adapted from raster package R/geom.R
 ## generalized on Polygon and Line
+#' @importFrom sp geometry
+#' @importFrom dplyr bind_rows
 .gobbleGeom <-   function(x,  ...) {
   gx <- geometry(x)
   typ <- switch(class(gx), 

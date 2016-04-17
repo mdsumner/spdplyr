@@ -2,23 +2,28 @@
 % Please edit documentation in R/embedded.r
 \name{db_df}
 \alias{db_df}
+\alias{db_df.Spatial}
+\alias{db_df.list}
 \title{Nested tables without recursion :)}
 \usage{
 db_df(x, ...)
+
+\method{db_df}{list}(x, ...)
+
+\method{db_df}{Spatial}(x, ...)
 }
 \arguments{
-\item{x}{}
+\item{x}{Spatial object}
 
-\item{...}{}
+\item{...}{ignored}
 }
 \value{
 For Spatial, a data frame with columns
 \itemize{
- \item \code{object} \tab object ID \code{integer}
- \item \code{part} \tab part counter within object \code{integer}
- \item \code{branch} \tab global part ID \code{integer}
- \item \code{hole} \tab hole status island or hole? \code{logical}
- \item \code{x} \tab 
+ \item \code{object} object ID \code{integer}
+ \item \code{part} part counter within object \code{integer}
+ \item \code{branch}  global part ID \code{integer}
+ \item \code{hole} hole status island or hole? \code{logical}
 }
 }
 \description{

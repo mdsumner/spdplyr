@@ -7,9 +7,10 @@ Description: Functions to convert from Spatial*DataFrame classes and other forms
 License: GPL-3
 LazyData: TRUE
 Depends:
+    R (>= 3.2.3),
     dplyr,
     sp
-Imports: ggplot2, scales, tidyr
+Imports: ggplot2, lazyeval, rgeos, scales, tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,

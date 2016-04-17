@@ -70,16 +70,7 @@ GeomHolygon <- ggproto(
 
 #' Title
 #'
-#' @param mapping 
-#' @param data 
-#' @param stat 
-#' @param position 
-#' @param na.rm 
-#' @param show.legend 
-#' @param inherit.aes 
-#' @param rule 
-#' @param ... 
-#'
+#' @inheritParams ggplot2::layer
 #' @return
 #' @export
 #'

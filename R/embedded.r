@@ -3,14 +3,13 @@
 #' @return 
 #' For Spatial, a data frame with columns
 #' \itemize{
-#'  \item \code{object} \tab object ID \code{integer}
-#'  \item \code{part} \tab part counter within object \code{integer}
-#'  \item \code{branch} \tab global part ID \code{integer}
-#'  \item \code{hole} \tab hole status island or hole? \code{logical}
-#'  \item \code{x} \tab 
+#'  \item \code{object} object ID \code{integer}
+#'  \item \code{part} part counter within object \code{integer}
+#'  \item \code{branch}  global part ID \code{integer}
+#'  \item \code{hole} hole status island or hole? \code{logical}
 #' }
-#' @param x 
-#' @param ... 
+#' @param x Spatial object
+#' @param ... ignored
 #'
 #' @return
 #' @export
@@ -20,28 +19,15 @@ db_df <- function(x, ...) {
   UseMethod("db_df")
 }
 
-#' Create a data frame from a list. 
-#'
-#' @param x 
-#' @param ... 
-#'
-#' @return
+#' @rdname db_df
 #' @export
-#'
-#' @examples
 db_df.list <- function(x, ...) {
   if (is.null(names(x))) names(x) <- make.names(seq_along(x))
   data_frame(Name = names(x), Table = x)
 }
 
-#' Title
-#'
-#' @param x 
-#' @param ... 
-#'
+#' @rdname db_df
 #' @export
-#'
-#' @examples
 db_df.Spatial <- function(x, ...) {
   sptab <-  sptable(x) 
   attrd <- as_data_frame(as.data.frame(x))

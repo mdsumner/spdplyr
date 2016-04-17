@@ -1,4 +1,4 @@
-#' Mutate for Spatial
+#' Dplyr verbs for Spatial
 #' 
 #' @param .data 
 #' @param ... 
@@ -14,7 +14,8 @@
 #' library(spbabel)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
 #' library(raster)  
 #' wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number())
-#' 
+#' @importFrom dplyr mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
+#' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
 
@@ -123,6 +124,36 @@ distinct_.Spatial <- function(.data, ...) {
 }
 
 
+#' @rdname spdplyr
+#' @export
+#' @importFrom rgeos gUnaryUnion
+summarise_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data for distinct for a %s", class(.data))
+  }
+  # this should only ever return one-row objects
+  # we cannot group_by on Spatial
+  dat <- summarise_(as_data_frame(as.data.frame(.data)), ...)
+  g <- rgeos::gUnaryUnion(geometry(.data))
+  #print(class(g))
+  x <- .data[1,]
+  row.names(x) <- "1"
+  x@data <- as.data.frame(dat)
+  if (inherits(.data, "SpatialPolygonsDataFrame")) {
+    x@polygons <- g@polygons
+  }
+  if (inherits(.data, "SpatialLinesDataFrame")) {
+    x@lines <- g@lines
+  }
+  ## and so on for points and multipoints
+  
+  
+  
+ ## geometry(x) <- g
+  x
+}
+
+
 # decided this is a non-starter
 #  - a good reason to stop and do this with another scheme
 # #' @rdname spdplyr
@@ -144,14 +175,5 @@ distinct_.Spatial <- function(.data, ...) {
 # }
 # 
 # 
-# #' @rdname spdplyr
-# #' @export
-# summarise_.Spatial <- function(.data, ...) {
-#   if (!.hasSlot(.data, "data")) {
-#     stop("no data for distinct for a %s", class(.data))
-#   }
-#   
-#   dat <- .data@data
-#   class(dat) <- 
-#   
-# }
+
+ 

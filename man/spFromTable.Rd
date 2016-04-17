@@ -4,7 +4,7 @@
 \alias{spFromTable}
 \title{Convert from dplyr tbl form to Spatial*DataFrame.}
 \usage{
-spFromTable(x, crs, attr = NULL, ..., quiet = FALSE)
+spFromTable(x, crs, attr = NULL, ...)
 }
 \arguments{
 \item{x}{data_frame as created by \code{\link{sptable}}}
@@ -12,6 +12,8 @@ spFromTable(x, crs, attr = NULL, ..., quiet = FALSE)
 \item{crs}{projection, defaults to \code{NA_character_}}
 
 \item{attr}{remaining data from the attributes}
+
+\item{...}{unused}
 }
 \value{
 Spatial*
