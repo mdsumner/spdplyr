@@ -2,16 +2,19 @@
 % Please edit documentation in R/as_gggeom.r
 \name{as_gggeom}
 \alias{as_gggeom}
-\title{Title}
+\title{Convert Spatial Polygons data frame to gggeom format.}
 \usage{
 as_gggeom(x, ...)
 }
 \arguments{
-\item{x}{}
+\item{x}{\code{\link[sp]{SpatialPolygonsDataFrame}}}
 
-\item{...}{}
+\item{...}{ignored}
+}
+\value{
+data frame with recursive x_ and y_ ggeom::coords.
 }
 \description{
-Title
+This can work, but it does not fit the one-branch-per-object assumtion in gggeom:::plot.geom_polygon.
 }
 

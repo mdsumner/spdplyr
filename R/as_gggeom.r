@@ -2,12 +2,14 @@ cna <- function(x, na = NA_real_) {
   c(x, na)
 }
 
-#' Title
+#' Convert Spatial Polygons data frame to gggeom format. 
+#' 
+#' This can work, but it does not fit the one-branch-per-object assumtion in gggeom:::plot.geom_polygon. 
 #'
-#' @param x 
-#' @param ... 
+#' @param x \code{\link[sp]{SpatialPolygonsDataFrame}}
+#' @param ... ignored
 #'
-#' @return
+#' @return data frame with recursive x_ and y_ ggeom::coords. 
 #' @export
 #'
 #' @examples
