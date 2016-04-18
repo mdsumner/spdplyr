@@ -4,8 +4,8 @@
 \alias{ggplot.nsp_df}
 \title{Title}
 \usage{
-ggplot.nsp_df(data, mapping = aes(x = x, y = y, group = branch, fill =
-  branch), ..., environment = parent.frame())
+\method{ggplot}{nsp_df}(data, mapping = aes(x = x, y = y, group = branch, fill
+  = branch), ..., environment = parent.frame())
 }
 \arguments{
 \item{data}{}
