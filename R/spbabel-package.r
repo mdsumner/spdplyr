@@ -45,5 +45,19 @@ NULL
 #' @rdname mpoint1
 NULL
 
+#' "South-east" map data. 
+#' 
+#' Created in /data-raw/ \code{semap} is the setable() version of some of maptools wrld_simpl, and \code{seatt} is the matching attribute data, linked by `object`. 
+#' @name semap
+#' @docType data
+NULL
 
+
+#' "South-east" map attribute data. 
+#' 
+#' Created in /data-raw/
+#' @name seatt
+#' @docType data
+#' @rdname semap
+NULL
 

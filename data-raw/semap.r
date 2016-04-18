@@ -1,0 +1,11 @@
+library(maptools)
+data(wrld_simpl)
+library(spbabel)
+library(dplyr)
+xtab <- sptable(wrld_simpl)
+abline(v = 90, h = 0)
+semap <- dplyr::filter(xtab, x > 100 & y < 0) 
+seatt <- seworld %>% distinct(object) %>% inner_join(as.data.frame(wrld_simpl) %>% mutate(object = row_number()))
+
+devtools::use_data(semap, overwrite = TRUE)
+devtools::use_data(seatt, overwrite = TRUE)
