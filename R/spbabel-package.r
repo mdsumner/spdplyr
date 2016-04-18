@@ -54,7 +54,7 @@ NULL
 #' # recreate as sp object
 #' mp <- spFromTable(semap, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
 #' # can also reproject first and use these instead
-#' reproj
+#' reproj::reproj( semap[, c("x", "y")], "+proj=longlat +ellps=WGS84", "+proj=laea +lon_0=108 +ellps=WGS84")
 NULL
 
 
