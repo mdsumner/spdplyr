@@ -11,10 +11,8 @@
 #' @param x Spatial object
 #' @param ... ignored
 #'
-#' @return
+#' @return nested tables
 #' @export
-#'
-#' @examples
 db_df <- function(x, ...) {
   UseMethod("db_df")
 }

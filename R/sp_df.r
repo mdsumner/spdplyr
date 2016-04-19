@@ -1,29 +1,76 @@
-#' sp_df to store the list of Polygons in a column
-#'
+#' Store Spatial* objects in a data frame
+#' 
 #' @param x Spatial object
 #'
-#' @return
+#' @return nested table with Geometry column
 #' @export
 #'
 #' @examples
-#' #x <- sp_df(wrld_simpl)
-#' #as_Spatial.sp_df(d)
-sp_df <- function(x) {
-  tab <- as_data_frame(as.data.frame(x))
-  tab$Spatial <- geometry(x)
-  attr(tab, "crs") <- proj4string(x)
+#' spdf <- sp_df(wrld_simpl)
+#' #as_Spatial.sp_df(spdf)
+#' 
+#' sdf <- sp_df(geometry(wrld_simpl))
+sp_df <- function(x, ...) {
+ UseMethod("sp_df") 
+}
+
+has_data_frame <- function(x) {
+  if (has_data(x)) {
+    as_data_frame(as.data.frame(x))
+  } else {
+    data_frame(x = seq(length(x)))[, -1L]
+  }
+}
+
+# explode_ <- function(x) {
+#   l <- vector('list', length(x))
+#   for (i in seq_along(l)) l[[i]] <- x[i]
+#   l
+# }
+#' @export
+sp_df.Spatial <- function(x, ...) {
+  tab <- has_data_frame(x)
+  tab$Spatial_ <- geometry(x)
   class(tab) <- c("sp_df", class(tab))
   tab
 }
 
-names.sp_df <- function(x, ...) {
-  x$Spatial <- NULL
-  names(x)
+#' @export
+`[.sp_df` <- function(x, i, j, ...) {
+  ## this cannot work if i has duplicates (can't find plot order if polygons are replicated)
+  ## though it does work for Spatial*DataFrame
+  d <- NextMethod(x)
+  class(d) <- c("sp_df", class(d))
+  d
 }
+
+
+# #' Retrieve geometry from sp_df
+# #' @name geometry-methods
+# #' @param x sp_df object
+# #' @param ... ignored
+# #' @seealso \code{\link[sp]{geometry-methods}}
+# #' @export
+# geometry <- function(x, ...) {
+#   UseMethod("geometry")
+# }
+# @export
+ .geometry.sp_df <- function(obj) obj[["Spatial_"]]
+# 
+ setOldClass("sp_df")
+#' @export
+ setMethod("geometry", "sp_df", .geometry.sp_df)
+# #' @export
+# sp_df.list <- function(x, ...) {
+#   ## detect class and upgrade to Spatial?
+#   ## ultimately I want these to have autononomy, geoms with crs and mixable with other topology so keep as a list
+#   sp_df(SpatialPolygons(x))  ## need to detect class for this to work
+# }
+
+#' @export
 print.sp_df <- function(x, ...) {
-  catclass <- class(x$Spatial)
-  x$Spatial <- NULL
-  
+  catclass <- class(x$Spatial_)
+  x$Spatial_ <- sprintf("<%s>", catclass)
   cat(catclass, "\n")
   NextMethod("print", x)
 }
@@ -33,20 +80,12 @@ as.data.frame.sp_df <- function(x, ...) {
   NextMethod("as.data.frame", x)
 }
 
+#' @export
 plot.sp_df <- function(x, ...) {
   px <- as.data.frame(x)
   plot(SpatialPolygonsDataFrame(x$Spatial, px, match.ID = FALSE), ...)
 }
 
-`[.sp_df` <- function(x, i, j, ...) {
-  id <- setNames(seq(nrow(x)), rownames(x))[i]
-  sp <- x[["Spatial"]]
-  #class(x) <- setdiff(class(x), "sp_df")
-  d <- NextMethod("[", x)
-  d$Spatial <- sp[id]
-  class(d) <- c("sp_df", class(d))
-  d
-}
 
 names.sp_df <- function(x) {
   x$Spatial <- NULL

@@ -13,7 +13,7 @@
 #' library(tidyr)
 #' x <- nest(wrld_simpl)
 #' x %>% select(Object, ISO3) %>% unnest %>% unnest
-#' plot(x, grey(seq(0, 1, length = nrow(x))))
+#' plot_nsp_df(x, grey(seq(0, 1, length = nrow(x))))
 nest_.Spatial <- function(data, ...) {
   sptab <-  sptable(data) %>% 
     group_by_("branch", "object") %>% 
@@ -27,6 +27,7 @@ nest_.Spatial <- function(data, ...) {
   y
 }
 
+nsp_df <- function(x, ...) UseMethod(x)
 
 from_nested_df <- function(x) {
   spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)], quiet = TRUE)
@@ -85,14 +86,11 @@ filter_.nsp_df <- function (.data, ..., .dots) {
 }
 
 
-#' methods for nsp_df
-#' @inheritParams base::plot
 #' @export
-#' @method 
-#' @rdname plot
-#' plot.nsp_df <- function(x, ...) {
-#'   x <- from_nested_df(x)
-#'   plot(x, ...)
-#'   invisible(NULL)
-#' }
+#' @importFrom sp plot
+plot_nsp_df <- function(x, ...) {
+   x <- from_nested_df(x)
+   plot(x, ...)
+   invisible(NULL)
+ }
 

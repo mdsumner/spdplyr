@@ -11,8 +11,6 @@ cna <- function(x, na = NA_real_) {
 #'
 #' @return data frame with recursive x_ and y_ ggeom::coords. 
 #' @export
-#'
-#' @examples
 as_gggeom <- function(x,  ...) {
   data <- as.data.frame(x)
   x <- sptable(x)

@@ -32,10 +32,163 @@ devtools::install_github("mdsumner/spbabel")
 
 # What is the spatial babel for? 
 
+
+# What is Spatial in R?
+
 Spatial data in the `sp` package have a formal definition  (extending class `Spatial`) that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. https://github.com/edzer/sfr
 
 In GIS we have Objects linked to a table of attributes, one row of a table for each Object. An Object is a shape defined by potentially complex *geometry*, and importantly the geometry is an *inherent* property of the shape while the attribute data is simply 
 Internally Spatial objects are composed of lists of lists of matrices, with two levels of structure for the geometry for each each line or polygon object. An individual matrix is an ordered set of connected vertices defining a single linear path. If the path is closed it is a polygon "ring", and the order of the coordinates (clockwise or anti-clockwise reflects its status as an "island" or a "hole"). The formal base-level classes `Line` and `Polygon` store this path for the corresponding type, (these types cannot be mixed in a composite object).  An object may be composed of one or more linear paths of either type, and these are collected together as `Lines` and `Polygons`. So, a single `Line` or `Polygon` corresponds to a piece (connected line, island or hole), and a single `Lines` or `Polygons` object corresponds to  The formal definition of 
+
+# How does spbabel allow sp to work with dplyr? 
+
+There are several ways to do this. 
+
+
+* Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
+* Use the table of coordinates with identifiers for object and part, like fortify. For this we need at least two tables. 
+* Use the sptable() and sptable()<- workflow to fortify and modify in a more flexible ways. 
+* Use a real data.frame but include the Spatial* objects as a list column. This runs into issues with the meaning of repeated elements. 
+* Nest (with tidyr) the fortify table for each object in a single column. 
+* Nest (with tidyr) the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization. 
+* Nest (with tidyr) the normalized tables Vertices, Objects and the topological links between them. 
+
+This document illustrates each of these approaches, work in progress. 
+
+
+
+## Usage
+
+Apply pipeline modifications to the attribute data of `sp` objects with dplyr verbs. 
+
+```{r}
+data(quakes)
+library(sp)
+coordinates(quakes) <- ~long+lat
+library(spbabel)
+## plot a subset of locations by number of stations
+quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
+
+```
+
+We can use polygons and lines objects as well. 
+
+```{r}
+library(maptools)
+data(wrld_simpl)
+
+x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -20, lon > 60) %>% select(NAME)
+plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
+```
+
+use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
+
+```{r}
+## standard dplyr on this S4 class
+w2 <- filter(wrld_simpl, NAME == "Australia")
+plot(w2, col = "grey")
+
+## modify the geometry on this object
+sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
+
+plot(w2, add = TRUE)
+```
+
+We can also restructure objects. 
+
+```{r}
+## explode (disaggregate) objects to individual polygons
+## here each part becomes and object, and each object only has one part
+w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
+```
+
+
+
+
+
+## How to dplyr with Spatial? 
+
+This has been discussed here: 
+
+https://github.com/ropensci/unconf16/issues/22
+
+I'm also working on a completely database-ready form of spatial objects here: 
+
+https://github.com/mdsumner/gris
+
+It's not clear to me yet whether we should have just one, or all, or many of these approaches . . .  I was not aware of nested data frames though, so exploring that as well. 
+
+Here I refer to the *Spatial Family* as the packages sp, raster, rgdal and rgeos. Together these provide very comprehensive support for read and write, coordinate system transformation, extraction and analysis with spatial data, and topological and geometric operations. 
+
+## What options are there? 
+
+We could serialize to WKT and store this in a column, but that means we still need to write classes for the objects and for the column type, so we can dispatch to the already defined methods in the Spatial Family. We could serialize to WKB, but that means we are storing objects in a list in a data frame which adds another level of complexity.  This requires constantly serializing/de-serializing between WKT/WKB and Spatial form. One advantage here is that this is how a database (and GDAL) will understand the geometry, both for read and write. 
+
+To leverage the power of the Spatial Family we really need easy conversion to the exising Spatial classes. There are three main options that I can see: 
+
+1. Vertex-table-centric: Store the full vertex table with object, 'piece', hole-status, ring ordering and coordinates in one table. Use the object ID to join to other attributes. This is the `ggplot2::fortify` approach.
+2. Data-table-centric: store the object attributes with a link to the geometric information. This could be done by serializing to a column, but still we need conversions and classing to form high-level operations. 
+3. Create a new object with multiple tables, at least two for objects and vertices (ggplot2) and up to 6 for vertices, branches, objects and link-tables (gris). 
+
+
+## The problem with ggplot2
+
+The main issue with the `ggplot2::fortify model` is that it currently doesn't support multiple holes in one polygon. This is not a problem for multi-part line object or for a multi-point object, but since ggplot2 uses gridPoly rather than gridPath this means we cannot get complex holy polygons. The plotting currently fools you by not showing the border, which you would see tracing correctly around a single-hole. We get topological artefacts if this is tried with more than one hole. 
+
+This could be fixed using `geom_holygon` as here: but this is not officially supported yet. My guess is this will stay that way until ggvis takes over. Ggvis is another reason I think that 1) is not the right way forward. 
+
+The raster package also has function `geom` for the 1) case above, but this creates a matrix rather than a data frame and uses slightly different terms for the object, 'piece', hole, and coordinates. 
+
+## The problem with spbabel
+
+The spbabel package also does a similar task to fortify with the function `sptable`, with the process being reversable with `spFromTable`. The problem here is that we need to store the coordinate system and topological type with the table, and since we don't record the crs or the type per object that requires more thought. Once in a set of tables, there's no reason not to mix lines, points, and areas in one table - and the same goes for coordinate systems. The graphics device knows its coordinate system so like in a GIS we can throw any kind of object at it, and it computes the transformation on the fly and draws it the right way.  
+
+## The problem with recursive objects
+
+Sp stores all the geometry in recursive lists of matrices. This means we are stuck to the data type of all vertices (i.e. we cannot have integer, or date-time vertices) and we cannot have 3 or more coordinate attributes without writing new classes of objects.  We also have to write specific object-aware methods that recurse the objects in the right way. This problem also exists for the fortify model, we have two tables and we either summarize / work in vertex-centric mode and join back to objects, or in object-centric mode and join back to vertices. 
+
+Since we have to have multiple tables (or matrices), why not allow them all to be full data frames with any data on them. If I plot or analyse with them, I can nominate that this is "x" and "y" geometrically, or "x", "y" and "time". The geometry is  more flexible rather than be ing locked down on the object. The entities in vector Spatial data are objects, branches (or parts/pieces), and vertices. We can store attributes with the branches (am I a hole?) and we can also normalize to unique vertices if needed with a vertex-link branches table. Why? We need this for running triangulations on the vertices, or on providing shared-edit and other topologically constrained oeprations. 
+
+I think all of these options are important, and we should have easy tools for transferring between them.
+
+
+## convert Spatial to a sp_df / tbl_df with the Spatial column
+
+```{r}
+x <- sp_df(wrld_simpl)
+x %>% filter(NAME == "Australia")
+```
+
+## Work with nested data frames
+
+
+```{r}
+library(tidyr)
+library(maptools)
+library(dplyr)
+data(wrld_simpl)
+```
+
+To directly nest the geometry  from sp we can work from the top, group by object and cumulative part, then again group by object and nest again. 
+
+```{r,eval=FALSE}
+library(ggplot2)
+x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(branch, object) %>% nest %>%  group_by(object) %>% nest)
+```
+
+Unfinished. 
+```{r, eval = FALSE}
+vertices <- function(x) {
+  unnest(unnest(x))
+}
+## plot function
+plotspdf <- function(x, ...) {
+  plot(spbabel::spFromTable(vertices(x)))
+}
+
+plotspdf(x)
+
+```
 
 
 
@@ -172,52 +325,6 @@ I also tried store list of Polygons() in the column, that's kind of simple but y
 Nested data frames are much easier, I find it more natural to use two-level nesting, but you could go further to store more information on individual pieces, their area, winding, etc. You could also just store the fortify-table at one level nesting, more to experiment with. 
 
 *See gris for deduplication of vertices - we cannot do that with nesting afaics.*
-
-
-## Usage
-
-Apply pipeline modifications to the attribute data of `sp` objects with dplyr verbs. 
-
-```{r}
-data(quakes)
-library(sp)
-coordinates(quakes) <- ~long+lat
-library(spbabel)
-## plot a subset of locations by number of stations
-quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
-
-```
-
-We can use polygons and lines objects as well. 
-
-```{r}
-library(maptools)
-data(wrld_simpl)
-
-x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -20, lon > 60) %>% select(NAME)
-plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
-```
-
-use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
-
-```{r}
-## standard dplyr on this S4 class
-w2 <- filter(wrld_simpl, NAME == "Australia")
-plot(w2, col = "grey")
-
-## modify the geometry on this object
-sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
-
-plot(w2, add = TRUE)
-```
-
-We can also restructure objects. 
-
-```{r}
-## explode (disaggregate) objects to individual polygons
-## here each part becomes and object, and each object only has one part
-w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
-```
 
 
 

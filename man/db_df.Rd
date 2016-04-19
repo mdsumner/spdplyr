@@ -25,6 +25,8 @@ For Spatial, a data frame with columns
  \item \code{branch}  global part ID \code{integer}
  \item \code{hole} hole status island or hole? \code{logical}
 }
+
+nested tables
 }
 \description{
 Nested tables without recursion :)

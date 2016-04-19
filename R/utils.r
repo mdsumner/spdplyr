@@ -8,6 +8,7 @@ has_names <- function(x) {
 }
 
 
+has_data <- function(x) .hasSlot(x, "data")
 
 #' @importFrom sp bbox proj4string 
 #' @importFrom dplyr tbl_df group_by
@@ -18,7 +19,7 @@ function (x, ...)
   cat("class       :", class(x), "\n")
   isRaster <- hasData <- FALSE
   nc <- 0
-  if (.hasSlot(x, "data")) {
+  if (has_data(x)) {
     hasData <- TRUE
     nc <- ncol(x@data)
   }

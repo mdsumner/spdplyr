@@ -48,8 +48,6 @@ mat2d_f <- function(x) {
 #'
 #' @return Spatial object
 #' @export
-#'
-#' @examples
 "sptable<-" <-
   function(object, value) {
        spFromTable(value, proj4string(object), as.data.frame(object))

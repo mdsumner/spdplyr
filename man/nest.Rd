@@ -24,6 +24,6 @@ data(wrld_simpl)
 library(tidyr)
 x <- nest(wrld_simpl)
 x \%>\% select(Object, ISO3) \%>\% unnest \%>\% unnest
-plot(x, grey(seq(0, 1, length = nrow(x))))
+plot_nsp_df(x, grey(seq(0, 1, length = nrow(x))))
 }
 

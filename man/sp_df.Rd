@@ -2,18 +2,23 @@
 % Please edit documentation in R/sp_df.r
 \name{sp_df}
 \alias{sp_df}
-\title{sp_df to store the list of Polygons in a column}
+\title{Store Spatial* objects in a data frame}
 \usage{
-sp_df(x)
+sp_df(x, ...)
 }
 \arguments{
 \item{x}{Spatial object}
 }
+\value{
+nested table with Geometry column
+}
 \description{
-sp_df to store the list of Polygons in a column
+Store Spatial* objects in a data frame
 }
 \examples{
-#x <- sp_df(wrld_simpl)
-#as_Spatial.sp_df(d)
+spdf <- sp_df(wrld_simpl)
+#as_Spatial.sp_df(spdf)
+
+sdf <- sp_df(geometry(wrld_simpl))
 }
 

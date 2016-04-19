@@ -16,6 +16,7 @@ Suggests: testthat,
     knitr,
     maptools,
     methods,
+    raster,
     reproj,
     rmarkdown
 VignetteBuilder: knitr
