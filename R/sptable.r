@@ -64,6 +64,9 @@ mat2d_f <- function(x) {
 #' @export
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
+#' @examples 
+#' fort <- semap  %>% dplyr::filter(y == -90)
+#' sp <- spFromTable(fort, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
 spFromTable <- function(x, crs, attr = NULL, ...) {
   if (missing(crs)) crs <- NA_character_
   ## raster::geom form
