@@ -31,9 +31,9 @@ The \code{nsp_df} class provides a "nested spatial" way to store the parts and c
 \tabular{ll}{
  \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
  \code{\link{spFromTable}} \tab create Spatial object from table \cr
- \code{\link{sp_df}} \tab store the Spatial part on the table
- \code{\link{nest}} \tab create a nested spatial table
- \code{\link{db_df}} \tab create a table of tables
+ \code{\link{sp_df}} \tab store the Spatial part on the table \cr
+ \code{\link{nest}} \tab create a nested spatial table \cr
+ \code{\link{db_df}} \tab create a table of tables \cr
  }
 }
 

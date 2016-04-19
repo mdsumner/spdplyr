@@ -3,21 +3,22 @@
 #'
 #' @param data Spatial*DataFrame
 #' @param ... unused
-#' @name nsp_df
+#' @name nest
 #' @return nested data frame
 #' @export
-#' @importFrom tidyr nest unnest
+#' @importFrom tidyr nest_ unnest
 #' @examples
 #' library(maptools)
 #' data(wrld_simpl)
+#' library(tidyr)
 #' x <- nest(wrld_simpl)
 #' x %>% select(Object, ISO3) %>% unnest %>% unnest
 #' plot(x, grey(seq(0, 1, length = nrow(x))))
 nest_.Spatial <- function(data, ...) {
   sptab <-  sptable(data) %>% 
-    group_by(branch, object) %>% 
+    group_by_("branch", "object") %>% 
     nest_(key_col = "Branch") %>%  
-    group_by(object) %>% nest_(key_col = "Object")
+    group_by_("object") %>% nest_(key_col = "Object")
   
   attrd <- as_data_frame(as.data.frame(data))
   y <- bind_cols(attrd, sptab)
@@ -37,8 +38,14 @@ vertices <- function(x) {
 }
 
 
+#' Methods for nsp_df
+#' 
+#' @param x nsp_df object
+#' @param i see \code{\link{Extract}}
+#' @param j see \code{\link{Extract}}
+#' @param ... ignored
 #' @export
-#' @rdname nsp_df
+#' @rdname nsp_df-methods
 `[.nsp_df` <- function(x, i, j, ...) {
   d <- NextMethod("[", x)
   if (!is.null(d[["Object"]]) & is.list(d[["Object"]])) {
@@ -48,16 +55,22 @@ vertices <- function(x) {
   d
 }
 
-#' @importFrom dplyr as.tbl
+#' Methods for as.tbl
+#' @inheritParams dplyr::as.tbl
+#' @importFrom dplyr as.tbl group_by_
 #' @export
-#' @rdname nsp_df
+#' @rdname as.tbl-methods
 as.tbl.nsp <- function(x, ...) {
   class(x) <- setdiff("nsp_df", class(x))
   x
 }
 
+#' Filter
+#' 
+#' @inheritParams dplyr::filter
+#'
 #' @export
-#' @rdname nsp_df
+#' @rdname filter-nsp
 #' @examples
 #' \dontrun{
 #' xa <- nestify(wrld_simpl)
@@ -72,12 +85,14 @@ filter_.nsp_df <- function (.data, ..., .dots) {
 }
 
 
+#' methods for nsp_df
+#' @inheritParams base::plot
 #' @export
 #' @method 
-#' @rdname nsp_df
-plot.nsp_df <- function(x, ...) {
-  x <- from_nested_df(x)
-  plot(x, ...)
-  invisible(NULL)
-}
+#' @rdname plot
+#' plot.nsp_df <- function(x, ...) {
+#'   x <- from_nested_df(x)
+#'   plot(x, ...)
+#'   invisible(NULL)
+#' }
 

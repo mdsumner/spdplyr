@@ -15,5 +15,8 @@ RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
     maptools,
+    methods,
+    reproj,
     rmarkdown
 VignetteBuilder: knitr
+Remotes: mdsumner/reproj

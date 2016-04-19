@@ -21,9 +21,9 @@
 #' \tabular{ll}{
 #'  \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
 #'  \code{\link{spFromTable}} \tab create Spatial object from table \cr
-#'  \code{\link{sp_df}} \tab store the Spatial part on the table
-#'  \code{\link{nest}} \tab create a nested spatial table
-#'  \code{\link{db_df}} \tab create a table of tables
+#'  \code{\link{sp_df}} \tab store the Spatial part on the table \cr
+#'  \code{\link{nest}} \tab create a nested spatial table \cr
+#'  \code{\link{db_df}} \tab create a table of tables \cr
 #'  }
 #'
 #' @name spbabel-package
@@ -32,14 +32,7 @@ NULL
 
 #' MultiPointsDataFrame data set
 #' 
-#' Created with the following code
-#' #library(maptools)
-#' #data(wrld_simpl)
-#' #poly1 <- wrld_simpl
-#' #line1 <- as(wrld_simpl, "SpatialLinesDataFrame")
-#' #point1 <- as(line1, "SpatialPointsDataFrame")
-#' #mpoint1 <- SpatialMultiPointsDataFrame(lapply(split(line1, seq(nrow(line1))), function(y) coordinates(as(y, "SpatialPoints"))), 
-#'                              ##         as.data.frame(line1))
+
 #' @name mpoint1
 #' @docType data
 #' @rdname mpoint1
@@ -54,7 +47,8 @@ NULL
 #' # recreate as sp object
 #' mp <- spFromTable(semap, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
 #' # can also reproject first and use these instead
-#' reproj::reproj( semap[, c("x", "y")], "+proj=longlat +ellps=WGS84", "+proj=laea +lon_0=108 +ellps=WGS84")
+#' llprj <-  "+proj=longlat +ellps=WGS84"
+#' reproj::reproj( semap[, c("x", "y")], llprj, "+proj=laea +lon_0=108 +ellps=WGS84")
 NULL
 
 

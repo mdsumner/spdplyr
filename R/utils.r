@@ -92,8 +92,12 @@ function (x, ...)
   }
 }
 
+#' Sp methods
+#' @param object Spatial object
+#' @param x Spatial object
+#' @param ... ignored
 #' @title sp methods
-#' @name sp-methods
+#' @rdname sp-methods
 #' @export
 setMethod("show", "SpatialPolygonsDataFrame", 
           function(object) {

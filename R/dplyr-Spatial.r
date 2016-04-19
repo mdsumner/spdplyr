@@ -1,8 +1,6 @@
 #' Dplyr verbs for Spatial
 #' 
-#' @param .data 
-#' @param ... 
-#' @param .dots 
+#' @inheritParams dplyr::mutate
 #'
 #' @rdname spdplyr
 #' @export

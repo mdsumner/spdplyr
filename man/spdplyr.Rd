@@ -31,11 +31,14 @@
 \method{summarise_}{Spatial}(.data, ...)
 }
 \arguments{
-\item{.data}{}
+\item{.data}{A tbl. All main verbs are S3 generics and provide methods
+for \code{\link{tbl_df}}, \code{\link{tbl_dt}} and \code{\link{tbl_sql}}.}
 
-\item{...}{}
+\item{...}{Name-value pairs of expressions. Use \code{NULL} to drop
+a variable.}
 
-\item{.dots}{}
+\item{.dots}{Used to work around non-standard evaluation. See
+\code{vignette("nse")} for details.}
 }
 \description{
 Dplyr verbs for Spatial

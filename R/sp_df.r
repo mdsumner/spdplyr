@@ -1,6 +1,6 @@
 #' sp_df to store the list of Polygons in a column
 #'
-#' @param x 
+#' @param x Spatial object
 #'
 #' @return
 #' @export

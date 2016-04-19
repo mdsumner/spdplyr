@@ -13,14 +13,7 @@ StatNested <- ggplot2::ggproto("StatNested", ggplot2::Stat,
 
 #' Title
 #'
-#' @param mapping 
-#' @param data 
-#' @param geom 
-#' @param position 
-#' @param na.rm 
-#' @param show.legend 
-#' @param inherit.aes 
-#' @param ... 
+#' @inheritParams ggplot2::stat_bin
 #'
 #' @return
 #' @export
@@ -71,6 +64,9 @@ GeomHolygon <- ggproto(
 #' Title
 #'
 #' @inheritParams ggplot2::layer
+#' @param na.rm remove NA
+#' @param rule winding or evenodd as per \code{\link[graphics]{polypath}} 
+#' @param ... passed to \code{\link[ggplot2]{layer}}
 #' @return
 #' @export
 #'
@@ -87,10 +83,7 @@ geom_holygon <- function (mapping = NULL, data = NULL, stat = "identity", positi
 
 #' Title
 #'
-#' @param model 
-#' @param data 
-#' @param ... 
-#'
+#' @inheritParams ggplot2::fortify
 #' @return
 #' @export
 #'
@@ -99,20 +92,20 @@ fortify.nsp_df <- function(model, data, ...) {
   unnest(unnest(model, ...))
 }
 
-#' Title
-#'
-#' @param data 
-#' @param mapping 
-#' @param ... 
-#' @param environment 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = branch,  fill = branch), ..., environment = parent.frame()) {
-  ggplot(fortify.nsp_df(data, ...), mapping, environment = environment)
-}
+# Title
+#
+# @param data 
+# @param mapping 
+# @param ... 
+# @param environment 
+#
+# @return
+# @export
+#
+# @examples
+# ggplot.nsp_df <- function (data, mapping = aes(x = x, y = y, group = branch,  fill = branch), ..., environment = parent.frame()) {
+#   ggplot(fortify.nsp_df(data, ...), mapping, environment = environment)
+# }
 
 
 # GeomSpatialPath <- ggproto("GeomSpatialPath", Geom,

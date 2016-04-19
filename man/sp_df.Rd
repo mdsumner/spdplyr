@@ -7,7 +7,7 @@
 sp_df(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{Spatial object}
 }
 \description{
 sp_df to store the list of Polygons in a column

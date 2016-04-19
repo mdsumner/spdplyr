@@ -70,15 +70,15 @@ spFromTable <- function(x, crs, attr = NULL, ...) {
   if (missing(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
-  dat <- x %>% distinct_("object") %>% as.data.frame
+  dat <- x %>% distinct_("object") %>% as.data.frame()
   
   
   n_object <- length(unique(x$object))
   n_attribute <- nrow(attr)
   if (is.null(n_attribute)) n_attribute <- n_object
   if (!n_object == n_attribute){
-    
-    spFromTable(value, proj4string(object), as.data.frame(object))
+    ## not sure what this is for?
+    #spFromTable(value, proj4string(object), as.data.frame(object))
   } else {
    # if (!quiet) warning("modifications removed the relation between object and data, using a dummy data frame of attributes")
     attr <- data.frame(id = seq(n_object))

@@ -7,11 +7,11 @@
 fortify.nsp_df(model, data, ...)
 }
 \arguments{
-\item{model}{}
+\item{model}{model or other R object to convert to data frame}
 
-\item{data}{}
+\item{data}{original dataset, if needed}
 
-\item{...}{}
+\item{...}{other arguments passed to methods}
 }
 \description{
 Title
