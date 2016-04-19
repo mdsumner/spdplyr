@@ -3,7 +3,7 @@
 #'
 #' @param data Spatial*DataFrame
 #' @param ... unused
-#' @name nest
+#' @name nsp_df
 #' @return nested data frame
 #' @export
 #' @importFrom tidyr nest_ unnest
@@ -13,7 +13,6 @@
 #' library(tidyr)
 #' x <- nest(wrld_simpl)
 #' x %>% select(Object, ISO3) %>% unnest %>% unnest
-#' plot_nsp_df(x, grey(seq(0, 1, length = nrow(x))))
 nest_.Spatial <- function(data, ...) {
   sptab <-  sptable(data) %>% 
     group_by_("branch", "object") %>% 
@@ -87,8 +86,10 @@ filter_.nsp_df <- function (.data, ..., .dots) {
 
 
 #' @export
+#' @rdname nsp_df
+#' @rawNamespace S3method(plot,nsp_df)
 #' @importFrom sp plot
-plot_nsp_df <- function(x, ...) {
+plot.nsp_df <- function(x, ...) {
    x <- from_nested_df(x)
    plot(x, ...)
    invisible(NULL)

@@ -1,15 +1,13 @@
 #' Store Spatial* objects in a data frame
 #' 
 #' @param x Spatial object
-#'
+#' @param ... arguments passed to methods
 #' @return nested table with Geometry column
 #' @export
 #'
 #' @examples
-#' spdf <- sp_df(wrld_simpl)
-#' #as_Spatial.sp_df(spdf)
-#' 
-#' sdf <- sp_df(geometry(wrld_simpl))
+#' sp <- spFromTable(semap, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+#' spdf <- sp_df(sp)
 sp_df <- function(x, ...) {
  UseMethod("sp_df") 
 }
@@ -44,30 +42,9 @@ sp_df.Spatial <- function(x, ...) {
   d
 }
 
-
-# #' Retrieve geometry from sp_df
-# #' @name geometry-methods
-# #' @param x sp_df object
-# #' @param ... ignored
-# #' @seealso \code{\link[sp]{geometry-methods}}
-# #' @export
-# geometry <- function(x, ...) {
-#   UseMethod("geometry")
-# }
-# @export
- .geometry.sp_df <- function(obj) obj[["Spatial_"]]
-# 
- setOldClass("sp_df")
 #' @export
- setMethod("geometry", "sp_df", .geometry.sp_df)
-# #' @export
-# sp_df.list <- function(x, ...) {
-#   ## detect class and upgrade to Spatial?
-#   ## ultimately I want these to have autononomy, geoms with crs and mixable with other topology so keep as a list
-#   sp_df(SpatialPolygons(x))  ## need to detect class for this to work
-# }
-
-#' @export
+#' @rdname sp_df
+#' @rawNamespace S3method(print,sp_df)
 print.sp_df <- function(x, ...) {
   catclass <- class(x$Spatial_)
   x$Spatial_ <- sprintf("<%s>", catclass)
@@ -80,11 +57,13 @@ as.data.frame.sp_df <- function(x, ...) {
   NextMethod("as.data.frame", x)
 }
 
-#' @export
-plot.sp_df <- function(x, ...) {
-  px <- as.data.frame(x)
-  plot(SpatialPolygonsDataFrame(x$Spatial, px, match.ID = FALSE), ...)
-}
+# #' @export
+# #' @rdname sp_df
+# #' @rawNamespace S3method(plot,sp_df)
+# plot.sp_df <- function(x, ...) {
+#   px <- as.data.frame(x)
+#   plot(spFromTable(x[["Spatial_"]], as.data.frame(x)), ...)
+# }
 
 
 names.sp_df <- function(x) {

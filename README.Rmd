@@ -30,7 +30,6 @@ Spbabel can be installed directly from github:
 devtools::install_github("mdsumner/spbabel")
 ```
 
-# What is the spatial babel for? 
 
 
 # What is Spatial in R?

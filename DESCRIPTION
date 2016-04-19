@@ -10,7 +10,7 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: ggplot2, lazyeval, rgeos, scales, tidyr
+Imports: ggplot2, lazyeval, rgeos, tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
@@ -18,6 +18,7 @@ Suggests: testthat,
     methods,
     raster,
     reproj,
-    rmarkdown
+    rmarkdown, 
+    scales
 VignetteBuilder: knitr
 Remotes: mdsumner/reproj
