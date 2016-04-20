@@ -35,13 +35,13 @@ Turning these data into tables has been likened to making fish soup, which has a
 
 There are several ways to do this. 
 
-* **dplyr-Spatial**:  Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
-* **sptable**:  Use the table of coordinates with identifiers for object and part, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
-* **geometry-column** Use a real data.frame but include the "Spatial* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization. 
-* **single-level nesting**: Nest the fortify table for each object in a single column. 
-* **double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization, but cannot work with shared vertices or other topology. 
-* **normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them. 
-* **normalized**: A collection of related tables, without nesting. 
+* **1) dplyr-Spatial**:  Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
+* **2) sptable**:  Use the table of coordinates with identifiers for object and part, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
+* **3) geometry-column** Use a real data.frame but include the "Spatial* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization. 
+* **4) single-level nesting**: Nest the fortify table for each object in a single column. 
+* **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization, but cannot work with shared vertices or other topology. 
+* **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them. 
+* **7) normalized**: A collection of related tables, without nesting. 
 
 The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). 
 
@@ -60,16 +60,16 @@ I want these things:
 * flexibility and ease of use
 * integration with database engines and other systems
 * integration with D3 via htmlwidgets, with shiny, and with gggeom ggvis or similar
+* data-flow with dplyr piping as the engine behind a D3 web interface
 
-
-The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done via dplyr "back-ending". 
+The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending". 
 
 ## But I don't like pipes! 
 
 Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here. 
 
 
-# Direct dplyr verbs for Spatial
+# 1) Direct dplyr verbs for Spatial
 
 Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs. 
 
@@ -109,7 +109,7 @@ The problem with this approach is that it is fundamentally limited by the fact t
 
 This approach is limited to the simple verbs  `arrange`, `distinct`, `filter`, `mutate`, `rename`, `select`, `slice`, `transmute`, and `summarize`. Summarize is a little bit of a stretch since it cannot be used after a `group_by` and so it is limited to collapsing to a single Spatial object, with all sub-geometries in one without any consideration of topology or relationships. 
 
-# sptable: a round-trip-able extension to fortify
+# 2) sptable: a round-trip-able extension to fortify
 
 The `sptable` function decomposes a Spatial object to a single table structured as a row for every coordinate in all the sub-geometries, including duplicated coordinates that close polygonal rings, close lines and shared vertices between objects. 
 
@@ -134,23 +134,23 @@ We can also restructure objects.
 #w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
 ```
 
-# geometry-columns: store the Spatial* thing in the column
+# 3) geometry-columns: store the Spatial* thing in the column
 
 sp_df
 
-# single-level nesting: tidy fortify
+# 4) single-level nesting: tidy fortify
 
 sportify?
 
-# double-level nesting: even tidier fortify
+# 5) double-level nesting: even tidier fortify
 
 nsp_df
 
-# normalized-nesting: one table of non-analogous tables
+# 6) normalized-nesting: one table of non-analogous tables
 
 db_df
 
-# normalized: gris
+# 7) normalized: gris
 
 gris
 
