@@ -28,7 +28,7 @@ The spbabel package provides methods for the dplyr verbs and functions to round-
 }
 
 \section{II. sptable}{
- an extension to fortify in ggplot2
+ an round-trip extension to fortify for Spatial
 }
 
 \section{III. sp_df}{
@@ -45,7 +45,7 @@ The \code{nsp_df} class provides a "nested spatial" way to store the parts and c
 }
 
 \section{VI. db_df}{
- table normalization#' 
+ table normalization' 
 
 The \code{db_df} class provides a "database table" way to store tables in a single object, the "tables" table.
 }

@@ -1,5 +1,7 @@
 #' Convert from Spatial*DataFrame to table.
 #'
+#' Decompose a Spatial object to a single table structured as a row for every coordinate in all the sub-geometries, including duplicated coordinates that close polygonal rings, close lines and shared vertices between objects. 
+#' 
 #' Input can be a \code{\link[sp]{SpatialPolygonsDataFrame}}, \code{\link[sp]{SpatialLinesDataFrame}} or a \code{\link[sp]{SpatialPointsDataFrame}}.
 #' @param x \code{\link[sp]{Spatial}} object
 #' @param ... ignored
