@@ -47,6 +47,12 @@ I want these things:
 -   provide a flexible basis for conversion between other formats.
 -   flexibility and ease of use
 -   integration with database engines and other systems
+-   integration with D3 via htmlwidgets, with shiny, and with gggeom ggvis or similar
+
+The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done via dplyr "back-ending".
+
+But I don't like pipes!
+-----------------------
 
 Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here.
 
