@@ -56,11 +56,6 @@ mat2d_f <- function(x) {
 
 
 
-geomnames <- function() {
-  list(SpatialPolygonsDataFrame = c("object",  "branch", "hole",  "x", "y"),
-       SpatialLinesDataFrame = c("object",  "branch",  "x", "y"),
-       SpatialPointsDataFrame = c("branch", "object", "x", "y"))
-}
 
 
 .coordsIJ <- function(x, i, j, type) {

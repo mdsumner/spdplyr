@@ -1,3 +1,11 @@
+## spFromTable must deal with the following cases (so we don't need class-methods)
+## fortified table (done)
+## sp_df type, easy just grab the "Spatial_" column
+## sportify type, unnest once
+## nsp_df type, unnest twice (need name of column)
+## db_df type, inner_join Object, Branch, Vertex and re-nest to sportify
+
+
 #' Convert from dplyr tbl form to Spatial*DataFrame.
 #'
 #' @param x data_frame as created by \code{\link{sptable}}
@@ -33,6 +41,16 @@ spFromTable <- function(x, crs, attr = NULL, ...) {
   )
   gom
 }
+
+
+
+## convert this to sptable type (Spatial_, Object)
+geomnames <- function() {
+  list(SpatialPolygonsDataFrame = c("object",  "branch", "hole",  "x", "y"),
+       SpatialLinesDataFrame = c("object",  "branch",  "x", "y"),
+       SpatialPointsDataFrame = c("branch", "object", "x", "y"))
+}
+
 
 reverse_geomPoly <- function(x, d, proj) {
   objects <- split(x, x$object)
