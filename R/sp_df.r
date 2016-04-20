@@ -40,4 +40,3 @@ format.Spatial <- function(x, ...) {
 obj_str.Lines <- function(x) sprintf("%s[%i]", class(x), length(x@Lines))
 obj_str.Polygons <- function(x) sprintf("%s[%i]", class(x), length(x@Polygons))
 
-

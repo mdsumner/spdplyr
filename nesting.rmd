@@ -1,0 +1,171 @@
+---
+title: "Untitled"
+author: "Michael Sumner"
+date: "April 20, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Work with nested data frames
+
+
+```{r}
+library(tidyr)
+library(maptools)
+library(dplyr)
+data(wrld_simpl)
+```
+
+To directly nest the geometry  from sp we can work from the top, group by object and cumulative part, then again group by object and nest again. 
+
+```{r,eval=FALSE}
+library(ggplot2)
+x <- bind_cols(as.data.frame(wrld_simpl), as_data_frame(as.data.frame(raster::geom(wrld_simpl))) %>% group_by(branch, object) %>% nest %>%  group_by(object) %>% nest)
+```
+
+Unfinished. 
+```{r, eval = FALSE}
+vertices <- function(x) {
+  unnest(unnest(x))
+}
+## plot function
+plotspdf <- function(x, ...) {
+  plot(spbabel::spFromTable(vertices(x)))
+}
+
+plotspdf(x)
+
+```
+
+
+
+
+## Embedded nesting
+
+Still working on the terminology here, does "embedding" make sense? 
+
+This approach stores a single table at the top level, but it only stores the tables that we need - it's not a recursive object with a table split across rows. This means we can still normalize across objects (unique vertices), and apply operations on the entire set of rows (e.g. all vertices) without unnesting or recursing.  Yes this also means shared topology. 
+
+Here is an example of "embedding". 
+
+```{r}
+library(spbabel)
+library(maptools)
+data(wrld_simpl)
+world <- db_df(wrld_simpl)
+
+world$Table
+
+```
+
+How to reconstitute these objects? 
+
+```{r}
+nam <- c("Australia", "New Zealand")
+library(dplyr)
+Objects <- function(x) x$Table$Object
+Branches <- function(x) x$Table$Branch
+Coords <- function(x) x$Table$Coord
+
+(countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam) )
+
+countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
+
+spFromTable(countries, attr = countryObjects, quiet = TRUE)
+```
+
+
+## Recursive nesting
+
+
+I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for parts, and tables of parts for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
+
+Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y). 
+
+This example shows raw round-tripping, just to prove it mostly works. 
+
+```{r}
+library(tidyr)
+library(spbabel)
+library(maptools)
+data(wrld_simpl)
+xa <- nest(wrld_simpl)
+## method for plotting this nsp_df (nested sp df) shows round-trip back to Spatial
+plot(xa, col = grey(seq(0, 1, length = nrow(xa))))
+
+## ggplot2
+library(ggplot2)
+library(tidyr)
+
+## custom stat for this nested "nsp_df" object
+ggplot(xa) + stat_nested()
+ 
+```
+
+This example shows we can pipeline in simple ways. 
+
+Filter out by country NAME. 
+
+```{r}
+library(dplyr)
+
+xa %>% filter(NAME %in% c("Australia", "New Zealand")) %>% 
+ ggplot() + stat_nested()
+
+```
+
+Extract the full vertices table (with all object attributes dropped), filter-join on any objects that have holes and pick one to plot. 
+
+(Here the cascade of un-nesting should extract the branch-level metadata, i.e. winding order, hole-status, area, etc.)
+
+Using `geom_holygon` we can get true polypaths. 
+
+```{r}
+xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
+  filter(row_number() == 17) %>% ggplot() + geom_holygon() 
+
+
+sptable(subset(wrld_simpl, NAME == "Armenia"))
+armenia <- xa %>% filter(NAME == "Armenia") 
+
+ggplot(armenia, aes(x, y, group = branch, fill = factor(hole))) + stat_nested()
+```
+
+
+Much more to do . . . 
+
+
+```{r}
+## how to pass down object for faceting . . .
+#xa %>% inner_join(spbabel:::vertices(xa) %>% filter(hole == 1) %>% distinct(object)  %>% select(object)) %>%  
+#   ggplot() + stat_nested() + facet_grid(branch)
+
+
+
+```
+
+
+
+Have a closer look at what happens, we need to keep at least `Object`, and we copy out `ISO3` to all vertices. This is essentially an implicit join, made simpler since rows store data frames 'recursively'. 
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+## Be careful to keep the nested Object table - here see all vertices
+xa %>% select(Object, ISO3) %>% unnest() %>% unnest()
+
+```
+
+Questions: how do we protect special columns, like "Object" - and how do we ensure they are recorded when unnested? Same goes for PROJ.4 string, here I use an attribute. 
+
+I also tried store list of Polygons() in the column, that's kind of simple but you need S3 methods for everything - this is is `sp-df.r`. 
+
+Nested data frames are much easier, I find it more natural to use two-level nesting, but you could go further to store more information on individual pieces, their area, winding, etc. You could also just store the fortify-table at one level nesting, more to experiment with. 
+
+*See gris for deduplication of vertices - we cannot do that with nesting afaics.*
+
