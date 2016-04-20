@@ -1,5 +1,5 @@
 
-#' Two level nesting, branches and objects
+#' Nested tables for Spatial
 #'
 #' @param data Spatial*DataFrame
 #' @param ... unused
@@ -26,17 +26,6 @@ nest_.Spatial <- function(data, ...) {
   y
 }
 
-nsp_df <- function(x, ...) UseMethod(x)
-
-from_nested_df <- function(x) {
-  spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)], quiet = TRUE)
-}
-
-
-vertices <- function(x) {
-  unnest(unnest(select_(x, "object", "Object")))
-}
-
 
 #' Methods for nsp_df
 #' 
@@ -54,6 +43,29 @@ vertices <- function(x) {
   }
   d
 }
+
+#' @export
+#' @rdname nsp_df
+#' @rawNamespace S3method(plot,nsp_df)
+#' @importFrom sp plot
+plot.nsp_df <- function(x, ...) {
+  x <- from_nested_df(x)
+  plot(x, ...)
+  invisible(NULL)
+}
+
+#nsp_df <- function(x, ...) UseMethod(x)
+
+from_nested_df <- function(x) {
+  spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)], quiet = TRUE)
+}
+
+
+vertices <- function(x) {
+  unnest(unnest(select_(x, "object", "Object")))
+}
+
+
 
 #' Methods for as.tbl
 #' @inheritParams dplyr::as.tbl
@@ -85,13 +97,4 @@ filter_.nsp_df <- function (.data, ..., .dots) {
 }
 
 
-#' @export
-#' @rdname nsp_df
-#' @rawNamespace S3method(plot,nsp_df)
-#' @importFrom sp plot
-plot.nsp_df <- function(x, ...) {
-   x <- from_nested_df(x)
-   plot(x, ...)
-   invisible(NULL)
- }
 

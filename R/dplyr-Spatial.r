@@ -2,6 +2,8 @@
 #' 
 #' Direct application of the dplyr verbs to Spatial objects. Not all verbs are supported, see Details. 
 #' 
+#' There is no need for a conversion from and to Spatial with this approach. 
+#' 
 #' mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged. 
 #' 
 #' summarise collapses to a single geometry by listing all subgeometries together, it does not perform any topological union or merge. 

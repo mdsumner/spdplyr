@@ -43,19 +43,17 @@ sp_df.Spatial <- function(x, ...) {
 }
 
 #' @export
-#' @rdname sp_df
-#' @rawNamespace S3method(print,sp_df)
-print.sp_df <- function(x, ...) {
-  catclass <- class(x$Spatial_)
-  x$Spatial_ <- sprintf("<%s>", catclass)
-  cat(catclass, "\n")
-  NextMethod("print", x)
+format.Spatial <- function(x, ...) {
+  switch(class(geometry(x)), 
+         SpatialPolygons =   vapply(x@polygons, obj_str.Polygons, character(1)), 
+         SpatialLines = vapply(x@lines, obj_str.Lines, character(1)))
 }
 
-as.data.frame.sp_df <- function(x, ...) {
-  x$Spatial <- NULL
-  NextMethod("as.data.frame", x)
-}
+#obj_str <- function(x) UseMethod("obj_str")
+obj_str.Lines <- function(x) sprintf("%s[%i]", class(x), length(x@Lines))
+obj_str.Polygons <- function(x) sprintf("%s[%i]", class(x), length(x@Polygons))
+
+
 
 # #' @export
 # #' @rdname sp_df
@@ -64,6 +62,13 @@ as.data.frame.sp_df <- function(x, ...) {
 #   px <- as.data.frame(x)
 #   plot(spFromTable(x[["Spatial_"]], as.data.frame(x)), ...)
 # }
+
+as.data.frame.sp_df <- function(x, ...) {
+  x$Spatial <- NULL
+  NextMethod("as.data.frame", x)
+}
+
+
 
 
 names.sp_df <- function(x) {
