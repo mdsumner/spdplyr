@@ -65,8 +65,10 @@ mat2d_f <- function(x) {
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
 #' @examples 
-#' fort <- semap  %>% dplyr::filter(y == -90)
-#' sp <- spFromTable(fort, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+#' semap1 <- semap  %>% dplyr::filter(y > -89.9999)
+#' sp <- spFromTable(semap1, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+#' ## look, seamless Antarctica!
+#' ## library(rgdal); plot(spTransform(sp, "+proj=laea +lat_0=-70"))
 spFromTable <- function(x, crs, attr = NULL, ...) {
   if (missing(crs)) crs <- attr(x, "crs")
   if (is.null(crs)) crs <- NA_character_
