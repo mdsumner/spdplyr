@@ -1,7 +1,7 @@
 Package: spbabel
 Type: Package
 Title: Convert Data Between Spatial and Other
-Version: 0.1.0.9001
+Version: 0.2.0.9001
 Authors@R: person("Michael D.","Sumner", role = c("aut", "cre"), email = "mdsumner@gmail.com")
 Description: Functions to convert from Spatial*DataFrame classes and other forms. The table form follows the output of the `geom` function from the `raster` package.
 License: GPL-3
@@ -10,7 +10,7 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: ggplot2, lazyeval, rgeos, tidyr
+Imports: ggplot2, lazyeval, rgeos
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
@@ -19,6 +19,7 @@ Suggests: testthat,
     raster,
     reproj,
     rmarkdown, 
-    scales
+    scales,
+    tidyr
 VignetteBuilder: knitr
 Remotes: mdsumner/reproj
