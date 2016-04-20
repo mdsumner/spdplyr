@@ -8,11 +8,8 @@
 }
 \details{
 The spbabel package provides methods for the dplyr verbs and functions to round-trip a Spatial object to a single table and back.
-The \code{db_df} class provides a "database table" way to store tables in a single object, the "tables" table. 
-
-The \code{nsp_df} class provides a "nested spatial" way to store the parts and child vertices of Spatial objects in one table, either all as tables or with the list of Spatial objects in a list.
 }
-\section{I. dplyr verbs}{
+\section{O. dplyr verbs}{
 
  \tabular{ll}{
   \code{\link[dplyr]{filter}} \tab  filter   \cr
@@ -26,14 +23,30 @@ The \code{nsp_df} class provides a "nested spatial" way to store the parts and c
  }
 }
 
-\section{II. Conversion}{
+\section{I. dplyr-Spatial}{
+ dplyr verbs operating directly on Spatial objects
+}
 
-\tabular{ll}{
- \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
- \code{\link{spFromTable}} \tab create Spatial object from table \cr
- \code{\link{sp_df}} \tab store the Spatial part on the table \cr
- \code{\link{nest}} \tab create a nested spatial table \cr
- \code{\link{db_df}} \tab create a table of tables \cr
- }
+\section{II. sptable}{
+ an extension to fortify in ggplot2
+}
+
+\section{III. sp_df}{
+ store the Spatial-geometry as a list-column
+}
+
+\section{IV.  sportify}{
+ single-nested fortify tables
+}
+
+\section{V. nsp_df}{
+ double-nested tables for Branch and Vertex
+The \code{nsp_df} class provides a "nested spatial" way to store the parts and child vertices of Spatial objects in one table.
+}
+
+\section{VI. db_df}{
+ table normalization#' 
+
+The \code{db_df} class provides a "database table" way to store tables in a single object, the "tables" table.
 }
 

@@ -46,9 +46,8 @@ These classes are extremely powerful and provide a seamless mechanism to do many
 There are several ways to do this. 
 
 
-* Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
-* Use the table of coordinates with identifiers for object and part, like fortify. For this we need at least two tables. 
-* Use the sptable() and sptable()<- workflow to fortify and modify in a more flexible ways. 
+* **dplyr-Spatial** Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
+* **sptable** Use the table of coordinates with identifiers for object and part, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
 * Use a real data.frame but include the Spatial* objects as a list column. This runs into issues with the meaning of repeated elements. 
 * Nest (with tidyr) the fortify table for each object in a single column. 
 * Nest (with tidyr) the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization. 
