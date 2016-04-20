@@ -134,17 +134,28 @@ We can also restructure objects.
 #w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
 ```
 
+# geometry-columns: store the Spatial* thing in the column
 
-## convert Spatial to a sp_df / tbl_df with the Spatial column
+sp_df
 
-```{r}
-#x <- sp_df(wrld_simpl)
-#x %>% filter(NAME == "Australia")
-```
+# single-level nesting: tidy fortify
+
+sportify?
+
+# double-level nesting: even tidier fortify
+
+nsp_df
+
+# normalized-nesting: one table of non-analogous tables
+
+db_df
+
+# normalized: gris
+
+gris
 
 
-
-## Early approach
+# Early approach
 
 Create methods for the dplyr verbs: filter, mutate, arrange, select etc. 
 
