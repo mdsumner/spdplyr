@@ -21,4 +21,8 @@ Spatial*
 \description{
 Convert from dplyr tbl form to Spatial*DataFrame.
 }
+\examples{
+fort <- semap  \%>\% dplyr::filter(y == -90)
+sp <- spFromTable(fort, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+}
 

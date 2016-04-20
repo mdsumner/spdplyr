@@ -17,10 +17,6 @@ knitr::opts_chunk$set(
 library(dplyr)
 ```
 
-# spbabel: bisque or bouillon?
-
-Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
-
 
 ## Installation
 
@@ -31,13 +27,19 @@ devtools::install_github("mdsumner/spbabel")
 ```
 
 
+# spbabel: bisque or bouillon?
+
+Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
+
 
 # What is Spatial in R?
 
 Spatial data in the `sp` package have a formal definition  (extending class `Spatial`) that is modelled on shapefiles, and close at least in spirit to the Simple Features definition. https://github.com/edzer/sfr
 
 In GIS we have Objects linked to a table of attributes, one row of a table for each Object. An Object is a shape defined by potentially complex *geometry*, and importantly the geometry is an *inherent* property of the shape while the attribute data is simply 
-Internally Spatial objects are composed of lists of lists of matrices, with two levels of structure for the geometry for each each line or polygon object. An individual matrix is an ordered set of connected vertices defining a single linear path. If the path is closed it is a polygon "ring", and the order of the coordinates (clockwise or anti-clockwise reflects its status as an "island" or a "hole"). The formal base-level classes `Line` and `Polygon` store this path for the corresponding type, (these types cannot be mixed in a composite object).  An object may be composed of one or more linear paths of either type, and these are collected together as `Lines` and `Polygons`. So, a single `Line` or `Polygon` corresponds to a piece (connected line, island or hole), and a single `Lines` or `Polygons` object corresponds to  The formal definition of 
+Internally Spatial objects are composed of lists of lists of matrices, with two levels of structure for the geometry for each each line or polygon object. An individual matrix is an ordered set of connected vertices defining a single linear path. If the path is closed it is a polygon "ring", and the order of the coordinates (clockwise or anti-clockwise reflects its status as an "island" or a "hole"). The formal base-level classes `Line` and `Polygon` store this path for the corresponding type, (these types cannot be mixed in a composite object).  An object may be composed of one or more linear paths of either type, and these are collected together as `Lines` and `Polygons`. So, a single `Line` or `Polygon` corresponds to a piece (connected line, island or hole), and a single `Lines` or `Polygons` object corresponds to a row in the attribute table. The `SpatialPolygon`, `SpatialLines` classes act like vectors of the `Polygons` and `Lines` type, with additional `Spatial` information, the coordinate system in use and the bounding box. 
+
+These classes are extremely powerful and provide a seamless mechanism to do many kinds of spatial modelling and spatial data manipulation. However, the definitions are actually very narrow and the design philosophy is generally inflexibility and very formal which means there's often only one way to do a particular task and it can be quite torturous.  
 
 # How does spbabel allow sp to work with dplyr? 
 
@@ -52,13 +54,16 @@ There are several ways to do this.
 * Nest (with tidyr) the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization. 
 * Nest (with tidyr) the normalized tables Vertices, Objects and the topological links between them. 
 
+Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, that is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here. 
+
 This document illustrates each of these approaches, work in progress. 
 
 
+# Direct dplyr verbs for Spatial
 
-## Usage
+Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs. 
 
-Apply pipeline modifications to the attribute data of `sp` objects with dplyr verbs. 
+See `?dplyr-Spatial'` for supported verbs. 
 
 ```{r}
 data(quakes)
@@ -67,7 +72,6 @@ coordinates(quakes) <- ~long+lat
 library(spbabel)
 ## plot a subset of locations by number of stations
 quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
-
 ```
 
 We can use polygons and lines objects as well. 
@@ -75,9 +79,11 @@ We can use polygons and lines objects as well.
 ```{r}
 library(maptools)
 data(wrld_simpl)
-
+## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
 x <- wrld_simpl %>% mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% filter(lat < -20, lon > 60) %>% select(NAME)
 plot(x, asp = ""); text(coordinates(x), label = x$NAME, cex = 0.6)
+
+wrld_simpl %>% as("SpatialLinesDataFrame") %>% summarise(big = max(AREA))
 ```
 
 use the `sptable<-` replacment method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 

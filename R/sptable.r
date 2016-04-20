@@ -19,7 +19,7 @@ sptable <- function(x, ...) {
 #' @export
 #' @rdname sptable
 sptable.SpatialPolygonsDataFrame <- function(x, ...) {
-  mat2d_f(.gobbleGeom(x, ...))
+  .gobbleGeom(x, ...)
 }
 
 #' @export
@@ -68,23 +68,16 @@ mat2d_f <- function(x) {
 #' fort <- semap  %>% dplyr::filter(y == -90)
 #' sp <- spFromTable(fort, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
 spFromTable <- function(x, crs, attr = NULL, ...) {
-  if (missing(crs)) crs <- NA_character_
+  if (missing(crs)) crs <- attr(x, "crs")
+  if (is.null(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
   dat <- x %>% distinct_("object") %>% as.data.frame()
   
-  
   n_object <- length(unique(x$object))
   n_attribute <- nrow(attr)
   if (is.null(n_attribute)) n_attribute <- n_object
-  if (!n_object == n_attribute){
-    ## not sure what this is for?
-    #spFromTable(value, proj4string(object), as.data.frame(object))
-  } else {
-   # if (!quiet) warning("modifications removed the relation between object and data, using a dummy data frame of attributes")
-    attr <- data.frame(id = seq(n_object))
-  }
-  
+
   ## this is rough and ready, needs proper matching checks
   dat <- cbind(dat, attr)  
   gom <- switch(target,
@@ -97,6 +90,8 @@ spFromTable <- function(x, crs, attr = NULL, ...) {
 
 reverse_geomPoly <- function(x, d, proj) {
   objects <- split(x, x$object)
+  ## remove those columns used by reconstruction?
+  d$part <- d$branch <- d$object <- d$hole <- d$order <- d$x <- d$y <- NULL
   ## match.ID should be replaced by method to carry the original rownames somehow
   SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopPartsPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
@@ -105,6 +100,7 @@ loopPartsPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Pol
 
 reverse_geomLine <- function(x, d, proj) {
   objects <- split(x, x$object)
+  d$part <- d$branch <- d$object <- d$order <- d$x <- d$y <- NULL
   SpatialLinesDataFrame(SpatialLines(lapply(objects, loopPartsLine), proj4string = CRS(proj)), d)
 }
 loopPartsLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
@@ -192,7 +188,7 @@ geomnames <- function() {
   
   rownames(obs) <- NULL
 
- 
+  attr(obs, "crs") <- proj4string(x)
   return( obs )
 }
 

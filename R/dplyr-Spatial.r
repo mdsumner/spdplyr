@@ -1,8 +1,17 @@
 #' Dplyr verbs for Spatial
 #' 
+#' Direct application of the dplyr verbs to Spatial objects. Not all verbs are supported, see Details. 
+#' 
+#' mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged. 
+#' 
+#' summarise collapses to a single geometry by listing all subgeometries together, it does not perform any topological union or merge. 
+#' This is a pretty brutal collapse of all the data. 
+#' 
+#'  summarise for points and multipoints, ... todo single Multipoint for multiple points
 #' @inheritParams dplyr::mutate
-#'
-#' @rdname spdplyr
+#' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
+#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 #' @examples 
 #' library(sp)
@@ -12,6 +21,25 @@
 #' library(spbabel)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
 #' library(raster)  
 #' wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number())
+#' wrld_simpl %>% transmute(alpha = paste0(FIPS, NAME))
+#' wrld_simpl %>% filter(NAME %in% c("New Zealand", "Australia", "Fiji"))
+#' wrld_simpl %>% arrange(LON)
+#' wrld_simpl %>% slice(c(9, 100))
+#' wrld_simpl %>% dplyr::select(UN, FIPS)
+#' wrld_simpl %>% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME)
+#' wrld_simpl %>% distinct(REGION) %>% arrange(REGION)  ## first alphabetically in REGION
+#' wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION) ## last
+#' 
+#' ## we don't need to use piping
+#' slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4)
+#' 
+#' 
+#' ## works with Lines
+#' #as(wrld_simpl, "SpatialLinesDataFrame") %>% mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
+#' 
+#' 
+#' ## summarise/ze is different, we have to return only one geometry
+#' wrld_simpl %>% summarize(max(AREA))
 #' @importFrom dplyr mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
@@ -26,7 +54,32 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
   .data
 }
 
-#' @rdname spdplyr
+
+#' @rdname dplyr-Spatial
+#' @export
+#' @importFrom rgeos gUnionCascaded gLineMerge
+summarise_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data for distinct for a %s", class(.data))
+  }
+  # this should only ever return one-row objects
+  # we cannot group_by on Spatial
+  dat <- summarise_(as_data_frame(as.data.frame(.data)), ...)
+ ## print(dat)
+  row.names(dat) <- "1"
+  gbomb <- sptable(.data)
+  gbomb$object <- 1
+  ## not
+  gbomb$part <- gbomb$branch
+  ## only return the same names as the summarized data_frame
+  #
+  
+  spFromTable(gbomb, attr = dat, crs = proj4string(.data))
+  
+}
+
+
+#' @rdname dplyr-Spatial
 #' @export
 transmute_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
@@ -40,7 +93,7 @@ transmute_.Spatial <-  function(.data, ..., .dots) {
 }
 
 
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @export
 filter_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
@@ -59,7 +112,7 @@ filter_.Spatial <- function(.data, ...) {
 }
 
 
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @importFrom dplyr arrange_ distinct_ rename_ select_ slice_ filter_ transmute_ mutate_ 
 #' @export
 arrange_.Spatial <- function(.data, ...) {
@@ -73,7 +126,7 @@ arrange_.Spatial <- function(.data, ...) {
 }
 
 
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @export
 slice_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
@@ -85,7 +138,7 @@ slice_.Spatial <- function(.data, ...) {
   .data[dat$order, ]
 }
 
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @export
 select_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
@@ -95,7 +148,7 @@ select_.Spatial <- function(.data, ...) {
  .data[, names(dat)]
 }
   
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @export
 rename_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
@@ -109,7 +162,7 @@ rename_.Spatial <- function(.data, ...) {
 
 
 
-#' @rdname spdplyr
+#' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
@@ -121,40 +174,22 @@ distinct_.Spatial <- function(.data, ...) {
   .data[dat$order, ]
 }
 
+# getsubSpatial <- function(x) {
+#   if (inherits(x, "SpatialPolygons")) return(x@polygons)
+#   if (inherits(x, "SpatialLInes")) return(x@lines)
+#   NULL
+# }
+# c_ <- function(x) {
+#   ##need to fix the IDs
+#   do.call("c", getsubSpatial(x))
+# }
 
-#' @rdname spdplyr
-#' @export
-#' @importFrom rgeos gUnaryUnion
-summarise_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data for distinct for a %s", class(.data))
-  }
-  # this should only ever return one-row objects
-  # we cannot group_by on Spatial
-  dat <- summarise_(as_data_frame(as.data.frame(.data)), ...)
-  g <- rgeos::gUnaryUnion(geometry(.data))
-  #print(class(g))
-  x <- .data[1,]
-  row.names(x) <- "1"
-  x@data <- as.data.frame(dat)
-  if (inherits(.data, "SpatialPolygonsDataFrame")) {
-    x@polygons <- g@polygons
-  }
-  if (inherits(.data, "SpatialLinesDataFrame")) {
-    x@lines <- g@lines
-  }
-  ## and so on for points and multipoints
-  
-  
-  
- ## geometry(x) <- g
-  x
-}
+
 
 
 # decided this is a non-starter
 #  - a good reason to stop and do this with another scheme
-# #' @rdname spdplyr
+# #' @rdname dplyr-Spatial
 # #' @export
 # group_by_.Spatial <- function(.data, ...) {
 #   if (!.hasSlot(.data, "data")) {

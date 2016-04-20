@@ -1,4 +1,4 @@
-context("basic-dplyr")
+context("dplyr-Spatial")
 
 ## TODO: Rename context
 ## TODO: Add more tests
@@ -13,6 +13,7 @@ point1 <- as(line1, "SpatialPointsDataFrame")
 #                                       as.data.frame(line1))
 
 data(mpoint1)
+
 
 test_that("filter works for all geometric types", {
   expect_that(nrow(filter(poly1, NAME == "Australia")), equals(1L) )
@@ -97,3 +98,27 @@ test_that("mutate works", {
   expect_silent(transmute(line1, Country= NAME, LON = 100))
   expect_that(transmute(line1, Country= NAME, LON = 100), is_a("SpatialLinesDataFrame"))
 })
+
+
+test_that("various examples", {
+  expect_silent(wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number()))
+  expect_silent(wrld_simpl %>% transmute(alpha = paste0(FIPS, NAME)) )
+  expect_silent(wrld_simpl %>% filter(NAME %in% c("New Zealand", "Australia", "Fiji")))
+  expect_silent(wrld_simpl %>% arrange(LON) )
+  expect_silent(wrld_simpl %>% slice(c(9, 100)))
+  expect_silent(wrld_simpl %>% dplyr::select(UN, FIPS))
+  expect_silent(wrld_simpl %>% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME))
+  expect_silent(wrld_simpl %>% distinct(REGION) %>% arrange(REGION) )  ## first alphabetically in REGION
+  expect_silent(wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION)) ## last
+   
+  ## we don't need to use piping
+  expect_silent( slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4))
+ ## summarise/ze is different, we have to return only one geometry
+  expect_silent(wrld_simpl %>% summarize(max(AREA)))
+  expect_warning(as(wrld_simpl, "SpatialLinesDataFrame") %>% mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE)), 
+                 "Spatial object is not projected;")
+  }
+  
+ )
+
+
