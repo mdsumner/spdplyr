@@ -10,7 +10,7 @@
 #' This is a pretty brutal collapse of all the data. 
 #' 
 #'  summarise for points and multipoints, ... todo single Multipoint for multiple points
-#' @param A tbl.
+#' @param .data A tbl.
 #' @param ... Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}
 #' @param .dots Used to work around non-standard evaluation. 
 #' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 

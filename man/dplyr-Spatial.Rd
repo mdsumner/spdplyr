@@ -32,11 +32,11 @@
 \method{distinct_}{Spatial}(.data, ...)
 }
 \arguments{
+\item{.data}{A tbl.}
+
 \item{...}{Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}}
 
 \item{.dots}{Used to work around non-standard evaluation.}
-
-\item{A}{tbl.}
 }
 \description{
 Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details.
