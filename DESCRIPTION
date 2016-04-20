@@ -17,9 +17,7 @@ Suggests: testthat,
     maptools,
     methods,
     raster,
-    reproj,
     rmarkdown, 
     scales,
     tidyr
 VignetteBuilder: knitr
-Remotes: mdsumner/reproj
