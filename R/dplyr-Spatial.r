@@ -1,8 +1,8 @@
 #' Dplyr verbs for Spatial
 #' 
-#' Direct application of the dplyr verbs to Spatial objects. Not all verbs are supported, see Details. 
+#' Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details. 
 #' 
-#' There is no need for a conversion from and to Spatial with this approach. 
+#'  
 #' 
 #' mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged. 
 #' 
@@ -10,7 +10,9 @@
 #' This is a pretty brutal collapse of all the data. 
 #' 
 #'  summarise for points and multipoints, ... todo single Multipoint for multiple points
-#' @inheritParams dplyr::mutate
+#' @param A tbl.
+#' @param ... Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}
+#' @param .dots Used to work around non-standard evaluation. 
 #' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
 #' @rdname dplyr-Spatial
 #' @name dplyr-Spatial

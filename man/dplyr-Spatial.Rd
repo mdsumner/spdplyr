@@ -32,21 +32,16 @@
 \method{distinct_}{Spatial}(.data, ...)
 }
 \arguments{
-\item{.data}{A tbl. All main verbs are S3 generics and provide methods
-for \code{\link{tbl_df}}, \code{\link{tbl_dt}} and \code{\link{tbl_sql}}.}
+\item{...}{Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}}
 
-\item{...}{Name-value pairs of expressions. Use \code{NULL} to drop
-a variable.}
+\item{.dots}{Used to work around non-standard evaluation.}
 
-\item{.dots}{Used to work around non-standard evaluation. See
-\code{vignette("nse")} for details.}
+\item{A}{tbl.}
 }
 \description{
-Direct application of the dplyr verbs to Spatial objects. Not all verbs are supported, see Details.
+Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details.
 }
 \details{
-There is no need for a conversion from and to Spatial with this approach.
-
 mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged.
 
 summarise collapses to a single geometry by listing all subgeometries together, it does not perform any topological union or merge. 
