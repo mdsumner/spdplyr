@@ -52,7 +52,7 @@ mat2d_f <- function(x) {
 #' @export
 "sptable<-" <-
   function(object, value) {
-       spFromTable(value, proj4string(object), as.data.frame(object))
+       spFromTable(value, as.data.frame(object), proj4string(object))
 
   }
 
