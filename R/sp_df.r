@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' sp <- spFromTable(semap, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+#' sp <- spFromTable(semap, attr_tab = seatt, crs = "+proj=longlat +ellps=WGS84")
 #' spdf <- sp_df(sp)
 sp_df <- function(x, ...) {
  UseMethod("sp_df") 

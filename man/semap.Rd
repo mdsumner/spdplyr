@@ -12,7 +12,7 @@ Created in /data-raw/
 }
 \examples{
 # recreate as sp object
-mp <- spFromTable(semap, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+mp <- spFromTable(semap, attr_tab = seatt, crs = "+proj=longlat +ellps=WGS84")
 
 }
 

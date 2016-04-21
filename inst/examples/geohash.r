@@ -46,7 +46,7 @@ dbhash$Table$Coord$x <- xy$lng
 dbhash$Table$Coord$y <- xy$lat
 dbhash$Table$Coord$gh <- NULL
 countries <- Objects(dbhash) %>% inner_join(Branches(dbhash)) %>% inner_join(Coords(dbhash))
-sprestore <- spFromTable(countries, attr = Objects(dbhash), quiet = TRUE)
+sprestore <- spFromTable(countries, attr_tab = Objects(dbhash), quiet = TRUE)
 plot(sprestore)
 text(coordinates(sprestore), lab = sprestore$NAME)
 
@@ -60,7 +60,7 @@ Branches <- function(x) x$Table$Branch
 Coords <- function(x) x$Table$Coord
 
 countries <- Objects(dbtab) %>% inner_join(Branches(dbtab)) %>% inner_join(Coords(dbtab))
-sprestore <- spFromTable(countries, attr = Objects(dbtab), quiet = TRUE)
+sprestore <- spFromTable(countries, attr_tab = Objects(dbtab), quiet = TRUE)
 plot(sprestore)
 text(coordinates(sprestore), lab = sprestore$NAME)
 

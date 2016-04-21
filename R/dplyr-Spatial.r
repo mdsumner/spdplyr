@@ -73,7 +73,7 @@ summarise_.Spatial <- function(.data, ...) {
   row.names(dat) <- "1"
   gbomb <- sptable(.data)
   gbomb$object <- 1
-  spFromTable(gbomb, attr = dat, crs = proj4string(.data))
+  spFromTable(gbomb, attr_tab = dat, crs = proj4string(.data))
   
 }
 

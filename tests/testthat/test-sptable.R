@@ -47,7 +47,7 @@ test_that("round trip embedding works", {
 })
 
 countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam)
-countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
+countries <- countryObjects %>% inner_join(Branches(world), "object") %>% inner_join(Coords(world), "branch")
 test_that("round trip embedding works", {
-  expect_that(spFromTable(countries, attr = countryObjects, quiet = TRUE), is_a("SpatialPolygonsDataFrame"))
+  expect_that(spFromTable(countries, attr_tab = countryObjects, quiet = TRUE), is_a("SpatialPolygonsDataFrame"))
 })

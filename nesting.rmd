@@ -75,7 +75,7 @@ Coords <- function(x) x$Table$Coord
 
 countries <- countryObjects %>% inner_join(Branches(world)) %>% inner_join(Coords(world))
 
-spFromTable(countries, attr = countryObjects, quiet = TRUE)
+spFromTable(countries, attr_tab = countryObjects, quiet = TRUE)
 ```
 
 

@@ -57,7 +57,7 @@
 #' #nsp_df <- function(x, ...) UseMethod(x)
 #' 
 #' from_nested_df <- function(x) {
-#'   spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr = x[!sapply(x, is.list)], quiet = TRUE)
+#'   spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr_tab = x[!sapply(x, is.list)], quiet = TRUE)
 #' }
 #' 
 #' 

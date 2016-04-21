@@ -10,7 +10,7 @@
 #'
 #' @param x data_frame as created by \code{\link{sptable}}
 #' @param crs projection, defaults to \code{NA_character_}
-#' @param attr remaining data from the attributes
+#' @param attr_tab remaining data from the attributes
 #' @param ... unused
 #' @return Spatial*
 #' @export
@@ -18,22 +18,22 @@
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
 #' @examples 
 #' semap1 <- semap  %>% dplyr::filter(y > -89.9999)
-#' sp <- spFromTable(semap1, attr = seatt, crs = "+proj=longlat +ellps=WGS84")
+#' sp <- spFromTable(semap1, attr_tab = seatt, crs = "+proj=longlat +ellps=WGS84")
 #' ## look, seamless Antarctica!
 #' ## library(rgdal); plot(spTransform(sp, "+proj=laea +lat_0=-70"))
-spFromTable <- function(x, crs, attr = NULL, ...) {
+spFromTable <- function(x, attr_tab = NULL, crs, ...) {
   if (missing(crs)) crs <- attr(x, "crs")
   if (is.null(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
-  dat <- x %>% distinct_("object") %>% as.data.frame()
+  dat <- x %>% distinct_("object")
   
-  n_object <- length(unique(x$object))
-  n_attribute <- nrow(attr)
-  if (is.null(n_attribute)) n_attribute <- n_object
-  
-  ## this is rough and ready, needs proper matching checks
-  dat <- cbind(dat, attr)  
+   n_object <- length(unique(x$object))
+   n_attribute <- nrow(attr_tab)
+   if (is.null(n_attribute)) n_attribute <- n_object
+  if (!(n_attribute == n_object)) stop("number of rows in attr must match distinct object in x") 
+  if (!is.null(attr_tab)) dat <- bind_cols(dat, attr_tab)
+  dat <- as.data.frame(dat)
   gom <- switch(target,
                 SpatialPolygonsDataFrame = reverse_geomPoly(x, dat, crs),
                 SpatialLinesDataFrame = reverse_geomLine(x, dat, crs),
@@ -56,6 +56,7 @@ reverse_geomPoly <- function(x, d, proj) {
   objects <- split(x, x$object)
   ## remove those columns used by reconstruction?
   d$branch <- d$object <- d$hole <- d$order <- d$x <- d$y <- NULL
+  if (ncol(d) < 1L) d$id_ <- seq(nrow(d))  ## we might end up with no attributes
   ## match.ID should be replaced by method to carry the original rownames somehow
   SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopBranchPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
@@ -65,6 +66,7 @@ loopBranchPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Po
 reverse_geomLine <- function(x, d, proj) {
   objects <- split(x, x$object)
   d$branch <- d$object <- d$order <- d$x <- d$y <- NULL
+  if (ncol(d) < 1L) d$id_ <- seq(nrow(d))  ## we might end up with no attributes
   SpatialLinesDataFrame(SpatialLines(lapply(objects, loopBranchLine), proj4string = CRS(proj)), d)
 }
 loopBranchLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
