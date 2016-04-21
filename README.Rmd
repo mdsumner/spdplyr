@@ -1,4 +1,4 @@
----
+
 output:
   md_document:
     variant: markdown_github
@@ -43,11 +43,10 @@ There are several ways to do this.
 * **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them. 
 * **7) normalized**: A collection of related tables, without nesting. 
 
+
 The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). 
 
-
 This document aims to illustrate each of these approaches, much is still work in progress. 
-
 
 # Why do this? 
 
@@ -63,6 +62,8 @@ I want these things:
 * data-flow with dplyr piping as the engine behind a D3 web interface
 
 The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending". 
+
+(If you think you can do these things by extending `sp` then I'm very interested to see.)
 
 ## But I don't like pipes! 
 
@@ -113,25 +114,33 @@ This approach is limited to the simple verbs  `arrange`, `distinct`, `filter`, `
 
 The `sptable` function decomposes a Spatial object to a single table structured as a row for every coordinate in all the sub-geometries, including duplicated coordinates that close polygonal rings, close lines and shared vertices between objects. 
 
-use the `sptable<-` replacement method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
+Use the `sptable<-` replacement method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
 
 ```{r}
 ## standard dplyr on this S4 class
-w2 <- filter(wrld_simpl, NAME == "Australia")
-plot(w2, col = "grey")
+(oz <- filter(wrld_simpl, NAME == "Australia"))
 
-## modify the geometry on this object
-sptable(w2) <- sptable(w2) %>% mutate(x = x - 5)
 
-plot(w2, add = TRUE)
+## this is ready for ggplot2, though at the expense of needing the object attributes in a separate object
+oztab <- sptable(oz)
+
+##  make a copy to modify
+woz <- oz
+## modify the geometry on this object without separating the vertices from the objects
+sptable(woz) <- sptable(woz) %>% mutate(x = x - 5)
+
+# plot to compare 
+plot(oz, col = "grey")
+plot(woz, add = TRUE)
 ```
 
 We can also restructure objects. 
 
 ```{r}
-## explode (disaggregate) objects to individual polygons
-## here each part becomes and object, and each object only has one part
-#w3 <- spFromTable(sptable(w2)  %>% mutate(object = part, part = 1), crs = proj4string(w2))
+## explode (or "disaggregate"") objects to individual polygons
+## here each part becomes an object, and each object only has one part
+## (ignoring hole-vs-island status for now)
+wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
 ```
 
 # 3) geometry-columns: store the Spatial* thing in the column
