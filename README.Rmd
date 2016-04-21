@@ -148,7 +148,6 @@ wone <- spFromTable(pp %>% mutate(object = branch))
 op <- par(mfrow = c(2, 1), mar = rep(0, 4))
 plot(spFromTable(pp), col = grey(seq(0.3, 0.7, length = length(unique(pp$object)))))
 plot(wone, col = sample(rainbow(nrow(wone))), border = NA)
-text("topright", lab = "1")
 par(op)
 ```
 
@@ -164,6 +163,9 @@ geocol <- sp_df(wrld_simpl)
 ```
 
 Note that this approach can be easily applied with WKT or WKB, it's just a fair bit of extra work to do the type conversion when needed. Note that, R has a `raw` type that seamlessly handles WKB from many DBs, and the `wkb` package can read it, likewise with `rgeos::readWKT` and `rgeos::writeWKT`.
+
+I'm also not sure on the right ways to make this all work - do we subclass the table with the geometry, or just extend the format options for a "Spatial" column? 
+
 
 # 4) single-level nesting: tidy fortify
 
