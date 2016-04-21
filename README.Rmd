@@ -63,8 +63,6 @@ I want these things:
 
 The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending". 
 
-(If you think you can do these things by extending `sp` then I'm very interested to see.)
-
 ## But I don't like pipes! 
 
 Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here. 
@@ -140,7 +138,7 @@ We can also restructure objects.
 ## explode (or "disaggregate"") objects to individual polygons
 ## here each branch becomes an object, and each object only has one branch
 ## (ignoring hole-vs-island status for now)
-#wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
+wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
 ```
 
 # 3) geometry-columns: store the Spatial* thing in the column
