@@ -25,7 +25,7 @@ How does spbabel allow sp to work with dplyr?
 There are several ways to do this.
 
 -   **1) dplyr-Spatial**: Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame.
--   **2) sptable**: Use the table of coordinates with identifiers for object and part, like fortify, with sptable() and sptable()&lt;- workflow to fortify and modify in a more flexible way.
+-   **2) sptable**: Use the table of coordinates with identifiers for object and branch, like fortify, with sptable() and sptable()&lt;- workflow to fortify and modify in a more flexible way.
 -   **3) geometry-column** Use a real data.frame but include the "Spatial\* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization.
 -   **4) single-level nesting**: Nest the fortify table for each object in a single column.
 -   **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization, but cannot work with shared vertices or other topology.

@@ -11,7 +11,7 @@ library(ggplot2)
 
 ## entity tables, nested (not normalized)
 dbtab <- spbabel::db_df(wrld_simpl)
-## object table->nested_parts->nested_vertices (not normalized)
+## object table->nested_branch->nested_vertices (not normalized)
 sptab <- spbabel::sp_df(wrld_simpl)
 ## normalized tables
 grtab <- gris::gris(wrld_simpl)

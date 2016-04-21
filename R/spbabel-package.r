@@ -21,7 +21,7 @@
 #' @section III. sp_df: store the Spatial-geometry as a list-column
 #' @section IV.  sportify: single-nested fortify tables
 #' @section V. nsp_df: double-nested tables for Branch and Vertex
-#' The \code{nsp_df} class provides a "nested spatial" way to store the parts and child vertices of Spatial objects in one table. 
+#' The \code{nsp_df} class provides a "nested spatial" way to store the branches and child vertices of Spatial objects in one table. 
 #' @section VI. db_df: table normalization' 
 #' 
 #' The \code{db_df} class provides a "database table" way to store tables in a single object, the "tables" table. 
@@ -34,7 +34,7 @@ NULL
 # \tabular{ll}{
 #  \code{\link{sptable}} \tab create a \code{\link[dplyr]{tbl_df}} from Spatial*DataFrame  \cr
 #  \code{\link{spFromTable}} \tab create Spatial object from table \cr
-#  \code{\link{sp_df}} \tab store the Spatial part on the table \cr
+#  \code{\link{sp_df}} \tab store the Spatial objects on a table column \cr
 #  \code{\link{nest}} \tab create a nested spatial table \cr
 #  \code{\link{db_df}} \tab create a table of tables \cr
 #  }

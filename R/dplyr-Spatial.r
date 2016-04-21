@@ -73,11 +73,6 @@ summarise_.Spatial <- function(.data, ...) {
   row.names(dat) <- "1"
   gbomb <- sptable(.data)
   gbomb$object <- 1
-  ## not
-  gbomb$part <- gbomb$branch
-  ## only return the same names as the summarized data_frame
-  #
-  
   spFromTable(gbomb, attr = dat, crs = proj4string(.data))
   
 }

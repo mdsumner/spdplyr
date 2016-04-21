@@ -20,7 +20,7 @@ library(dplyr)
 data(wrld_simpl)
 ```
 
-To directly nest the geometry  from sp we can work from the top, group by object and cumulative part, then again group by object and nest again. 
+To directly nest the geometry  from sp we can work from the top, group by object and branch, then again group by object and nest again. 
 
 ```{r,eval=FALSE}
 library(ggplot2)
@@ -82,7 +82,7 @@ spFromTable(countries, attr = countryObjects, quiet = TRUE)
 ## Recursive nesting
 
 
-I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for parts, and tables of parts for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
+I'm not particularly fond of this approach, since you need to nest two levels down in order to have tables of coordinates for branches, and tables of branches for objects. This means we start reproducing the recursive list structures we started with. Better is to store separate tables for distinct entities and keep rules for table views.
 
 Recent discussion resulted in a "nested data frame" approach, I've applied that in `nested.r` with two-levels of nesting, Objects as the table to store each Branch (part or piece or ring or linestring), and each Branch table stores actual vertices (x, y). 
 

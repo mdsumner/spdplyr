@@ -55,19 +55,19 @@ geomnames <- function() {
 reverse_geomPoly <- function(x, d, proj) {
   objects <- split(x, x$object)
   ## remove those columns used by reconstruction?
-  d$part <- d$branch <- d$object <- d$hole <- d$order <- d$x <- d$y <- NULL
+  d$branch <- d$object <- d$hole <- d$order <- d$x <- d$y <- NULL
   ## match.ID should be replaced by method to carry the original rownames somehow
-  SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopPartsPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
+  SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopBranchPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
-loopPartsPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
+loopBranchPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
 
 
 reverse_geomLine <- function(x, d, proj) {
   objects <- split(x, x$object)
-  d$part <- d$branch <- d$object <- d$order <- d$x <- d$y <- NULL
-  SpatialLinesDataFrame(SpatialLines(lapply(objects, loopPartsLine), proj4string = CRS(proj)), d)
+  d$branch <- d$object <- d$order <- d$x <- d$y <- NULL
+  SpatialLinesDataFrame(SpatialLines(lapply(objects, loopBranchLine), proj4string = CRS(proj)), d)
 }
-loopPartsLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
+loopBranchLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
 
 reverse_geomPoint <- function(a, d, proj) {
   # stop("not implemented")
@@ -77,12 +77,6 @@ reverse_geomPoint <- function(a, d, proj) {
 }
 
 detectSpClass <- function(x) {
-  #names(sptable(wrld_simpl))
-  #[1] "object" "part"   "branch"   "hole"   "x"      "y"
-  #names(sptable(as(wrld_simpl, "SpatialLinesDataFrame")))
-  #"object" "part"   "branch"   "x"      "y"
-  #names(sptable(as(as(wrld_simpl, "SpatialLinesDataFrame"), "SpatialPointsDataFrame")))
-  # "branch"   "object" "x"      "y"
   gn <-geomnames()
   if (all(gn$SpatialPolygonsDataFrame %in% names(x))) return("SpatialPolygonsDataFrame")
   if (all(gn$SpatialLinesDataFrame %in% names(x))) return("SpatialLinesDataFrame")

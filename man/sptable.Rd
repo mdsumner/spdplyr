@@ -30,8 +30,8 @@ sptable(object) <- value
 \value{
 \code{\link[dplyr]{tbl_df}} data_frame with columns
 \itemize{
- \item SpatialPolygonsDataFrame "object" "part"   "branch"   "hole"   "x"      "y"
- \item SpatialLinesDataFrame "object" "part"   "branch"   "x"      "y"
+ \item SpatialPolygonsDataFrame "object"   "branch"   "hole"   "x"      "y"
+ \item SpatialLinesDataFrame "object"   "branch"   "x"      "y"
  \item SpatialPointsDataFrame  "branch"   "object" "x"      "y"
 }
 

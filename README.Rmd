@@ -36,10 +36,10 @@ Turning these data into tables has been likened to making fish soup, which has a
 There are several ways to do this. 
 
 * **1) dplyr-Spatial**:  Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
-* **2) sptable**:  Use the table of coordinates with identifiers for object and part, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
+* **2) sptable**:  Use the table of coordinates with identifiers for object and branch, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
 * **3) geometry-column** Use a real data.frame but include the "Spatial* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization. 
 * **4) single-level nesting**: Nest the fortify table for each object in a single column. 
-* **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each part. This is close to full normalization, but cannot work with shared vertices or other topology. 
+* **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each branch. This is close to full normalization, but cannot work with shared vertices or other topology. 
 * **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them. 
 * **7) normalized**: A collection of related tables, without nesting. 
 
@@ -138,9 +138,9 @@ We can also restructure objects.
 
 ```{r}
 ## explode (or "disaggregate"") objects to individual polygons
-## here each part becomes an object, and each object only has one part
+## here each branch becomes an object, and each object only has one branch
 ## (ignoring hole-vs-island status for now)
-wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
+#wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
 ```
 
 # 3) geometry-columns: store the Spatial* thing in the column
@@ -174,7 +174,7 @@ Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and 
 
 Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes. 
 
-(See `mdsumner/gris` for normalizing further to unique vertices and storing parts and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
+(See `mdsumner/gris` for normalizing further to unique vertices and storing branches and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
 
 
 Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: https://gist.github.com/holstius/58818dc9bbb88968ec0b

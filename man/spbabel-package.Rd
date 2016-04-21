@@ -41,7 +41,7 @@ The spbabel package provides methods for the dplyr verbs and functions to round-
 
 \section{V. nsp_df}{
  double-nested tables for Branch and Vertex
-The \code{nsp_df} class provides a "nested spatial" way to store the parts and child vertices of Spatial objects in one table.
+The \code{nsp_df} class provides a "nested spatial" way to store the branches and child vertices of Spatial objects in one table.
 }
 
 \section{VI. db_df}{

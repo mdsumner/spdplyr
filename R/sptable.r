@@ -8,8 +8,8 @@
 #'
 #' @return \code{\link[dplyr]{tbl_df}} data_frame with columns
 #' \itemize{
-#'  \item SpatialPolygonsDataFrame "object" "part"   "branch"   "hole"   "x"      "y"
-#'  \item SpatialLinesDataFrame "object" "part"   "branch"   "x"      "y"
+#'  \item SpatialPolygonsDataFrame "object"   "branch"   "hole"   "x"      "y"
+#'  \item SpatialLinesDataFrame "object"   "branch"   "x"      "y"
 #'  \item SpatialPointsDataFrame  "branch"   "object" "x"      "y"
 #' }
 #' @export
@@ -97,7 +97,7 @@ mat2d_f <- function(x) {
                    function(j) {
                      coords <- .coordsIJ(x, i, j, typ)
                      nr <- nrow(coords)
-                     lst <- list(part = rep(j, nr), 
+                     lst <- list(
                                  branch = rep(j + cnt, nr), 
                                  hole = rep(.holes(x, i, j, typ), nr), 
                                  order = seq(nr),

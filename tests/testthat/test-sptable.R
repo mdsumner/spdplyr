@@ -1,12 +1,12 @@
 library(maptools)
 data(wrld_simpl)
 polytab <- spbabel::sptable(wrld_simpl)
-polynames <- c("object", "part", "branch", "hole", "order", "x", "y")
-polytypes <- setNames(c("integer", "integer", "integer", "logical", "integer", "numeric", "numeric"), polynames)
+polynames <- c("object", "branch", "hole", "order", "x", "y")
+polytypes <- setNames(c("integer", "integer", "logical", "integer", "numeric", "numeric"), polynames)
 
 linetab <- spbabel::sptable(as(wrld_simpl, "SpatialLinesDataFrame"))
-linenames <- c("object", "part", "branch", "order", "x", "y")
-linetypes <- setNames(c("integer", "integer", "integer",  "integer", "numeric", "numeric"), linenames)
+linenames <- c("object",  "branch", "order", "x", "y")
+linetypes <- setNames(c("integer",  "integer",  "integer", "numeric", "numeric"), linenames)
 
 context("safety catch in case the column order changes")
 test_that("sptable names is the same", {

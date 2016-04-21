@@ -4,8 +4,7 @@
 #' For Spatial, a data frame with columns
 #' \itemize{
 #'  \item \code{object} object ID \code{integer}
-#'  \item \code{part} part counter within object \code{integer}
-#'  \item \code{branch}  global part ID \code{integer}
+#'  \item \code{branch}  global branch ID \code{integer}
 #'  \item \code{hole} hole status island or hole? \code{logical}
 #' }
 #' @param x Spatial object
