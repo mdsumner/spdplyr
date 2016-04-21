@@ -1,5 +1,7 @@
 # spbabel dev
 
+* removed "part" terminology, in favour of "branch"
+
 * remove ptransform - maybe use reproj instead, wip
 
 * added methods for ptransform, needs tests
