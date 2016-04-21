@@ -63,7 +63,9 @@ I want these things:
 
 The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending". 
 
-## But I don't like pipes! 
+## "But, I don't like pipes!"
+
+Is nothing sacred? 
 
 Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here. 
 
@@ -132,18 +134,36 @@ plot(oz, col = "grey")
 plot(woz, add = TRUE)
 ```
 
-We can also restructure objects. 
+We can also restructure objects, by mutating the value of object to be the same as "branch" we get individual objects from each.
+
+
 
 ```{r}
+
+pp <- sptable(wrld_simpl %>% filter(NAME == "Japan" | grepl("Korea", NAME)))
 ## explode (or "disaggregate"") objects to individual polygons
 ## here each branch becomes an object, and each object only has one branch
 ## (ignoring hole-vs-island status for now)
-wone <- spFromTable(sptable(oz)  %>% filter(y < -39.5) %>% mutate(object = branch),   crs = proj4string(oz))
+wone <- spFromTable(pp %>% mutate(object = branch))
+op <- par(mfrow = c(2, 1), mar = rep(0, 4))
+plot(spFromTable(pp), col = grey(seq(0.3, 0.7, length = length(unique(pp$object)))))
+plot(wone, col = sample(rainbow(nrow(wone))), border = NA)
+text("topright", lab = "1")
+par(op)
 ```
 
 # 3) geometry-columns: store the Spatial* thing in the column
 
-sp_df
+The "geometry-column" approach simply stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see (Geometry columns)[https://github.com/mdsumner/spbabel/wiki/Geometry-columns]. 
+
+In `spbabel` we can store the `Spatial*` (without the DataFrame) geometry in a special column. 
+
+```{r}
+geocol <- sp_df(wrld_simpl)
+#geocol %>% filter(NAME, Spatial_)
+```
+
+Note that this approach can be easily applied with WKT or WKB, it's just a fair bit of extra work to do the type conversion when needed. Note that, R has a `raw` type that seamlessly handles WKB from many DBs, and the `wkb` package can read it, likewise with `rgeos::readWKT` and `rgeos::writeWKT`.
 
 # 4) single-level nesting: tidy fortify
 
@@ -160,6 +180,14 @@ db_df
 # 7) normalized: gris
 
 gris
+
+
+# Issues
+
+* names are not permanent yet, consider using "_" append like in gggeom for "special" columns
+* need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
+* some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
+* 
 
 
 # Early approach
