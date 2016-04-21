@@ -34,3 +34,8 @@ test_that("attributes are preserved, and adding a new one does only that", {
 test_that("mismatched attributes and object number is an error", {
   expect_error(spFromTable(sptab, attr_tab = data.frame(x = sample(1:20, 1))), "number of rows in attr must match distinct object in x")
 })
+
+sptable(poly1) <- sptable(poly1) %>% mutate(x = x - 5)
+test_that("replacement sptable works", {
+  expect_that(poly1, is_a("SpatialPolygonsDataFrame"))
+})
