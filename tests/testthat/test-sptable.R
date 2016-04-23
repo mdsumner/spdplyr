@@ -1,11 +1,11 @@
 library(maptools)
 data(wrld_simpl)
 polytab <- spbabel::sptable(wrld_simpl)
-polynames <- c("object", "branch", "hole", "order", "x", "y")
+polynames <- c("object_", "branch_", "island_", "order_", "x_", "y_")
 polytypes <- setNames(c("integer", "integer", "logical", "integer", "numeric", "numeric"), polynames)
 
 linetab <- spbabel::sptable(as(wrld_simpl, "SpatialLinesDataFrame"))
-linenames <- c("object",  "branch", "order", "x", "y")
+linenames <- c("object_", "branch_",  "order_", "x_", "y_")
 linetypes <- setNames(c("integer",  "integer",  "integer", "numeric", "numeric"), linenames)
 
 context("safety catch in case the column order changes")
@@ -43,11 +43,11 @@ world <- db_df(wrld_simpl)
 
 context("embedding works")
 test_that("round trip embedding works", {
-  expect_that(Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam), is_a("tbl_df"))
+  expect_that(Objects(world) %>% select(NAME, object_) %>% filter(NAME %in% nam), is_a("tbl_df"))
 })
 
-countryObjects <- Objects(world) %>% select(NAME, object) %>% filter(NAME %in% nam)
-countries <- countryObjects %>% inner_join(Branches(world), "object") %>% inner_join(Coords(world), "branch")
+countryObjects <- Objects(world) %>% select(NAME, object_) %>% filter(NAME %in% nam)
+countries <- countryObjects %>% inner_join(Branches(world), "object_") %>% inner_join(Coords(world), "branch_")
 test_that("round trip embedding works", {
   expect_that(spFromTable(countries, attr_tab = countryObjects, quiet = TRUE), is_a("SpatialPolygonsDataFrame"))
 })

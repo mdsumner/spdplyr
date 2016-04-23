@@ -17,7 +17,7 @@
 #' @importFrom dplyr %>% distinct_ as_data_frame
 #' @importFrom sp coordinates CRS SpatialPoints SpatialPointsDataFrame Line Lines SpatialLines SpatialLinesDataFrame Polygon Polygons SpatialPolygons SpatialPolygonsDataFrame
 #' @examples 
-#' semap1 <- semap  %>% dplyr::filter(y > -89.9999)
+#' semap1 <- semap  %>% dplyr::filter(y_ > -89.9999)
 #' sp <- spFromTable(semap1, attr_tab = seatt, crs = "+proj=longlat +ellps=WGS84")
 #' ## look, seamless Antarctica!
 #' ## library(rgdal); plot(spTransform(sp, "+proj=laea +lat_0=-70"))
@@ -26,9 +26,9 @@ spFromTable <- function(x, attr_tab = NULL, crs, ...) {
   if (is.null(crs)) crs <- NA_character_
   ## raster::geom form
   target <- detectSpClass(x)
-  dat <- x %>% distinct_("object")
+  dat <- x %>% distinct_("object_")
   
-   n_object <- length(unique(x$object))
+   n_object <- length(unique(x$object_))
    n_attribute <- nrow(attr_tab)
    if (is.null(n_attribute)) n_attribute <- n_object
   if (!(n_attribute == n_object)) stop("number of rows in attr must match distinct object in x") 
@@ -46,36 +46,36 @@ spFromTable <- function(x, attr_tab = NULL, crs, ...) {
 
 ## convert this to sptable type (Spatial_, Object)
 geomnames <- function() {
-  list(SpatialPolygonsDataFrame = c("object",  "branch", "hole",  "x", "y"),
-       SpatialLinesDataFrame = c("object",  "branch",  "x", "y"),
-       SpatialPointsDataFrame = c("branch", "object", "x", "y"))
+  list(SpatialPolygonsDataFrame = c("object_",  "branch_", "island_",  "x_", "y_"),
+       SpatialLinesDataFrame = c("object_",  "branch_",  "x_", "y_"),
+       SpatialPointsDataFrame = c("branch_", "object_", "x_", "y_"))
 }
 
 
 reverse_geomPoly <- function(x, d, proj) {
-  objects <- split(x, x$object)
+  objects <- split(x, x$object_)
   ## remove those columns used by reconstruction?
-  d$branch <- d$object <- d$hole <- d$order <- d$x <- d$y <- NULL
+  d$branch_ <- d$object_ <- d$island_ <- d$order_ <- d$x_ <- d$y_ <- NULL
   if (ncol(d) < 1L) d$id_ <- seq(nrow(d))  ## we might end up with no attributes
   ## match.ID should be replaced by method to carry the original rownames somehow
   SpatialPolygonsDataFrame(SpatialPolygons(lapply(objects, loopBranchPoly), proj4string = CRS(proj)), d, match.ID = FALSE)
 }
-loopBranchPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]), hole = b$hole[1L] == 1)), as.character(a$object[1L]))
+loopBranchPoly <- function(a) Polygons(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x_", "y_")]), hole = !b$island_[1L] == 1)), as.character(a$object_[1L]))
 
 
 reverse_geomLine <- function(x, d, proj) {
-  objects <- split(x, x$object)
-  d$branch <- d$object <- d$order <- d$x <- d$y <- NULL
+  objects <- split(x, x$object_)
+  d$branch_ <- d$object_ <- d$order_ <- d$x_ <- d$y_ <- NULL
   if (ncol(d) < 1L) d$id_ <- seq(nrow(d))  ## we might end up with no attributes
   SpatialLinesDataFrame(SpatialLines(lapply(objects, loopBranchLine), proj4string = CRS(proj)), d)
 }
-loopBranchLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x", "y")]))), as.character(a$object[1L]))
+loopBranchLine<- function(a) Lines(lapply(split(a, a$branch), function(b) Polygon(as.matrix(b[, c("x_", "y_")]))), as.character(a$object_[1L]))
 
 reverse_geomPoint <- function(a, d, proj) {
   # stop("not implemented")
   ## the decomposition is not yet applied for Multipoints . . .
   ## if (length(unique(a$object)) > 1) warning("no support for Multipoints yet")
-  SpatialPointsDataFrame(SpatialPoints(as.matrix(a[, c("x", "y")])), d, proj4string = CRS(proj))
+  SpatialPointsDataFrame(SpatialPoints(as.matrix(a[, c("x_", "y_")])), d, proj4string = CRS(proj))
 }
 
 detectSpClass <- function(x) {

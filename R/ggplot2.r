@@ -112,7 +112,7 @@
 # #                           # required_aes = c("x", "y"),
 # #                            default_aes = aes(x = "x", y = "y", 
 # #                                              fill = "grey", col = "black", 
-# #                                              group = "branch", fill = "object"),
+# #                                              group = "branch_", fill = "object_"),
 # #                            draw_key = draw_key_polygon,
 # #                            
 # #                            draw_group = function(data, panel_scales, coord) {
@@ -163,7 +163,7 @@
 # #                                first_row <- coords[1, , drop = FALSE]
 # #                               
 # #                                grid::pathGrob(
-# #                                  coords$x, coords$y, 
+# #                                  coords$x_, coords$y_, 
 # #                                  default.units = "native",
 # #                                  gp = grid::gpar(
 # #                                    col = first_row$colour,
@@ -186,9 +186,9 @@
 # # }
 # # 
 # # # ggplot.nsp_df <- function (data = NULL, mapping = aes(), ..., environment = parent.frame()) {
-# # #   NextMethod("ggplot", unnest(unnest(data)), mapping = aes(x, y, group = branch, fill = object))
+# # #   NextMethod("ggplot", unnest(unnest(data)), mapping = aes(x, y, group = branch_, fill = object_))
 # # # }
-# # ggplot(xa[, c("NAME", "object", "Object")]) + 
-# # #+ aes(x, y, group = branch, fill = object) 
+# # ggplot(xa[, c("NAME", "object_", "Object")]) + 
+# # #+ aes(x_, y_, group = branch_, fill = object_) 
 # #  geom_simple_path()
 # # 

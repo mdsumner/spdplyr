@@ -15,9 +15,9 @@
 #' #' x %>% select(Object, ISO3) %>% unnest %>% unnest
 #' nest_.Spatial <- function(data, ...) {
 #'   sptab <-  sptable(data) %>% 
-#'     group_by_("branch", "object") %>% 
-#'     nest_(key_col = "Branch") %>%  
-#'     group_by_("object") %>% nest_(key_col = "Object")
+#'     group_by_("branch_", "object_") %>% 
+#'     nest_(key_col = "Branch_") %>%  
+#'     group_by_("object_") %>% nest_(key_col = "Object")
 #'   
 #'   attrd <- as_data_frame(as.data.frame(data))
 #'   y <- bind_cols(attrd, sptab)
@@ -37,7 +37,7 @@
 #' #' @rdname nsp_df-methods
 #' `[.nsp_df` <- function(x, i, j, ...) {
 #'   d <- NextMethod("[", x)
-#'   if (!is.null(d[["Object"]]) & is.list(d[["Object"]])) {
+#'   if (!is.null(d[["Object_"]]) & is.list(d[["Object_"]])) {
 #'     class(d) <- c("nsp_df", class(d))
 #'     
 #'   }
@@ -57,12 +57,12 @@
 #' #nsp_df <- function(x, ...) UseMethod(x)
 #' 
 #' from_nested_df <- function(x) {
-#'   spFromTable(vertices(select_(x, "object", "Object")), crs = attr(x, "crs"), attr_tab = x[!sapply(x, is.list)], quiet = TRUE)
+#'   spFromTable(vertices(select_(x, "object_", "Object_")), crs = attr(x, "crs"), attr_tab = x[!sapply(x, is.list)], quiet = TRUE)
 #' }
 #' 
 #' 
 #' vertices <- function(x) {
-#'   unnest(unnest(select_(x, "object", "Object")))
+#'   unnest(unnest(select_(x, "object_", "Object_")))
 #' }
 #' 
 #' 

@@ -9,7 +9,7 @@ point1 <- as(line1, "SpatialPointsDataFrame")
 sptab <- sptable(poly1)
 sp <- spFromTable(sptab, attr_tab = as.data.frame(poly1))
 
-sptabmod <- sptab %>% mutate(object = branch)
+sptabmod <- sptab %>% mutate(object_ = branch_)
 spFromTable(sptabmod)
 test_that("we can round-trip sensibly", {
   expect_true(all(names(poly1) == names(sp)))
@@ -35,7 +35,7 @@ test_that("mismatched attributes and object number is an error", {
   expect_error(spFromTable(sptab, attr_tab = data.frame(x = sample(1:20, 1))), "number of rows in attr must match distinct object in x")
 })
 
-sptable(poly1) <- sptable(poly1) %>% mutate(x = x - 5)
+sptable(poly1) <- sptable(poly1) %>% mutate(x_ = x_ - 5)
 test_that("replacement sptable works", {
   expect_that(poly1, is_a("SpatialPolygonsDataFrame"))
 })

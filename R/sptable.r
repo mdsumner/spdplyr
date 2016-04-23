@@ -8,9 +8,9 @@
 #'
 #' @return \code{\link[dplyr]{tbl_df}} data_frame with columns
 #' \itemize{
-#'  \item SpatialPolygonsDataFrame "object"   "branch"   "hole"   "x"      "y"
-#'  \item SpatialLinesDataFrame "object"   "branch"   "x"      "y"
-#'  \item SpatialPointsDataFrame  "branch"   "object" "x"      "y"
+#'  \item SpatialPolygonsDataFrame "object_"   "branch_"   "island_"   "_"      "y_"
+#'  \item SpatialLinesDataFrame "object_"   "branch_"   "x_"      "y_"
+#'  \item SpatialPointsDataFrame  "branch_"   "object_" "x_"      "y_"
 #' }
 #' @export
 #'
@@ -98,16 +98,16 @@ mat2d_f <- function(x) {
                      coords <- .coordsIJ(x, i, j, typ)
                      nr <- nrow(coords)
                      lst <- list(
-                                 branch = rep(j + cnt, nr), 
-                                 hole = rep(.holes(x, i, j, typ), nr), 
-                                 order = seq(nr),
-                                 x = coords[,1], 
-                                 y = coords[,2])
+                                 branch_ = rep(j + cnt, nr), 
+                                 island_ = rep(.holes(x, i, j, typ), nr), 
+                                 order_ = seq(nr),
+                                 x_ = coords[,1], 
+                                 y_ = coords[,2])
                      as_data_frame(lst[!sapply(lst, is.null)])
                    }
       )
       psd <- do.call(bind_rows, ps)
-      objlist[[i]] <- bind_cols(data_frame(object = rep(i, nrow(psd))), psd)
+      objlist[[i]] <- bind_cols(data_frame(object_ = rep(i, nrow(psd))), psd)
       cnt <- cnt + nsubobs
     }
   obs <- do.call(bind_rows, objlist)
@@ -132,6 +132,6 @@ mat2d_f <- function(x) {
     br <- seq(nrow(xy))
   }
   xy <- cbind(br, br, xy)
-  colnames(xy) <- c('branch', 'object', 'x', 'y')
+  colnames(xy) <- c('branch_', 'object_', 'x_', 'y_')
   return(xy)
 }

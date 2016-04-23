@@ -1,5 +1,7 @@
 # spbabel dev
 
+* committing to names object_, branch_, island_, order_, x_ and y_, and Object_ and Branch_
+
 * removed "part" terminology, in favour of "branch"
 
 * remove ptransform - maybe use reproj instead, wip

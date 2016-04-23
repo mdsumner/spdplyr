@@ -127,7 +127,7 @@ oztab <- sptable(oz)
 ##  make a copy to modify
 woz <- oz
 ## modify the geometry on this object without separating the vertices from the objects
-sptable(woz) <- sptable(woz) %>% mutate(x = x - 5)
+sptable(woz) <- sptable(woz) %>% mutate(x_ = x_ - 5)
 
 # plot to compare 
 plot(oz, col = "grey")
@@ -144,7 +144,7 @@ pp <- sptable(wrld_simpl %>% filter(NAME == "Japan" | grepl("Korea", NAME)))
 ## explode (or "disaggregate"") objects to individual polygons
 ## here each branch becomes an object, and each object only has one branch
 ## (ignoring hole-vs-island status for now)
-wone <- spFromTable(pp %>% mutate(object = branch))
+wone <- spFromTable(pp %>% mutate(object_ = branch_))
 op <- par(mfrow = c(2, 1), mar = rep(0, 4))
 plot(spFromTable(pp), col = grey(seq(0.3, 0.7, length = length(unique(pp$object)))))
 plot(wone, col = sample(rainbow(nrow(wone))), border = NA)
@@ -153,18 +153,30 @@ par(op)
 
 # 3) geometry-columns: store the Spatial* thing in the column
 
-The "geometry-column" approach simply stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see (Geometry columns)[https://github.com/mdsumner/spbabel/wiki/Geometry-columns]. 
+The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see (Geometry columns)[https://github.com/mdsumner/spbabel/wiki/Geometry-columns]. 
 
 In `spbabel` we can store the `Spatial*` (without the DataFrame) geometry in a special column. 
 
 ```{r}
 geocol <- sp_df(wrld_simpl)
-#geocol %>% filter(NAME, Spatial_)
+geocol %>% dplyr::select(NAME, Spatial_)
 ```
 
-Note that this approach can be easily applied with WKT or WKB, it's just a fair bit of extra work to do the type conversion when needed. Note that, R has a `raw` type that seamlessly handles WKB from many DBs, and the `wkb` package can read it, likewise with `rgeos::readWKT` and `rgeos::writeWKT`.
+Note that this approach can be easily applied with WKT or WKB, it's just a fair bit of extra work to do the type conversion when needed. Note that, R has a `raw` type that seamlessly handles WKB from many DBs, and the `wkb` package can read it, likewise with `rgeos::readWKT` and `rgeos::writeWKT`. (See this in action in [manifoldr](https://github.com/mdsumner/manifoldr).)
 
-I'm also not sure on the right ways to make this all work - do we subclass the table with the geometry, or just extend the format options for a "Spatial" column? 
+## Questions on sp_df
+
+
+Can we use mutate with the as coercion? 
+
+```{r}
+spdf <- sp_df(wrld_simpl)
+## this doesn't work
+#spdf %>% mutate(Spatial_ = as(Spatial_, "SpatialLines"))
+spdf$Spatial_ <- as(spdf$Spatial_, "SpatialLines")
+```
+
+How to apply this, as an extra class? Note that geom_polygon in gggeom does not survive filter since the class attribute is lost. 
 
 
 # 4) single-level nesting: tidy fortify

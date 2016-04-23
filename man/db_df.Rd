@@ -20,9 +20,9 @@ db_df(x, ...)
 \value{
 For Spatial, a data frame with columns
 \itemize{
- \item \code{object} object ID \code{integer}
- \item \code{branch}  global branch ID \code{integer}
- \item \code{hole} hole status island or hole? \code{logical}
+ \item \code{object_} object ID \code{integer}
+ \item \code{branch_}  global branch ID \code{integer}
+ \item \code{island_}  ring status island or hole? \code{logical}
 }
 
 nested tables
