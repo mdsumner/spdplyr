@@ -1,0 +1,53 @@
+---
+title: "Round-trip Spatial R / SQLite with WKB"
+author: "Michael Sumner"
+date: "25 April 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(maptools);library(dplyr); library(raster)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Create a dummy data set to read from. 
+
+```{r}
+## create a table with raw WKB
+library(maptools)
+data(wrld_simpl)
+world <- as.data.frame(wrld_simpl)
+library(wkb)
+world$wkb <- writeWKB(geometry(wrld_simpl))
+
+## write this table to sqlite
+library(dplyr)
+spdb <- src_sqlite("spdb.sqlite3", create = TRUE)
+wrld <- copy_to(spdb, world, temporary = FALSE, indexes = list("FIPS"))
+```
+
+
+
+Read back in with tbl on the table name, with SQL, and with dplyr verbs
+
+```{r}
+## 1. 
+tbl(spdb, "world")
+
+## 2. native in the db
+nx <- tbl(spdb, sql('SELECT [NAME], [wkb], [FIPS]FROM [world] WHERE [ISO3] = "AUS" OR [FIPS] = "GY"'))
+
+## 3. or translated from verbs in R
+dx <- tbl(spdb, "world") %>% 
+  dplyr::filter(ISO3 == "AUS" | FIPS == "GY") %>% 
+  dplyr::select(NAME, wkb, FIPS) %>% collect()
+```
+
+Restore to sp. Note that we have lost the projection information (in a just world it would live in the WKB but it does not). 
+
+```{r}
+# restore to sp
+library(raster) ## for nice printing
+SpatialPolygonsDataFrame(wkb::readWKB(dx$wkb), dplyr::select(dx, -wkb) %>% as.data.frame())
+```
