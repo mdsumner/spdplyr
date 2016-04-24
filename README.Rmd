@@ -242,8 +242,6 @@ obj <- Objects(db)  %>%
 gris is pretty much what we've recreated in 6, but including methods to convert to rgl and triangulate and plot. 
 
 
-
-
 # Issues
 
 * need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule: see Transfer Rules in Manifold

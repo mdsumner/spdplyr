@@ -315,41 +315,6 @@ obj <- Objects(db)  %>%
 
 gris is pretty much what we've recreated in 6, but including methods to convert to rgl and triangulate and plot.
 
-Take an example used to plot tilted maps in ggplot2.
-
-``` r
-# load libraries 
-library(rgeos) 
-#> rgeos version: 0.3-19, (SVN revision 524)
-#>  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
-#>  Linking to sp version: 1.2-2 
-#>  Polygon checking: TRUE
-library(UScensus2000tract) 
-#> Loading required package: foreign
-library(ggplot2) 
-library(dplyr) 
-library(RColorBrewer) 
-# load data 
-data("oregon.tract") 
-# plot Census Tract map 
-plot(oregon.tract)
-```
-
-![](figure/README-unnamed-chunk-12-1.png)<!-- -->
-
-``` r
-
-library(gris)
-#> 
-#> Attaching package: 'gris'
-#> The following object is masked from 'package:rgeos':
-#> 
-#>     triangulate
-x <- triangulate(gris(oregon.tract))
-#> Joining by: ".br0"
-plot3d(x)
-```
-
 Issues
 ======
 
