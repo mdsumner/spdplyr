@@ -189,10 +189,10 @@ pp <- sptable(wrld_simpl %>% filter(NAME == "Japan" | grepl("Korea", NAME)))
 ## explode (or "disaggregate"") objects to individual polygons
 ## here each branch becomes an object, and each object only has one branch
 ## (ignoring hole-vs-island status for now)
-wone <- spFromTable(pp %>% mutate(object_ = branch_))
+wone <- spFromTable(pp %>% mutate(object_ = branch_), crs = attr(pp, "crs"))
 op <- par(mfrow = c(2, 1), mar = rep(0, 4))
 plot(spFromTable(pp), col = grey(seq(0.3, 0.7, length = length(unique(pp$object)))))
-plot(wone, col = sample(rainbow(nrow(wone))), border = NA)
+plot(wone, col = sample(rainbow(nrow(wone), alpha = 0.6)), border = NA)
 ```
 
 ![](figure/README-unnamed-chunk-6-1.png)<!-- -->
@@ -240,7 +240,10 @@ library(ggplot2)
 ggplot(wtab) + aes(x = x_, y = y_, fill = factor(SUBREGION), group = branch_) + geom_polygon()
 ```
 
-![](figure/README-unnamed-chunk-7-1.png)<!-- --> \# 5) double-level nesting: even tidier fortify
+![](figure/README-unnamed-chunk-7-1.png)<!-- -->
+
+5) double-level nesting: even tidier fortify
+============================================
 
 Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. It's also difficult to see how to do the nesting in two natural parts, it's fine to double-nest in one go, but you can't single-nest and then nest again easily (it's easy to double-nest and then single-unnest though).
 
@@ -250,6 +253,7 @@ Unclear at the moment if this is worth doing at all. we can save space but it en
 Create the bare-bones of gris, a single table with nested tables of Vertices, Branches and Objects.
 
 ``` r
+wrld_simpl$NAME <- levels(wrld_simpl$NAME)[wrld_simpl$NAME]
 (db <- db_df(wrld_simpl))
 #> Source: local data frame [3 x 2]
 #> 
@@ -264,10 +268,45 @@ The nice part of this approach is that each individual table *within this db tab
 
 There are shared vertices in this data set, so let's remove the duplication with a branch\_vertex table.
 
-7) normalized: gris
-===================
+``` r
+vertex <- db$Table$Vertex
+vertex$vertex_ <- as.integer(factor(paste(vertex$x_, vertex$y_, sep = "|")))
+db <- bind_rows(db, list(Name = "Branch_Vertex", Table = list(select_(vertex, "branch_", "vertex_"))))
+db$Table[db$Name == "Vertex"] <- list(distinct_(vertex, "vertex_"))
+names(db$Table) <- db$Name
+```
 
-gris
+We can multiply everything out again with joins, though I haven't figured out how this should all work - would it make sense to set up a "cascaded join" for the object or something like that . . .
+
+``` r
+library(ggvis)
+#> 
+#> Attaching package: 'ggvis'
+#> The following object is masked from 'package:ggplot2':
+#> 
+#>     resolution
+Objects <- function(x) x$Table$Object
+Branches <- function(x) x$Table$Branch
+Vertices <- function(x) x$Table$Vertex
+
+
+tab <- Objects(db)  %>% 
+  dplyr::select_("object_", "NAME") %>% 
+  filter(NAME %in% c("Norway", "Sweden")) %>% 
+   inner_join(Branches(db)) %>% inner_join(db$Table$Branch_Vertex) %>% inner_join(Vertices(db)) %>% group_by(branch_) 
+#> Joining by: "object_"
+#> Joining by: "branch_"
+#> Joining by: c("branch_", "vertex_")
+#p <- tab %>%   ggvis(~x_, ~y_, fill= ~NAME) %>%  layer_paths() 
+#print(p)
+ ggplot(tab)  + aes(x_, y_, group = branch_, fill = NAME) + geom_polygon()
+```
+
+![](figure/README-unnamed-chunk-10-1.png)<!-- -->
+
+\`\`\` \# 7) normalized: gris
+
+gris is pretty much what we've recreated in 6, but including methods to convert to rgl and triangulate and plot.
 
 Issues
 ======
@@ -275,19 +314,6 @@ Issues
 -   need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
 -   some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
 -   
-
-Early approach
-==============
-
-Create methods for the dplyr verbs: filter, mutate, arrange, select etc.
-
-This is part of an overall effort to normalize Spatial data in R, to create a system that can be stored in a database.
-
-Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and round trip them. This is modelled on `raster::geom rather` than `ggplot2::fortify`, but perhaps only since I use raster constantly and ggplot2 barely ever.
-
-Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes.
-
-(See `mdsumner/gris` for normalizing further to unique vertices and storing branches and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
 
 Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: <https://gist.github.com/holstius/58818dc9bbb88968ec0b>
 
