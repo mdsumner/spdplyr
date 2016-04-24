@@ -214,25 +214,43 @@ The "geometry-column" approach stores the complex object in a special column typ
 
 See [sp.df]( https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation. 
 
-# 4) single-level nesting: tidy fortify
+# 4) single-level nesting: tidyr fortify
 
-sportify?
-
-# 5) double-level nesting: even tidier fortify
-
-nsp_df
-
-Please note that this cannot currently do polygons with holes properly, `geom_polygon` assumes you may only have one hole and is relying on `col` not being set. 
+Using `nest` will give us the analog of `fortify.Spatial*DataFrame` in the `Object_` column. 
 
 
 ```r
-library(dplyr)
+library(maptools)
+data(wrld_simpl)
 library(tidyr)
+wnest <- nest(wrld_simpl)
+ 
+(wtab <- wnest %>% select(Object_, SUBREGION) %>% unnest())
+#> Source: local data frame [26,264 x 6]
+#> 
+#>    SUBREGION branch_ island_ order_         x_       y_
+#>        (int)   (int)   (lgl)  (int)      (dbl)    (dbl)
+#> 1         29       1   FALSE      1 -61.686668 17.02444
+#> 2         29       1   FALSE      2 -61.887222 17.10527
+#> 3         29       1   FALSE      3 -61.794449 17.16333
+#> 4         29       1   FALSE      4 -61.686668 17.02444
+#> 5         29       2   FALSE      1 -61.729172 17.60861
+#> 6         29       2   FALSE      2 -61.853058 17.58305
+#> 7         29       2   FALSE      3 -61.873062 17.70389
+#> 8         29       2   FALSE      4 -61.729172 17.60861
+#> 9         15       3   FALSE      1   2.963610 36.80222
+#> 10        15       3   FALSE      2   4.785832 36.89472
+#> ..       ...     ...     ...    ...        ...      ...
+
 library(ggplot2)
-(nest(wrld_simpl)   %>% select(NAME, Object_, object_)  %>% unnest()  %>% unnest())  %>% ggplot() + aes(x_, y_, group = branch_, fill = object_) + geom_polygon()
+ggplot(wtab) + aes(x = x_, y = y_, fill = factor(SUBREGION), group = branch_) + geom_polygon()
 ```
 
 ![plot of chunk unnamed-chunk-7](figure/README-unnamed-chunk-7-1.png)
+# 5) double-level nesting: even tidier fortify
+
+Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. 
+
 
 # 6) normalized-nesting: one table of non-analogous tables
 
@@ -245,7 +263,6 @@ gris
 
 # Issues
 
-* names are not permanent yet, consider using "_" append like in gggeom for "special" columns
 * need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
 * some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
 * 
