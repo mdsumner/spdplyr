@@ -44,11 +44,11 @@ This document aims to illustrate each of these approaches, much is still work in
 
 ## What seems most promising? 
 
-1) **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only. 
-2) **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions. 
-3) **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end. 
-4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. 
-6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives. 
+* 1) **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only. 
+* 2) **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions. 
+* 3) **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end. 
+* 4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. Not sure if we need classes, it can all be done generically and that might be best. 
+* 6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives. 
 
 
 # Why do this? 
@@ -221,6 +221,18 @@ sportify?
 # 5) double-level nesting: even tidier fortify
 
 nsp_df
+
+Please note that this cannot currently do polygons with holes properly, `geom_polygon` assumes you may only have one hole and is relying on `col` not being set. 
+
+
+```r
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+(nest(wrld_simpl)   %>% select(NAME, Object_, object_)  %>% unnest()  %>% unnest())  %>% ggplot() + aes(x_, y_, group = branch_, fill = object_) + geom_polygon()
+```
+
+![plot of chunk unnamed-chunk-7](figure/README-unnamed-chunk-7-1.png)
 
 # 6) normalized-nesting: one table of non-analogous tables
 
