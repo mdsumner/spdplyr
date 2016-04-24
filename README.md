@@ -96,7 +96,6 @@ We can use polygons and lines objects as well.
 
 ```r
 library(maptools)
-#> Checking rgeos availability: TRUE
 data(wrld_simpl)
 ## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
 worldcorner <- wrld_simpl %>% 
@@ -211,7 +210,7 @@ par(op)
 
 # 3) geometry-columns: store the Spatial* thing in the column
 
-The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see (Geometry columns)[https://github.com/mdsumner/spbabel/wiki/Geometry-columns]. 
+The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see [Geometry columns](https://github.com/mdsumner/spbabel/wiki/Geometry-columns). 
 
 See [sp.df]( https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation. 
 
