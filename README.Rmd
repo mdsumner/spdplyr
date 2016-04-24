@@ -229,18 +229,26 @@ tab <- Objects(db)  %>%
 ```
 
 
+```{r}
+obj <- Objects(db)  %>% 
+  dplyr::select_("object_", "NAME") %>% 
+  filter(NAME %in% c("Norway", "Sweden"))
+
 
 ```
+
 # 7) normalized: gris
 
 gris is pretty much what we've recreated in 6, but including methods to convert to rgl and triangulate and plot. 
 
 
+
+
 # Issues
 
-* need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
-* some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
-* 
+* need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule: see Transfer Rules in Manifold
+* some details are carried by attr()ibutes on the objects, like "crs": these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
+
 
 Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: https://gist.github.com/holstius/58818dc9bbb88968ec0b
 

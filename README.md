@@ -304,16 +304,57 @@ tab <- Objects(db)  %>%
 
 ![](figure/README-unnamed-chunk-10-1.png)<!-- -->
 
-\`\`\` \# 7) normalized: gris
+``` r
+obj <- Objects(db)  %>% 
+  dplyr::select_("object_", "NAME") %>% 
+  filter(NAME %in% c("Norway", "Sweden"))
+```
+
+7) normalized: gris
+===================
 
 gris is pretty much what we've recreated in 6, but including methods to convert to rgl and triangulate and plot.
+
+Take an example used to plot tilted maps in ggplot2.
+
+``` r
+# load libraries 
+library(rgeos) 
+#> rgeos version: 0.3-19, (SVN revision 524)
+#>  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
+#>  Linking to sp version: 1.2-2 
+#>  Polygon checking: TRUE
+library(UScensus2000tract) 
+#> Loading required package: foreign
+library(ggplot2) 
+library(dplyr) 
+library(RColorBrewer) 
+# load data 
+data("oregon.tract") 
+# plot Census Tract map 
+plot(oregon.tract)
+```
+
+![](figure/README-unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+
+library(gris)
+#> 
+#> Attaching package: 'gris'
+#> The following object is masked from 'package:rgeos':
+#> 
+#>     triangulate
+x <- triangulate(gris(oregon.tract))
+#> Joining by: ".br0"
+plot3d(x)
+```
 
 Issues
 ======
 
--   need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
--   some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
--   
+-   need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule: see Transfer Rules in Manifold
+-   some details are carried by attr()ibutes on the objects, like "crs": these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
 
 Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: <https://gist.github.com/holstius/58818dc9bbb88968ec0b>
 
