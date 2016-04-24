@@ -42,6 +42,15 @@ The normalized approaches are in flux, though a non-nested approach is well fles
 
 This document aims to illustrate each of these approaches, much is still work in progress. 
 
+## What seems most promising? 
+
+1) **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only. 
+2) **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions. 
+3) **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end. 
+4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. 
+6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives. 
+
+
 # Why do this? 
 
 I want these things: 
@@ -87,6 +96,7 @@ We can use polygons and lines objects as well.
 
 ```r
 library(maptools)
+#> Checking rgeos availability: TRUE
 data(wrld_simpl)
 ## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
 worldcorner <- wrld_simpl %>% 
@@ -203,46 +213,7 @@ par(op)
 
 The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see (Geometry columns)[https://github.com/mdsumner/spbabel/wiki/Geometry-columns]. 
 
-In `spbabel` we can store the `Spatial*` (without the DataFrame) geometry in a special column. 
-
-
-```r
-geocol <- sp_df(wrld_simpl)
-geocol %>% dplyr::select(NAME, Spatial_)
-#> Source: local data frame [246 x 2]
-#> 
-#>                   NAME     Spatial_
-#>                 (fctr)       (SptP)
-#> 1  Antigua and Barbuda  Polygons[2]
-#> 2              Algeria  Polygons[1]
-#> 3           Azerbaijan  Polygons[5]
-#> 4              Albania  Polygons[1]
-#> 5              Armenia  Polygons[4]
-#> 6               Angola  Polygons[3]
-#> 7       American Samoa  Polygons[5]
-#> 8            Argentina  Polygons[6]
-#> 9            Australia Polygons[97]
-#> 10             Bahrain  Polygons[6]
-#> ..                 ...          ...
-```
-
-Note that this approach can be easily applied with WKT or WKB, it's just a fair bit of extra work to do the type conversion when needed. Note that, R has a `raw` type that seamlessly handles WKB from many DBs, and the `wkb` package can read it, likewise with `rgeos::readWKT` and `rgeos::writeWKT`. (See this in action in [manifoldr](https://github.com/mdsumner/manifoldr).)
-
-## Questions on sp_df
-
-
-Can we use mutate with the as coercion? 
-
-
-```r
-spdf <- sp_df(wrld_simpl)
-## this doesn't work
-#spdf %>% mutate(Spatial_ = as(Spatial_, "SpatialLines"))
-spdf$Spatial_ <- as(spdf$Spatial_, "SpatialLines")
-```
-
-How to apply this, as an extra class? Note that geom_polygon in gggeom does not survive filter since the class attribute is lost. 
-
+See [sp.df]( https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation. 
 
 # 4) single-level nesting: tidy fortify
 
