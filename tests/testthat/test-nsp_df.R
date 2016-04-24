@@ -13,6 +13,6 @@
 # 
 # 
 # test_that("nesting works", {
-#   expect_silent( plot(xa, col = grey(seq(0, 1, length = nrow(xa)))))
+#   #expect_silent( plot(xa, col = grey(seq(0, 1, length = nrow(xa)))))
 #   #expect_silent(ggplot(xa) + stat_nested())
 # })

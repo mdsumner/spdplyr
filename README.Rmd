@@ -162,7 +162,7 @@ par(op)
 
 # 3) geometry-columns: store the Spatial* thing in the column
 
-The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see [Geometry columns](https://github.com/mdsumner/spbabel/wiki/Geometry-columns). 
+The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see [Geometry columns](https://github.com/mdsumner/spbabel/wiki/Geometry-columns) and [Round-trip sp and WKB](https://github.com/mdsumner/spbabel/wiki/Round-trip-Spatial-R---SQLite-with-WKB). 
 
 See [sp.df]( https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation. 
 
@@ -184,12 +184,23 @@ ggplot(wtab) + aes(x = x_, y = y_, fill = factor(SUBREGION), group = branch_) + 
 ```
 # 5) double-level nesting: even tidier fortify
 
-Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. 
+Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. It's also difficult to see how to do the nesting in two natural parts, it's fine to double-nest in one go, but you can't single-nest and then nest again easily (it's easy to double-nest and then single-unnest though). 
 
 
 # 6) normalized-nesting: one table of non-analogous tables
 
-db_df
+Create the bare-bones of gris, a single table with nested tables of Vertices, Branches and Objects. 
+
+```{r}
+(db <- db_df(wrld_simpl))
+
+```
+
+The nice part of this approach is that each individual table *within this db table* can be backed in a DB without modification, this is not true for nested tables. 
+
+There are shared vertices in this data set, so let's remove the duplication with a branch_vertex table. 
+
+```{r}
 
 # 7) normalized: gris
 

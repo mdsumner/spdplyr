@@ -28,7 +28,7 @@ db_df.list <- function(x, ...) {
 db_df.Spatial <- function(x, ...) {
   sptab <-  sptable(x) 
   attrd <- as_data_frame(as.data.frame(x))
-  x <- list(Coord = select_(sptab, "x_", "y_", "branch_"), 
+  x <- list(Vertex = select_(sptab, "x_", "y_", "branch_"), 
        Branch = select_(distinct_(sptab, "branch_"), "branch_", "island_", "object_"), 
        Object = bind_cols(attrd, select_(distinct_(sptab, "object_"), "object_")))
   db_df(x)
