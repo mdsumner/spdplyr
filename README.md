@@ -1,86 +1,82 @@
 
-output:
-  md_document:
-    variant: markdown_github
----
-
 [![Travis-CI Build Status](https://travis-ci.org/mdsumner/spbabel.svg?branch=master)](https://travis-ci.org/mdsumner/spbabel)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+Installation
+------------
 
+Spbabel can be installed directly from github:
 
-## Installation
-
-Spbabel can be installed directly from github: 
-
-
-```r
+``` r
 devtools::install_github("mdsumner/spbabel")
 ```
-# spbabel: bisque or bouillon?
 
-Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions. 
+spbabel: bisque or bouillon?
+============================
 
-Spatial data in the `sp` package have a formal definition  (extending class `Spatial`) that is modelled on shapefiles, and close at least in spirit to the [Simple Features definition](https://github.com/edzer/sfr). See [What is Spatial in R?](https://github.com/mdsumner/spbabel/wiki/What-is-Spatial-in-R) for more details. 
+Part of an effort towards dplyr/table-fication of Spatial classes and the spatial-zoo in R. Inspired by Eonfusion and Manifold and dplyr and Douglas Adams and spurned on by helpful twitter and ropensci discussions.
 
-Turning these data into tables has been likened to making fish soup, which has a nice nod to the universal translator [babelfish](https://en.wikipedia.org/wiki/List_of_races_and_species_in_The_Hitchhiker%27s_Guide_to_the_Galaxy#Babel_fish). Soup may be thick and creamy as in the "twice cooked" *bisque* or clear as in the "boiled" *bouillon* and this analogy can be applied in many ways including whatever way you like. 
- 
-# How does spbabel allow sp to work with dplyr? 
+Spatial data in the `sp` package have a formal definition (extending class `Spatial`) that is modelled on shapefiles, and close at least in spirit to the [Simple Features definition](https://github.com/edzer/sfr). See [What is Spatial in R?](https://github.com/mdsumner/spbabel/wiki/What-is-Spatial-in-R) for more details.
 
-There are several ways to do this. 
+Turning these data into tables has been likened to making fish soup, which has a nice nod to the universal translator [babelfish](https://en.wikipedia.org/wiki/List_of_races_and_species_in_The_Hitchhiker%27s_Guide_to_the_Galaxy#Babel_fish). Soup may be thick and creamy as in the "twice cooked" *bisque* or clear as in the "boiled" *bouillon* and this analogy can be applied in many ways including whatever way you like.
 
-* **1) dplyr-Spatial**:  Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame. 
-* **2) sptable**:  Use the table of coordinates with identifiers for object and branch, like fortify, with sptable() and sptable()<- workflow to fortify and modify in a more flexible way. 
-* **3) geometry-column** Use a real data.frame but include the "Spatial* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization. 
-* **4) single-level nesting**: Nest the fortify table for each object in a single column. 
-* **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each branch. This is close to full normalization, but cannot work with shared vertices or other topology. 
-* **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them. 
-* **7) normalized**: A collection of related tables, without nesting. 
+How does spbabel allow sp to work with dplyr?
+=============================================
 
+There are several ways to do this.
 
-The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). 
+-   **1) dplyr-Spatial**: Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame.
+-   **2) sptable**: Use the table of coordinates with identifiers for object and branch, like fortify, with sptable() and sptable()&lt;- workflow to fortify and modify in a more flexible way.
+-   **3) geometry-column** Use a real data.frame but include the "Spatial\* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization.
+-   **4) single-level nesting**: Nest the fortify table for each object in a single column.
+-   **5) double-level nesting**: Nest the twice-fortified table for each object, and then in the object table for each branch. This is close to full normalization, but cannot work with shared vertices or other topology.
+-   **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them.
+-   **7) normalized**: A collection of related tables, without nesting.
 
-This document aims to illustrate each of these approaches, much is still work in progress. 
+The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris).
 
-## What seems most promising? 
+This document aims to illustrate each of these approaches, much is still work in progress.
 
-* 1) **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only. 
-* 2) **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions. 
-* 3) **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end. 
-* 4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. Not sure if we need classes, it can all be done generically and that might be best. 
-* 6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives. 
+What seems most promising?
+--------------------------
 
+-   1.  **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only.
+-   1.  **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions.
+-   1.  **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end.
+-   4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. Not sure if we need classes, it can all be done generically and that might be best.
+-   6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives.
 
-# Why do this? 
+Why do this?
+============
 
-I want these things: 
+I want these things:
 
-* flexibility in the number and type/s of attribute stored as "coordinates", x, y, lon, lat, z, time, temperature, etc.
-* shared vertices
-* ability to store points, lines and areas together, sharing topology where appropriate
-* provide a flexible basis for conversion between other formats.
-* flexibility and ease of use
-* integration with database engines and other systems
-* integration with D3 via htmlwidgets, with shiny, and with gggeom ggvis or similar
-* data-flow with dplyr piping as the engine behind a D3 web interface
+-   flexibility in the number and type/s of attribute stored as "coordinates", x, y, lon, lat, z, time, temperature, etc.
+-   shared vertices
+-   ability to store points, lines and areas together, sharing topology where appropriate
+-   provide a flexible basis for conversion between other formats.
+-   flexibility and ease of use
+-   integration with database engines and other systems
+-   integration with D3 via htmlwidgets, with shiny, and with gggeom ggvis or similar
+-   data-flow with dplyr piping as the engine behind a D3 web interface
 
-The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending". 
+The ability to use [Manifold System](http://www.manifold.net/) seamlessly with R is a particular long-term goal, and this will be best done(TM) via dplyr "back-ending".
 
-## "But, I don't like pipes!"
+"But, I don't like pipes!"
+--------------------------
 
-Is nothing sacred? 
+Is nothing sacred?
 
-Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here. 
+Please note that the "pipelining" aspect of `dplyr` is not the main motivation here, and it's not even important. That is just a syntactic sugar, all of this work can be done in the standard function "chaining" way that is common in R. It's the generalization, speed, database-back-end-ability and need for flexibility in what Spatial provides that is key here.
 
+1) Direct dplyr verbs for Spatial
+=================================
 
-# 1) Direct dplyr verbs for Spatial
+Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs.
 
-Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs. 
+See `?dplyr-Spatial'` for supported verbs.
 
-See `?dplyr-Spatial'` for supported verbs. 
-
-
-```r
+``` r
 data(quakes)
 library(sp)
 coordinates(quakes) <- ~long+lat
@@ -89,13 +85,13 @@ library(spbabel)
 quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
 ```
 
-![plot of chunk unnamed-chunk-3](figure/README-unnamed-chunk-3-1.png)
+![](figure/README-unnamed-chunk-3-1.png)<!-- -->
 
-We can use polygons and lines objects as well. 
+We can use polygons and lines objects as well.
 
-
-```r
+``` r
 library(maptools)
+#> Checking rgeos availability: TRUE
 data(wrld_simpl)
 ## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
 worldcorner <- wrld_simpl %>% 
@@ -108,9 +104,9 @@ plot(worldcorner, asp = "")
 text(coordinates(worldcorner), label = worldcorner$NAME, cex = 0.6)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/README-unnamed-chunk-4-1.png)
+![](figure/README-unnamed-chunk-4-1.png)<!-- -->
 
-```r
+``` r
 
 worldcorner
 #> class       : SpatialPolygonsDataFrame 
@@ -143,18 +139,18 @@ wrld_simpl %>% as("SpatialLinesDataFrame") %>% summarise(big = max(AREA))
 #> 1 1638094
 ```
 
-The problem with this approach is that it is fundamentally limited by the fact that Spatial*DataFrame objects are not actual data frames, they are very powerful but every feature that allows them to behave like data frames is painstakingly defined and extending this to the new features of extended data frames is onerous, and even slightly contentious. 
+The problem with this approach is that it is fundamentally limited by the fact that Spatial\*DataFrame objects are not actual data frames, they are very powerful but every feature that allows them to behave like data frames is painstakingly defined and extending this to the new features of extended data frames is onerous, and even slightly contentious.
 
-This approach is limited to the simple verbs  `arrange`, `distinct`, `filter`, `mutate`, `rename`, `select`, `slice`, `transmute`, and `summarize`. Summarize is a little bit of a stretch since it cannot be used after a `group_by` and so it is limited to collapsing to a single Spatial object, with all sub-geometries in one without any consideration of topology or relationships. 
+This approach is limited to the simple verbs `arrange`, `distinct`, `filter`, `mutate`, `rename`, `select`, `slice`, `transmute`, and `summarize`. Summarize is a little bit of a stretch since it cannot be used after a `group_by` and so it is limited to collapsing to a single Spatial object, with all sub-geometries in one without any consideration of topology or relationships.
 
-# 2) sptable: a round-trip-able extension to fortify
+2) sptable: a round-trip-able extension to fortify
+==================================================
 
-The `sptable` function decomposes a Spatial object to a single table structured as a row for every coordinate in all the sub-geometries, including duplicated coordinates that close polygonal rings, close lines and shared vertices between objects. 
+The `sptable` function decomposes a Spatial object to a single table structured as a row for every coordinate in all the sub-geometries, including duplicated coordinates that close polygonal rings, close lines and shared vertices between objects.
 
-Use the `sptable<-` replacement method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system). 
+Use the `sptable<-` replacement method to modify the underlying geometric attributes (here `x` and `y` is assumed no matter what coordinate system).
 
-
-```r
+``` r
 ## standard dplyr on this S4 class
 (oz <- filter(wrld_simpl, NAME == "Australia"))
 #> class       : SpatialPolygonsDataFrame 
@@ -183,14 +179,11 @@ plot(oz, col = "grey")
 plot(woz, add = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/README-unnamed-chunk-5-1.png)
+![](figure/README-unnamed-chunk-5-1.png)<!-- -->
 
 We can also restructure objects, by mutating the value of object to be the same as "branch" we get individual objects from each.
 
-
-
-
-```r
+``` r
 
 pp <- sptable(wrld_simpl %>% filter(NAME == "Japan" | grepl("Korea", NAME)))
 ## explode (or "disaggregate"") objects to individual polygons
@@ -202,24 +195,25 @@ plot(spFromTable(pp), col = grey(seq(0.3, 0.7, length = length(unique(pp$object)
 plot(wone, col = sample(rainbow(nrow(wone))), border = NA)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/README-unnamed-chunk-6-1.png)
+![](figure/README-unnamed-chunk-6-1.png)<!-- -->
 
-```r
+``` r
 par(op)
 ```
 
-# 3) geometry-columns: store the Spatial* thing in the column
+3) geometry-columns: store the Spatial\* thing in the column
+============================================================
 
-The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see [Geometry columns](https://github.com/mdsumner/spbabel/wiki/Geometry-columns). 
+The "geometry-column" approach stores the complex object in a special column type, or *as some kind of an evaluation promise* to generate that special type from the underlying data structure. How this is actually done in other programs worth exploring, see [Geometry columns](https://github.com/mdsumner/spbabel/wiki/Geometry-columns) and [Round-trip sp and WKB](https://github.com/mdsumner/spbabel/wiki/Round-trip-Spatial-R---SQLite-with-WKB).
 
-See [sp.df]( https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation. 
+See [sp.df](https://github.com/mdsumner/sp.df) which is separated from this project because the methods required needs a lot of experimentation.
 
-# 4) single-level nesting: tidyr fortify
+4) single-level nesting: tidyr fortify
+======================================
 
-Using `nest` will give us the analog of `fortify.Spatial*DataFrame` in the `Object_` column. 
+Using `nest` will give us the analog of `fortify.Spatial*DataFrame` in the `Object_` column.
 
-
-```r
+``` r
 library(maptools)
 data(wrld_simpl)
 library(tidyr)
@@ -246,46 +240,57 @@ library(ggplot2)
 ggplot(wtab) + aes(x = x_, y = y_, fill = factor(SUBREGION), group = branch_) + geom_polygon()
 ```
 
-![plot of chunk unnamed-chunk-7](figure/README-unnamed-chunk-7-1.png)
-# 5) double-level nesting: even tidier fortify
+![](figure/README-unnamed-chunk-7-1.png)<!-- --> \# 5) double-level nesting: even tidier fortify
 
-Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. 
+Unclear at the moment if this is worth doing at all. we can save space but it ends up like a recursive sp object anyway so we don't really gain anything. It's also difficult to see how to do the nesting in two natural parts, it's fine to double-nest in one go, but you can't single-nest and then nest again easily (it's easy to double-nest and then single-unnest though).
 
+6) normalized-nesting: one table of non-analogous tables
+========================================================
 
-# 6) normalized-nesting: one table of non-analogous tables
+Create the bare-bones of gris, a single table with nested tables of Vertices, Branches and Objects.
 
-db_df
+``` r
+(db <- db_df(wrld_simpl))
+#> Source: local data frame [3 x 2]
+#> 
+#>     Name              Table
+#>    (chr)              (chr)
+#> 1 Vertex <tbl_df [26264,3]>
+#> 2 Branch  <tbl_df [3768,3]>
+#> 3 Object  <tbl_df [246,12]>
+```
 
-# 7) normalized: gris
+The nice part of this approach is that each individual table *within this db table* can be backed in a DB without modification, this is not true for nested tables.
+
+There are shared vertices in this data set, so let's remove the duplication with a branch\_vertex table.
+
+7) normalized: gris
+===================
 
 gris
 
+Issues
+======
 
-# Issues
+-   need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
+-   some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
+-   
 
-* need semantics for one-to-many and many-to-one copy rules, i.e. exploding an object copies? all attributes to the new objects or perhaps applies a proportional rule - see Transfer Rules in Manifold
-* some details are carried by attr()ibutes on the objects, like "crs" - these don't survive the journey through functions without using classes - ultimately a branched object should carry this information with it
-* 
+Early approach
+==============
 
+Create methods for the dplyr verbs: filter, mutate, arrange, select etc.
 
-# Early approach
+This is part of an overall effort to normalize Spatial data in R, to create a system that can be stored in a database.
 
-Create methods for the dplyr verbs: filter, mutate, arrange, select etc. 
+Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and round trip them. This is modelled on `raster::geom rather` than `ggplot2::fortify`, but perhaps only since I use raster constantly and ggplot2 barely ever.
 
-This is part of an overall effort to normalize Spatial data in R, to create a system that can be stored in a database. 
-
-Functions `sptable` and `spFromTable` create `tbl_df`s from Spatial classes and round trip them. This is modelled on `raster::geom rather` than `ggplot2::fortify`, but perhaps only since I use raster constantly and ggplot2 barely ever. 
-
-Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes. 
+Complicating factors are the rownames of sp and the requirement for them both on object IDs and data.frame rownames, and the sense in normalizing the geometry to the table of coordinates without copying attributes.
 
 (See `mdsumner/gris` for normalizing further to unique vertices and storing branches and objects and vertices on different tables. Ultimately this should all be integrated into one consistent approach.)
 
+Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: <https://gist.github.com/holstius/58818dc9bbb88968ec0b>
 
-Thanks to @holstius for prompting a relook under the hood of dplyr for where this should go: https://gist.github.com/holstius/58818dc9bbb88968ec0b
+This package `spbabel` and these packages should be subsumed partly in the overall scheme:
 
-This package `spbabel` and these packages should be subsumed partly in the overall scheme: 
-
-https://github.com/mdsumner/dplyrodbc
-https://github.com/mdsumner/manifoldr
-
-
+<https://github.com/mdsumner/dplyrodbc> <https://github.com/mdsumner/manifoldr>

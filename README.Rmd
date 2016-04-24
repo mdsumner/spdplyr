@@ -1,7 +1,5 @@
-
-output:
-  md_document:
-    variant: markdown_github
+---
+output: github_document
 ---
 
 [![Travis-CI Build Status](https://travis-ci.org/mdsumner/spbabel.svg?branch=master)](https://travis-ci.org/mdsumner/spbabel)
@@ -201,7 +199,7 @@ The nice part of this approach is that each individual table *within this db tab
 There are shared vertices in this data set, so let's remove the duplication with a branch_vertex table. 
 
 ```{r}
-
+```
 # 7) normalized: gris
 
 gris
