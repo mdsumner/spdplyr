@@ -99,7 +99,7 @@ mat2d_f <- function(x) {
                      nr <- nrow(coords)
                      lst <- list(
                                  branch_ = rep(j + cnt, nr), 
-                                 island_ = rep(.holes(x, i, j, typ), nr), 
+                                 island_ = rep(!.holes(x, i, j, typ), nr), 
                                  order_ = seq(nr),
                                  x_ = coords[,1], 
                                  y_ = coords[,2])
