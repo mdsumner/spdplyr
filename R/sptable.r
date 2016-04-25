@@ -76,7 +76,8 @@ mat2d_f <- function(x) {
 .holes <- function(x, i, j, type) {
   switch(type, 
          line = NULL, 
-         poly = x@polygons[[i]]@Polygons[[j]]@hole
+         ## negate here since it will be NULL outside for lines
+         poly = !x@polygons[[i]]@Polygons[[j]]@hole
          )
 }
 ## adapted from raster package R/geom.R
@@ -99,7 +100,7 @@ mat2d_f <- function(x) {
                      nr <- nrow(coords)
                      lst <- list(
                                  branch_ = rep(j + cnt, nr), 
-                                 island_ = rep(!.holes(x, i, j, typ), nr), 
+                                 island_ = rep(.holes(x, i, j, typ), nr), 
                                  order_ = seq(nr),
                                  x_ = coords[,1], 
                                  y_ = coords[,2])
