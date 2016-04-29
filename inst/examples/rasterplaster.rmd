@@ -1,0 +1,73 @@
+---
+title: "Raster extract"
+author: "Michael Sumner"
+date: "25 April 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Raster extract is slow for RasterLayer but not single-layer RasterBrick
+
+```{r}
+library(raster)
+r <- disaggregate(raster(volcano), fact = 225)
+if (fromDisk(r)) r <- readAll(r)
+b <- brick(r)
+if (fromDisk(b)) b <- readAll(b)
+
+cells <- sample(ncell(r), 1e6)
+# system.time(extract(r, cells))
+#   user  system elapsed 
+#   0.53    0.11    0.64 
+# system.time(extract(b, cells))
+#   user  system elapsed 
+#   0.17    0.00    0.17 
+
+```
+
+## What about from disk? 
+
+Extract assumes reading "line by line" - the rows of the raster as you seem them in a plot - when the raster is tiled this causes many un-necessary reading calls as each line is read from multiple tiles. 
+
+```{r}
+writeRaster(b, "notiling.tif", overwrite = TRUE )
+gtiff0 <- brick("notiling.tif")
+fromDisk(gtiff0)
+class(gtiff0)
+
+writeRaster(b, "tiling.tif", options = c("TILED=YES"), overwrite = TRUE )
+gtiled <- brick("tiling.tif")
+fromDisk(gtiled)
+class(gtiled)
+any(grepl("Block=256x256", system("C:/OsGeo4W64/bin/gdalinfo tiling.tif", intern = TRUE)))
+library(rbenchmark)
+benchmark(GeoTIFFLine = extract(gtiff0, cells), GeoTIFFTile = extract(gtiled, cells), replications = 1)
+```
+
+
+
+## What does this mean?
+
+1. for GeoTIFF make sure you readAll from disk if it's tiled (use gdalinfo to find out, or gdalUtils package in R)
+2.  use readAll(brick(raster(filename))) to get an in-memory brick
+
+
+We can fix 1. with a change to the extract method if it can see that it's tiled, with 2. I don't know why this is yet. 
+
+```{r}
+benchmark(a0 = raster:::.cellValues(r, cells, 1), 
+         a1 = raster:::.cellValues(b, cells, 1), 
+         b1 = raster:::.cellValues(b[[1]], cells, 1), 
+         replications = 1)
+
+benchmark(a0 = raster:::.readCells(r, cells, 1), 
+         a1 = raster:::.readCells(b, cells, 1), 
+         b1 = raster:::.readCells(b[[1]], cells, 1), 
+         replications = 1)
+
+
+
+```

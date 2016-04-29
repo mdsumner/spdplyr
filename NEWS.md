@@ -1,4 +1,4 @@
-# spbabel dev
+# spbabel 0.3.0
 
 * committing to names object_, branch_, island_, order_, x_ and y_, and Object_ and Branch_
 
