@@ -5,6 +5,7 @@
 \alias{distinct_.Spatial}
 \alias{dplyr-Spatial}
 \alias{filter_.Spatial}
+\alias{group_by_.Spatial}
 \alias{mutate_.Spatial}
 \alias{rename_.Spatial}
 \alias{select_.Spatial}
@@ -16,6 +17,8 @@
 \method{mutate_}{Spatial}(.data, ..., .dots)
 
 \method{summarise_}{Spatial}(.data, ...)
+
+\method{group_by_}{Spatial}(.data, ...)
 
 \method{transmute_}{Spatial}(.data, ..., .dots)
 
@@ -44,8 +47,9 @@ Direct application of the dplyr verbs to Spatial objects. There is no need for a
 \details{
 mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged.
 
-summarise collapses to a single geometry by listing all subgeometries together, it does not perform any topological union or merge. 
-This is a pretty brutal collapse of all the data.
+summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge. 
+This is a brutal collapse of all the data, and is identical to what is seen with spplot(x, "group"). The behaviour of geometric collapse like this
+is touch and go anyway, see the examples for a what `rgeos::gUnion` does.
 
 summarise for points and multipoints, ... todo single Multipoint for multiple points
 }
@@ -79,5 +83,18 @@ slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 5
 
 ## summarise/ze is different, we have to return only one geometry
 wrld_simpl \%>\% summarize(max(AREA))
+## group_by and summarize
+g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
+ summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
+g \%>\% mutate(ar = factor(REGION)) \%>\% spplot("ar")
+w <- wrld_simpl
+w$ar <- factor(w$REGION)
+spplot(w, "ar")
+\dontrun{
+# compare what rgeos gives
+##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
+## this is hardly a clean dissolve
+plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
+}
 }
 

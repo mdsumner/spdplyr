@@ -1,3 +1,8 @@
+setOldClass( c("tbl_df", "tbl", "data.frame" ) )
+
+setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
+
+
 #' Dplyr verbs for Spatial
 #' 
 #' Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details. 
@@ -6,8 +11,9 @@
 #' 
 #' mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged. 
 #' 
-#' summarise collapses to a single geometry by listing all subgeometries together, it does not perform any topological union or merge. 
-#' This is a pretty brutal collapse of all the data. 
+#' summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge. 
+#' This is a brutal collapse of all the data, and is identical to what is seen with spplot(x, "group"). The behaviour of geometric collapse like this
+#' is touch and go anyway, see the examples for a what `rgeos::gUnion` does. 
 #' 
 #'  summarise for points and multipoints, ... todo single Multipoint for multiple points
 #' @param .data A tbl.
@@ -44,11 +50,11 @@
 #' 
 #' ## summarise/ze is different, we have to return only one geometry
 #' wrld_simpl %>% summarize(max(AREA))
-#' @importFrom dplyr mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
+#' @importFrom dplyr arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-
+  
   if (.hasSlot(.data, "data")) {
     dat <- mutate_(as.data.frame(.data), .dots = dots)
   } else {
@@ -61,21 +67,74 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 
 #' @rdname dplyr-Spatial
 #' @export
-#' @importFrom rgeos gUnionCascaded gLineMerge
+#' @examples 
+#' @importFrom dplyr inner_join
+#' ## group_by and summarize
+#' g <- wrld_simpl  %>% group_by(REGION)  %>% 
+#'  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
+#' g %>% mutate(ar = factor(REGION)) %>% spplot("ar")
+#' w <- wrld_simpl
+#' w$ar <- factor(w$REGION)
+#' spplot(w, "ar")
+#' \dontrun{
+#' # compare what rgeos gives
+#' ##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
+#' ## this is hardly a clean dissolve
+#' plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
+#' }
 summarise_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data for distinct for a %s", class(.data))
   }
   # this should only ever return one-row objects
   # we cannot group_by on Spatial
-  dat <- summarise_(as_data_frame(as.data.frame(.data)), ...)
- ## print(dat)
-  row.names(dat) <- "1"
+  dat <- summarise_(as.data.frame(.data), ...)
+  
+  # row.names(dat) <- "1"
   gbomb <- sptable(.data)
-  gbomb$object_ <- 1
+  if (inherits(.data@data, "grouped_df")) {
+    groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
+    regroup <- data_frame(labs =  unlist(lapply(seq_along(attr(.data@data, "group_sizes")), function(x) rep(x, attr(.data@data, "group_sizes")[x]))), 
+                          inds = unlist(groups) + 1)
+    
+    gbomb <- gbomb  %>% 
+      inner_join(regroup, c("object_" = "inds"))  %>% 
+      mutate_(object_ = quote(labs))  %>% 
+      select_(quote(-labs))  %>% 
+      arrange_("object_", "branch_", "order_")
+  
+    } else {
+    gbomb$object_ <- 1
+  }
   spFromTable(gbomb, attr_tab = dat, crs = proj4string(.data))
   
 }
+
+#x <- wrld_simpl  %>% group_by(REGION)  
+#x %>% summarize(mean(LON))
+
+#.data <- x
+#dat <- summarize(.data@data, mean(LON))
+
+#' @rdname dplyr-Spatial
+#' @export
+group_by_.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data for distinct for a %s", class(.data))
+  }
+  orownames <- row.names(.data)
+  dat <- group_by_(as_data_frame(as.data.frame(.data)), ...)
+  
+  #groupatts <- attributes(dat)
+  #groupatts$class <- "data.frame"
+  #groupatts$row.names <- orownames
+  #dat <- as.data.frame(dat)
+  #attributes(dat) <- groupatts
+  .data@data <- dat
+  .data
+}
+
+
 
 
 #' @rdname dplyr-Spatial
@@ -87,7 +146,7 @@ transmute_.Spatial <-  function(.data, ..., .dots) {
   } else {
     stop("no data to mutate for a %s", class(.data))
   }
- .data@data <- dat
+  .data@data <- dat
   .data
 }
 
@@ -103,9 +162,9 @@ filter_.Spatial <- function(.data, ...) {
   if (inherits(.data, "SpatialMultiPointsDataFrame")) {
     dat <- filter_(as_data_frame(.data@data), ...)
   } else {
-   dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
+    dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
   }
-#print(row.names(dat))
+  #print(row.names(dat))
   asub <- .data$rnames %in% dat$rnames
   .data[asub, ]
 }
@@ -143,10 +202,10 @@ select_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to select for a %s", class(.data))
   }
- dat <-  select_(as_data_frame(as.data.frame(.data)), ...)
- .data[, names(dat)]
+  dat <-  select_(as_data_frame(as.data.frame(.data)), ...)
+  .data[, names(dat)]
 }
-  
+
 #' @rdname dplyr-Spatial
 #' @export
 rename_.Spatial <- function(.data, ...) {
@@ -186,26 +245,4 @@ distinct_.Spatial <- function(.data, ...) {
 
 
 
-# decided this is a non-starter
-#  - a good reason to stop and do this with another scheme
-# #' @rdname dplyr-Spatial
-# #' @export
-# group_by_.Spatial <- function(.data, ...) {
-#   if (!.hasSlot(.data, "data")) {
-#     stop("no data for distinct for a %s", class(.data))
-#   }
-#   orownames <- row.names(.data)
-#   dat <- group_by_(as_data_frame(as.data.frame(.data)), ...)
-#   groupatts <- attributes(dat)
-#   groupatts$class <- "data.frame"
-#   groupatts$row.names <- orownames
-#   dat <- as.data.frame(dat)
-#  
-#   attributes(dat) <- groupatts
-#   .data@data <- dat
-#   .data
-# }
-# 
-# 
 
- 

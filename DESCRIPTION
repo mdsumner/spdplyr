@@ -10,7 +10,7 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: ggplot2, lazyeval, rgeos, tidyr
+Imports: ggplot2, lazyeval, tidyr
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,

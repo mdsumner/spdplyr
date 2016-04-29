@@ -1,3 +1,9 @@
+# spbabel dev
+
+* added group_by and complementary summarize capability for Spatial 
+
+* set data.frame and tbl and tbl_df as S4 compatible
+
 # spbabel 0.3.0
 
 * committing to names object_, branch_, island_, order_, x_ and y_, and Object_ and Branch_

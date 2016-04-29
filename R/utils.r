@@ -71,7 +71,8 @@ function (x, ...)
     if (!isRaster) {
       cat("variables   : ", nc, "\n", sep = "")
     }
-    print(as_data_frame(x))
+    if (!inherits(x, "tbl_df")) x <- tbl_df(x)
+    print(x)
     # if (nc > maxnl) {
     #   x <- x[, 1:maxnl]
     # }
