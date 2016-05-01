@@ -42,7 +42,7 @@ There are several ways to do this.
 * **7) normalized**: A collection of related tables, without nesting. 
 
 
-The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). 
+The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). Nested data frames can replace sp structures in a snap, but they can't be used for topological data structures - these are best done with a single table of vertices with other tables that define the linkings to objects. Finally, having a small number of biggish tables is a better framework for offloading to db
 
 This document aims to illustrate each of these approaches, much is still work in progress. 
 
