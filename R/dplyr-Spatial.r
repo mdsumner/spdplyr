@@ -78,7 +78,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' # compare what rgeos gives
 #' ##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
 #' ## this is hardly a clean dissolve
-#' plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
+#' ##plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
 #' }
 summarise_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
