@@ -1,3 +1,4 @@
+library(testthat)
 context("dplyr-Spatial")
 
 ## TODO: Rename context

@@ -11,7 +11,6 @@
 \alias{select_.Spatial}
 \alias{slice_.Spatial}
 \alias{summarise_.Spatial}
-\alias{transmute_.Spatial}
 \title{Dplyr verbs for Spatial}
 \usage{
 \method{mutate_}{Spatial}(.data, ..., .dots)
@@ -19,8 +18,6 @@
 \method{summarise_}{Spatial}(.data, ...)
 
 \method{group_by_}{Spatial}(.data, ...)
-
-\method{transmute_}{Spatial}(.data, ..., .dots)
 
 \method{filter_}{Spatial}(.data, ...)
 

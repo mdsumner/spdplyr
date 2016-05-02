@@ -135,18 +135,7 @@ group_by_.Spatial <- function(.data, ...) {
 
 
 
-#' @rdname dplyr-Spatial
-#' @export
-transmute_.Spatial <-  function(.data, ..., .dots) {
-  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  if (.hasSlot(.data, "data")) {
-    dat <- transmute_(as.data.frame(.data), .dots = dots)
-  } else {
-    stop("no data to mutate for a %s", class(.data))
-  }
-  .data@data <- dat
-  .data
-}
+
 
 
 #' @rdname dplyr-Spatial
