@@ -31,12 +31,13 @@ anz <-
 
 print(anz)
 
-rr <- readBin("inst/extdata/gworld.sqlite3", "raw", n = file.info("inst/extdata/gworld.sqlite3")$size)
-save(rr, file = "rr.rda", compress = "bzip2")
+# rr <- readBin("inst/extdata/gworld.sqlite3", "raw", n = file.info("inst/extdata/gworld.sqlite3")$size)
+# save(rr, file = "rr.rda", compress = "bzip2")
 
 
 ## gris version
 gworld <- src_sqlite("inst/extdata/gworld.sqlite3", create = TRUE)
+library(gris)
 g <-gris::gris(wrld_simpl)
 v <- g$v; v <- copy_to(gworld, v, name = "v", temporary = FALSE)
 bXv <- g$bXv; bXv <- copy_to(gworld, bXv, name = "bXv", temporary = FALSE)
