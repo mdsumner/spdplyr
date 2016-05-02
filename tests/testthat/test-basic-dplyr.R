@@ -5,6 +5,7 @@ context("dplyr-Spatial")
 ## TODO: Add more tests
 
 library(maptools)
+library(spbabel)
 library(dplyr)
 data(wrld_simpl)
 poly1 <- wrld_simpl
