@@ -5,11 +5,9 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' 
 #' Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details. 
 #' 
-#'  
-#' 
 #' mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged. 
 #' 
-#' summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge. 
+#' summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge, and it takes no account of the calculations done on attributes. 
 #' This is a brutal collapse of all the data, and is identical to what is seen with spplot(x, "group"). The behaviour of geometric collapse like this
 #' is touch and go anyway, see the examples for a what `rgeos::gUnion` does. 
 #' 

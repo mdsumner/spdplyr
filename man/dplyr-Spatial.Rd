@@ -68,7 +68,7 @@ Direct application of the dplyr verbs to Spatial objects. There is no need for a
 \details{
 mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged.
 
-summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge. 
+summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge, and it takes no account of the calculations done on attributes. 
 This is a brutal collapse of all the data, and is identical to what is seen with spplot(x, "group"). The behaviour of geometric collapse like this
 is touch and go anyway, see the examples for a what `rgeos::gUnion` does.
 
@@ -115,7 +115,7 @@ spplot(w, "ar")
 # compare what rgeos gives
 ##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
 ## this is hardly a clean dissolve
-plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
+##plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
 }
 }
 
