@@ -67,8 +67,8 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 
 #' @rdname dplyr-Spatial
 #' @export
-#' @examples 
 #' @importFrom dplyr inner_join
+#' @examples 
 #' ## group_by and summarize
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
 #'  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))

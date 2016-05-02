@@ -83,5 +83,18 @@ slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 5
 
 ## summarise/ze is different, we have to return only one geometry
 wrld_simpl \%>\% summarize(max(AREA))
+## group_by and summarize
+g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
+ summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
+g \%>\% mutate(ar = factor(REGION)) \%>\% spplot("ar")
+w <- wrld_simpl
+w$ar <- factor(w$REGION)
+spplot(w, "ar")
+\dontrun{
+# compare what rgeos gives
+##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
+## this is hardly a clean dissolve
+plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
+}
 }
 
