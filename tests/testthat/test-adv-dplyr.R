@@ -1,5 +1,6 @@
 context("adv-dplyr")
 
+
 library(maptools)
 library(dplyr)
 data(wrld_simpl)
