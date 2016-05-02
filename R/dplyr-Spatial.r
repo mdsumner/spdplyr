@@ -138,22 +138,16 @@ group_by_.Spatial <- function(.data, ...) {
 
 
 
+
 #' @rdname dplyr-Spatial
 #' @export
-filter_.Spatial <- function(.data, ...) {
+filter_.Spatial <- function(.data, ..., .dots) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to filter for a %s", class(.data))
   }
-  .data$rnames <- as.character(seq(nrow(.data)))
-  #print(rnames)
-  if (inherits(.data, "SpatialMultiPointsDataFrame")) {
-    dat <- filter_(as_data_frame(.data@data), ...)
-  } else {
-    dat <- filter_(as_data_frame(as.data.frame(.data)), ...)
-  }
-  #print(row.names(dat))
-  asub <- .data$rnames %in% dat$rnames
-  .data[asub, ]
+  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
+  masks <- lazyeval::lazy_eval(dots, data = as.data.frame(.data@data))
+  subset(.data, Reduce(`&`, masks))
 }
 
 
@@ -189,7 +183,7 @@ select_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to select for a %s", class(.data))
   }
-  dat <-  select_(as_data_frame(as.data.frame(.data)), ...)
+  dat <-  select_(as.data.frame(.data), ...)
   .data[, names(dat)]
 }
 
@@ -219,15 +213,27 @@ distinct_.Spatial <- function(.data, ...) {
   .data[dat$order, ]
 }
 
-# getsubSpatial <- function(x) {
-#   if (inherits(x, "SpatialPolygons")) return(x@polygons)
-#   if (inherits(x, "SpatialLInes")) return(x@lines)
-#   NULL
-# }
-# c_ <- function(x) {
-#   ##need to fix the IDs
-#   do.call("c", getsubSpatial(x))
-# }
+#' @rdname dplyr-Spatial
+#' @importFrom dplyr left_join inner_join
+#' @inheritParams dplyr::left_join
+#' @export
+left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
+  x@data <- left_join(tbl_df(as.data.frame(x)), y, by = by, copy = copy, ...)
+  x
+}
+
+#' @rdname dplyr-Spatial
+#' @export
+ inner_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
+   randomkey <- paste(sample(c(letters, 1:100)), collapse = "")
+   ## kludge to record which rows are kept
+   x[[randomkey]] <- seq(nrow(x))
+   .data <- inner_join(tbl_df(as.data.frame(x)), y, by = by, copy = copy, ...)
+   x <- x[.data[[randomkey]], ]
+   .data[[randomkey]] <- NULL
+   x@data <- .data
+   x
+ }
 
 
 

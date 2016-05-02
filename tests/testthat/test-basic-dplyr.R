@@ -123,3 +123,26 @@ test_that("various examples", {
  )
 
 
+
+ws <- filter(wrld_simpl, NAME %in% c("Portugal", "France", "Spain"))
+ws$chNAME <- levels(ws$NAME)[ws$NAME]
+d <- data_frame(ent = c("Australia", "Portugal", "New Zealand", "France", "Spain"), AREA = seq(1.2, 2, length = 5))
+test_that("joins work", {
+  expect_that(all(is.na(left_join(ws@data, d)$ent)), is_true())
+  expect_that(all(is.na(left_join(ws, d)$ent)), is_true())
+  
+  expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining character"))
+  expect_that(left_join(ws, d, c("chNAME" = "ent")), is_a(class(ws)))
+  
+  expect_that(nrow(inner_join(ws@data, d)), equals(0L))
+  ## we can get 0-row S*DF
+  expect_that(nrow(inner_join(ws, d)), equals(0L))
+  
+  expect_that(inner_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining factor and character"))
+  expect_that(inner_join(ws, d, c("chNAME" = "ent")), is_a(class(ws)))
+  
+  expect_that(nrow(inner_join(ws, d, c("chNAME" = "ent"))), equals(3L))
+  
+  expect_that(nrow(inner_join(ws, d[1:4, ], c("chNAME" = "ent"))), equals(2L))
+  
+})

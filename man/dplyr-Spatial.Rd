@@ -6,6 +6,8 @@
 \alias{dplyr-Spatial}
 \alias{filter_.Spatial}
 \alias{group_by_.Spatial}
+\alias{inner_join.Spatial}
+\alias{left_join.Spatial}
 \alias{mutate_.Spatial}
 \alias{rename_.Spatial}
 \alias{select_.Spatial}
@@ -19,7 +21,7 @@
 
 \method{group_by_}{Spatial}(.data, ...)
 
-\method{filter_}{Spatial}(.data, ...)
+\method{filter_}{Spatial}(.data, ..., .dots)
 
 \method{arrange_}{Spatial}(.data, ...)
 
@@ -30,6 +32,10 @@
 \method{rename_}{Spatial}(.data, ...)
 
 \method{distinct_}{Spatial}(.data, ...)
+
+\method{left_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
+
+\method{inner_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
 }
 \arguments{
 \item{.data}{A tbl.}
@@ -37,6 +43,24 @@
 \item{...}{Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}}
 
 \item{.dots}{Used to work around non-standard evaluation.}
+
+\item{x}{tbls to join}
+
+\item{y}{tbls to join}
+
+\item{by}{a character vector of variables to join by.  If \code{NULL}, the
+  default, \code{join} will do a natural join, using all variables with
+  common names across the two tables. A message lists the variables so
+  that you can check they're right.
+
+  To join by different variables on x and y use a named vector.
+  For example, \code{by = c("a" = "b")} will match \code{x.a} to
+  \code{y.b}.}
+
+\item{copy}{If \code{x} and \code{y} are not from the same data source,
+and \code{copy} is \code{TRUE}, then \code{y} will be copied into the
+same src as \code{x}.  This allows you to join tables across srcs, but
+it is a potentially expensive operation so you must opt into it.}
 }
 \description{
 Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details.
