@@ -1,7 +1,5 @@
 setOldClass( c("tbl_df", "tbl", "data.frame" ) )
-
 setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
-
 
 #' Dplyr verbs for Spatial
 #' 
