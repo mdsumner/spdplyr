@@ -25,7 +25,7 @@ How does spbabel allow sp to work with dplyr?
 
 There are several ways to do this.
 
--   **1) dplyr-Spatial**: Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame.
+-   **1) dplyr-Spatial**: Write the dplyr verbs for the Spatial classes (runs into limits with sp not using actual data.frame, though this can be improved by using `setOldClass`).
 -   **2) sptable**: Use the table of coordinates with identifiers for object and branch, like fortify, with sptable() and sptable()&lt;- workflow to fortify and modify in a more flexible way.
 -   **3) geometry-column** Use a real data.frame but include the "Spatial\* objects as a list column. This is somewhat like the use of WKT or WKB geometry in tables, but without the need for constant (de)-serialization.
 -   **4) single-level nesting**: Nest the fortify table for each object in a single column.
@@ -33,18 +33,20 @@ There are several ways to do this.
 -   **6) normalized-nesting**: Nest the normalized tables Vertices, Objects and the topological links between them.
 -   **7) normalized**: A collection of related tables, without nesting.
 
-The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris).
+The normalized approaches are in flux, though a non-nested approach is well fleshed out already in [gris](https://github.com/msdumnser/gris). Nested data frames can replace sp structures in a snap, but they can't be used for topological data structures - these are best done with a single table of vertices with other tables that define the linkings to objects. Finally, having a small number of biggish tables is a better framework for offloading to db
 
 This document aims to illustrate each of these approaches, much is still work in progress.
+
+Currently I think that only 1)
 
 What seems most promising?
 --------------------------
 
--   1.  **dplyr-Spatial** is limited to the simple verbs that don't change the number of objects, pointedly `group_by` can only work on a an actual data frame. I think this is of novelty interest only.
--   1.  **sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's not that useful for routine use as you still juggle the two tables, but it's a useful tools for using inside other functions.
--   1.  **geometry-column** this is a non-starter, you end up needing to write special classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/msdumnser/manifoldr) and could be easily applied to other spatial DB. I think `sp_df` should be forked from this work as a dead-end.
--   4, 5) **single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. Not sure if we need classes, it can all be done generically and that might be best.
--   6, 7) **normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives.
+-   **1) dplyr-Spatial** is useful for when the limits of the `sp` Spatial classes are sufficient. This is pretty much mostly done in `spbabel` now, needs some fleshing out of the behaviour of outer joins and testing, but the left and inner join and group\_by are pretty much working.
+-   **2) sptable** provides a framework for transitioning between the Spatial classes and the ggplot2 fortify table of vertices, it's particularly useful use inside other functions where the need for splitting into two tables is hidden.
+-   **3) geometry-column** this is not practically useful but is an important stepping stone from some DB implementations. For routine use in R you need to write special new classes of data frames, which means you need methods for every operation. This shows the need for worker functions that can read geometry in a single value (i.e. WKB) from a database or source, and be able to expand that out. This is already provided by `wkb::readWKB` and wKT versions in rgeos. This approach (for reading) is illustrated in [manifoldr](https://github.com/mdsumner/manifoldr) and could be easily applied to other spatial DB. The function `sp_df` has been forked from this work as a dead-end [sp.df](https://github.com/mdsumner/sp.df).
+-   **4, 5) single/double nesting** this is the way to go for a non-topological approach, but we need tools for dealing with the nesting/unnesting which means constructs like those in `gggeom` fleshed out fully. Not sure if we need classes, it can all be done generically and that might be best.
+-   **6, 7) normalized tables** this approach takes us away from nesting but allows topology and a very general approach beyond 2D maps and "simple features" to object composed of primitives. I'm continuing to work on this as a general replacement for `sp`.
 
 Why do this?
 ============
@@ -157,13 +159,13 @@ Use the `sptable<-` replacement method to modify the underlying geometric attrib
 #> features    : 1 
 #> extent      : 112.9511, 159.1019, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)
 #> coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
-#> variables   : 12
-#> Source: local data frame [1 x 12]
+#> variables   : 11
+#> Source: local data frame [1 x 11]
 #> 
 #>     FIPS   ISO2   ISO3    UN      NAME   AREA  POP2005 REGION SUBREGION
 #>   (fctr) (fctr) (fctr) (int)    (fctr)  (int)    (dbl)  (int)     (int)
 #> 1     AS     AU    AUS    36 Australia 768230 20310208      9        53
-#> Variables not shown: LON (dbl), LAT (dbl), rnames (chr)
+#> Variables not shown: LON (dbl), LAT (dbl)
 
 
 ## this is ready for ggplot2, though at the expense of needing the object attributes in a separate object
@@ -224,16 +226,16 @@ wnest <- nest(wrld_simpl)
 #> 
 #>    SUBREGION branch_ island_ order_         x_       y_
 #>        (int)   (int)   (lgl)  (int)      (dbl)    (dbl)
-#> 1         29       1   FALSE      1 -61.686668 17.02444
-#> 2         29       1   FALSE      2 -61.887222 17.10527
-#> 3         29       1   FALSE      3 -61.794449 17.16333
-#> 4         29       1   FALSE      4 -61.686668 17.02444
-#> 5         29       2   FALSE      1 -61.729172 17.60861
-#> 6         29       2   FALSE      2 -61.853058 17.58305
-#> 7         29       2   FALSE      3 -61.873062 17.70389
-#> 8         29       2   FALSE      4 -61.729172 17.60861
-#> 9         15       3   FALSE      1   2.963610 36.80222
-#> 10        15       3   FALSE      2   4.785832 36.89472
+#> 1         29       1    TRUE      1 -61.686668 17.02444
+#> 2         29       1    TRUE      2 -61.887222 17.10527
+#> 3         29       1    TRUE      3 -61.794449 17.16333
+#> 4         29       1    TRUE      4 -61.686668 17.02444
+#> 5         29       2    TRUE      1 -61.729172 17.60861
+#> 6         29       2    TRUE      2 -61.853058 17.58305
+#> 7         29       2    TRUE      3 -61.873062 17.70389
+#> 8         29       2    TRUE      4 -61.729172 17.60861
+#> 9         15       3    TRUE      1   2.963610 36.80222
+#> 10        15       3    TRUE      2   4.785832 36.89472
 #> ..       ...     ...     ...    ...        ...      ...
 
 library(ggplot2)
