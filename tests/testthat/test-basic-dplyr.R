@@ -117,8 +117,7 @@ test_that("various examples", {
   expect_silent( slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4))
  ## summarise/ze is different, we have to return only one geometry
   expect_that(wrld_simpl %>% summarize(max(AREA)), is_a(class(wrld_simpl)))
-  expect_warning(as(wrld_simpl, "SpatialLinesDataFrame") %>% mutate(perim = rnorm(20)), 
-                 "Spatial object is not projected;")
+  expect_silent(as(wrld_simpl, "SpatialLinesDataFrame") %>% mutate(perim = rnorm(246)))
   }
   
  )
