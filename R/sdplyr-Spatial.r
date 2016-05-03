@@ -23,8 +23,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' library(sp)
 #' library(maptools)
 #' data(wrld_simpl)
-#' library(dplyr)
-#' library(spbabel)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
+#' library(spdplyr)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
 #' library(raster)  
 #' wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number())
 #' wrld_simpl %>% transmute(alpha = paste0(FIPS, NAME))
@@ -46,7 +45,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' 
 #' ## summarise/ze is different, we have to return only one geometry
 #' wrld_simpl %>% summarize(max(AREA))
-#' @importFrom dplyr arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
+#' @importFrom dplyr %>% arrange as_data_frame data_frame mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
@@ -64,6 +63,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' @rdname dplyr-Spatial
 #' @export
 #' @importFrom dplyr inner_join
+#' @importFrom spbabel sptable spFromTable
 #' @examples 
 #' ## group_by and summarize
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
@@ -87,7 +87,7 @@ summarise_.Spatial <- function(.data, ...) {
   dat <- summarise_(as.data.frame(.data), ...)
   
   # row.names(dat) <- "1"
-  gbomb <- sptable(.data)
+  gbomb <- spbabel::sptable(.data)
   if (inherits(.data@data, "grouped_df")) {
     groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
     regroup <- data_frame(labs =  unlist(lapply(seq_along(attr(.data@data, "group_sizes")), function(x) rep(x, attr(.data@data, "group_sizes")[x]))), 
@@ -102,16 +102,11 @@ summarise_.Spatial <- function(.data, ...) {
     } else {
     gbomb$object_ <- 1
   }
-  spFromTable(gbomb, attr_tab = dat, crs = proj4string(.data))
+  spbabel::spFromTable(gbomb, attr_tab = dat, crs = proj4string(.data))
   
 }
 
-#x <- wrld_simpl  %>% group_by(REGION)  
-#x %>% summarize(mean(LON))
-
-#.data <- x
-#dat <- summarize(.data@data, mean(LON))
-
+#' @importFrom dplyr group_by_
 #' @rdname dplyr-Spatial
 #' @export
 group_by_.Spatial <- function(.data, ...) {
