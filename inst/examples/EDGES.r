@@ -38,15 +38,24 @@ library(RTriangle)
 library(spbabel)
 
 #getData("SRTM", lon = mean(verts$x_), lat = mean(verts$y_))
-#dem <- raster("srtm_35_11.tif")
-dem <- raster("srtm_38_03.tif")
+dem <- readAll(raster("C:\\Temp\\srtm_66_21\\srtm_66_21.tif"))
+
 
 ## normalized map
 
-db <- src_sqlite(system.file("extdata", "gworld.sqlite3", package = "spbabel"))
-aa <- 
-  tbl(db, "o") %>% dplyr::filter(NAME %in% c("France", "Switzerland", "Italy"))
-verts <- readgris(db, aa)
+#db <- src_sqlite(system.file("extdata", "gworld.sqlite3", package = "spbabel"))
+#aa <- 
+#  tbl(db, "o") %>% dplyr::filter(NAME == "Australia")
+#verts <- readgris(db, aa) %>% mutate(object_ = branch_)
+library(rworldxtra)
+data(countriesHigh)
+verts <- sptable(countriesHigh %>% filter(SOVEREIGNT == "Australia")) %>% 
+  filter(y_ < -39.4 & y_ > -50) %>%  mutate(object_ = branch_, vertex_ = row_number())
+
+prj <- "+proj=lcc +ellps=WGS84 +lon_0=147 +lat_0=-42 +lat_1=-35 +lat_2=-45"
+xy <- rgdal::project(dplyr::select(verts, x_, y_) %>% as.matrix(), prj)
+verts$X <- xy[,1]
+verts$Y <- xy[,2]
 
 plot(spFromTable(verts), col = sample(rainbow(length(unique(verts$object_)), alpha = 0.5)), add = FALSE)
 
@@ -55,21 +64,23 @@ edge <- bind_rows(lapply(split(verts, verts$branch_), function(x) edgetab(x$vert
 vtx <- verts %>% 
   left_join(edge, c("vertex_" = ".vx0"), copy = TRUE) %>% 
   filter(!is.na(.edg)) %>% 
-  dplyr::select(x_, y_, vertex_) %>% 
-  collect() %>% distinct(x_, y_) %>% mutate(rownum = row_number())
+  dplyr::select(X, Y, vertex_) %>% 
+  collect() %>% distinct(X, Y) %>% mutate(rownum = row_number())
 #edge %>% inner_join(vtx) %>% select(rownum)
 
-ps <- pslg(P = vtx  %>% dplyr::select(x_, y_) %>%  as.matrix(), 
+ps <- pslg(P = vtx  %>% dplyr::select(X, Y) %>%  as.matrix(), 
            S = matrix((edge %>% inner_join(vtx, c(".vx0" = "vertex_")) %>% dplyr::select(rownum))$rownum, ncol = 2, byrow = TRUE))
 
-tri <- triangulate(ps, a = 0.0005)
+
+tri <- triangulate(ps, a = 5e5)
 
 tet <- rgl::tetrahedron3d()
-tet$vb <- t(cbind(tri$P, extract(dem, tri$P), 1))
+tet$vb <- t(cbind(tri$P, extract(dem, rgdal::project(tri$P, prj, inv = TRUE)), 1))
 tet$vb[3,is.na(tet$vb[3,])] <- 0
 tet$it <- t(tri$T)
 rgl::shade3d(tet, col = "white")
-rgl::aspect3d(1, 1, 1e-2)
+#rgl::aspect3d(1, 1, 1e-2)
 
 ee <- edge  %>% left_join(verts, c(".vx0" = "vertex_"))
-rgl::segments3d(ee$x_, ee$y_, 0, lwd = 6, line_antialias = TRUE)
+#rgl::segments3d(ee$X, ee$Y, 0, lwd = 6, line_antialias = TRUE)
+rgl::spheres3d(ee$X, ee$Y, 0, radius = 5e3, col = "hotpink")
