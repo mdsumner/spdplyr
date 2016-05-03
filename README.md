@@ -10,7 +10,7 @@ spdplyr
 Installation
 ------------
 
-Spbabel can be installed directly from github:
+Spdplyr can be installed directly from github:
 
 ``` r
 devtools::install_github("mdsumner/spdplyr")
