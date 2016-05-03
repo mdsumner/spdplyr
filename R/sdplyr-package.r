@@ -34,7 +34,7 @@ NULL
 
 #' "South-east" map data. 
 #' 
-#' Created in /data-raw/ \code{spmap} is the setable() version of some of maptools wrld_simpl, and \code{seatt} is the matching attribute data, linked by `object`. 
+#' Created in /data-raw/ \code{spmap} is a subset of wrld_simpl from maptools. 
 #' @name spmap
 #' @docType data
 #' @examples 
