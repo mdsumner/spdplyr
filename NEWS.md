@@ -1,5 +1,7 @@
 # spdplyr dev
 
+* modified the print/show details for Spatial 
+
 * removed some leftover references from original source
 
 # spdplyr 0.1.1
