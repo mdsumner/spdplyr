@@ -81,7 +81,7 @@ Beware that attributes stored on Spatial objects *are not* linked to the geometr
 library(sp)
 library(maptools)
 data(wrld_simpl)
-library(spdplyr)   ## devtools::install_github("mdsumner/spbabel", ref = "pipe")
+library(spdplyr) 
 library(raster)  
 wrld_simpl \%>\% mutate(NAME = "allthesame", REGION = row_number())
 wrld_simpl \%>\% transmute(alpha = paste0(FIPS, NAME))
@@ -101,8 +101,10 @@ slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 5
 #as(wrld_simpl, "SpatialLinesDataFrame") \%>\% mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
 
 
-## summarise/ze is different, we have to return only one geometry
-wrld_simpl \%>\% summarize(max(AREA))
+## summarise/ze can be used after group_by, or without
+wrld_simpl \%>\% filter(REGION == 150) \%>\% summarize(max(AREA)) 
+wrld_simpl \%>\% group_by(REGION) \%>\% summarize(max(AREA)) \%>\% 
+plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
 ## group_by and summarize
 g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))

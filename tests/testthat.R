@@ -1,4 +1,4 @@
 library(testthat)
-library(spbabel)
+library(spdplyr)
 
-test_check("spbabel")
+test_check("spdplyr")

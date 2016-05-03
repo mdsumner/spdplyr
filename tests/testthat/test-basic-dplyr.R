@@ -5,8 +5,7 @@ context("dplyr-Spatial")
 ## TODO: Add more tests
 
 library(maptools)
-library(spbabel)
-library(dplyr)
+library(spdplyr)
 data(wrld_simpl)
 poly1 <- wrld_simpl
 line1 <- as(wrld_simpl, "SpatialLinesDataFrame")

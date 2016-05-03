@@ -1,3 +1,7 @@
+# spdplyr dev
+
+* removed some leftover references from original source
+
 # spdplyr 0.1.1
 
 * first working version 

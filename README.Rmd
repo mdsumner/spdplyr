@@ -21,7 +21,7 @@ library(spdplyr)
 
 ## Installation
 
-Spbabel can be installed directly from github: 
+Spdplyr can be installed directly from github: 
 
 ```{r,eval=FALSE}
 devtools::install_github("mdsumner/spdplyr")
