@@ -65,7 +65,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' @rdname dplyr-Spatial
 #' @export
 #' @importFrom dplyr inner_join
-#' @importFrom spbabel sptable spFromTable
+#' @importFrom spbabel sptable sp sp.data.frame
 #' @examples 
 #' ## group_by and summarize
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
@@ -104,7 +104,7 @@ summarise_.Spatial <- function(.data, ...) {
     } else {
     gbomb$object_ <- 1
   }
-  spbabel::spFromTable(gbomb, attr_tab = dat, crs = proj4string(.data))
+  spbabel::sp(gbomb, attr_tab = dat, crs = proj4string(.data))
   
 }
 

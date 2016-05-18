@@ -1,5 +1,7 @@
 # spdplyr dev
 
+* updated to use sp rather than spFromTable in line with spbabel
+
 * modified the print/show details for Spatial 
 
 * removed some leftover references from original source
