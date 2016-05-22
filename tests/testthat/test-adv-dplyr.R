@@ -1,3 +1,5 @@
+library(testthat)
+library(dplyr)
 context("adv-dplyr")
 
 
@@ -42,9 +44,9 @@ x1 %>% filter(grepl("Aust", NAME))
 x1 %>% slice(c(100, 200))
 
 x1 %>% arrange(AREA)
-x1 %>% select(matches("NA"), matches("2005"), AREA)
+x1 %>% dplyr::select(NAME, POP2005, AREA)
 x1 %>% rename(Country = NAME, Population = POP2005)
-x1 %>% distinct(AREA)
+x1 %>% distinct(AREA, .keep_all = TRUE)
 x1 %>% mutate(AREA = REGION * 2)
 x1 %>% transmute(NAME = gsub("^A", "Z", NAME))
 x1 %>% summarize(a = 'POP2005')

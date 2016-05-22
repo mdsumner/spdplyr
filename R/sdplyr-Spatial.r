@@ -65,7 +65,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' @rdname dplyr-Spatial
 #' @export
 #' @importFrom dplyr inner_join
-#' @importFrom spbabel sptable sp sp.data.frame
+#' @importFrom spbabel sptable sp 
 #' @examples 
 #' ## group_by and summarize
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
@@ -202,10 +202,14 @@ distinct_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data for distinct for a %s", class(.data))
   }
-  orownames <- rownames(.data)
-  .data$order <- seq(nrow(.data))
+  #orownames <- rownames(.data)
+ #@ nam <- tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
+  #.data[[nam]] <- seq(nrow(.data))
   dat <- distinct_(as_data_frame(as.data.frame(.data)), ...)
-  .data[dat$order, ]
+  left_join(dat, .data@data)
+  #out <- .data[dat[[nam]], ] 
+  #out[[nam]] <- NULL
+  #out
 }
 
 #' @rdname dplyr-Spatial

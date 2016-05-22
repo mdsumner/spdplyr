@@ -89,8 +89,8 @@ test_that("select works", {
 # sample_n() and sample_frac()
 
 test_that("distinct works", {
-          expect_that(nrow(distinct(poly1, REGION)), equals(6L))
-  expect_that(distinct(poly1, REGION), is_a("SpatialPolygonsDataFrame"))
+          expect_that(nrow(distinct(poly1, REGION, .keep_all = TRUE)), equals(6L))
+  expect_that(distinct(poly1, REGION, .keep_all = TRUE), is_a("SpatialPolygonsDataFrame"))
   
           })
 
