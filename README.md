@@ -7,6 +7,8 @@ spdplyr
 
 `spdplyr` provides methods for the `dplyr` verbs for the `Spatial` classes in the `sp` package.
 
+**NOTE:** joins aren't really thought through or developed properly, send me your feedback / ideas / help!
+
 Installation
 ------------
 
