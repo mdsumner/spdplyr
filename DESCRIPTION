@@ -11,11 +11,10 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: lazyeval, spbabel
+Imports: lazyeval, methods, spbabel
 RoxygenNote: 5.0.1
 Suggests: testthat,
     maptools,
-    methods,
     raster,
     rmarkdown
 Remotes: mdsumner/spbabel

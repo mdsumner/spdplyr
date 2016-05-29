@@ -38,6 +38,7 @@ function (x, ...)
 #' @param object Spatial object
 #' @title sp methods
 #' @rdname sp-methods
+#' @importFrom methods show .hasSlot
 #' @export
 setMethod ('show' , 'Spatial', 
            function(object) {
