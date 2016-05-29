@@ -195,7 +195,7 @@ rename_.Spatial <- function(.data, ...) {
 }
 
 
-
+#' @importfrom utils tail
 #' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ...) {
@@ -203,13 +203,14 @@ distinct_.Spatial <- function(.data, ...) {
     stop("no data for distinct for a %s", class(.data))
   }
   #orownames <- rownames(.data)
- #@ nam <- tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
-  #.data[[nam]] <- seq(nrow(.data))
-  dat <- distinct_(as_data_frame(as.data.frame(.data)), ...)
-  left_join(dat, .data@data)
-  #out <- .data[dat[[nam]], ] 
+  nam <- utils::tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
+  .dat <- as_data_frame(as.data.frame(.data))
+  .dat[[nam]] <- seq(nrow(.data))
+  dat <- distinct_(.dat, ...)
+  
+  out <- .data[dat[[nam]], ] 
   #out[[nam]] <- NULL
-  #out
+  out
 }
 
 #' @rdname dplyr-Spatial
