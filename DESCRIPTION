@@ -1,20 +1,22 @@
 Package: spdplyr
 Type: Package
-Title: Data Manipulation Verbs for Spatial Classes 
 Version: 0.1.1.9001
+Title: Data Manipulation Verbs for Spatial Classes 
+Description: Methods for dplyr verbs for sp `Spatial` classes. The basic verbs that modify data attributes, remove or re-arrange rows are supported and provide complete `Spatial` analogs of the input data. The group by and summarize chain returns a non-topological union. There is limited support for joins, with left and inner to copy attributes from another table. 
 Authors@R: c(person("Michael D.","Sumner", role = c("aut", "cre"), email = "mdsumner@gmail.com"), 
              person("Joscha", "Legewie", role = "ctb"))
-Description: Methods for dplyr verbs for sp Spatial classes. The basic verbs that modify data attributes, remove or re-arrange rows are supported and provide complete Spatial analogs of the input data. The group_by and summarize chain returns a non-topological union. There is limited support for joins, with left and inner to copy attributes from another table. 
-License: GPL-3
-LazyData: TRUE
+URL: https://github.com/mdsumner/spdplyr
+BugReports: https://github.com/mdsumner/spdplyr/issues
 Depends:
     R (>= 3.2.3),
     dplyr,
     sp
 Imports: lazyeval, methods, spbabel
-RoxygenNote: 5.0.1
 Suggests: testthat,
     maptools,
     raster,
     rmarkdown
-Remotes: mdsumner/spbabel
+VignetteBuilder: knitr
+LazyData: yes
+License: GPL-3
+RoxygenNote: 5.0.1

@@ -195,7 +195,7 @@ rename_.Spatial <- function(.data, ...) {
 }
 
 
-#' @importfrom utils tail
+#' @importFrom utils tail
 #' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ...) {
