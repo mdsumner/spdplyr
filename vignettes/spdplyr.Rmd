@@ -1,35 +1,25 @@
 ---
-output: github_document
+title: "spdplyr"
+author: "Michael D. Sumner"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    fig_width: 7
+    fig_height: 7
+vignette: >
+  %\VignetteIndexEntry{spdplyr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-[![Travis-CI Build Status](https://travis-ci.org/mdsumner/spdplyr.svg?branch=master)](https://travis-ci.org/mdsumner/spdplyr)
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE,message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "figure/README-"
+  comment = "#>"
 )
 library(maptools)
 library(spdplyr)
 ```
-
-# spdplyr
-
-`spdplyr` provides methods for the `dplyr` verbs for the `Spatial` classes in the `sp` package. 
-
-
-## Installation
-
-Spdplyr can be installed directly from github: 
-
-```{r,eval=FALSE}
-devtools::install_github("mdsumner/spdplyr")
-```
-
-
 
 # dplyr verbs for Spatial
 
@@ -37,7 +27,7 @@ Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs.
 
 See `?dplyr-Spatial'` for supported verbs. 
 
-```{r,eval=FALSE}
+```{r}
 data(quakes)
 library(sp)
 coordinates(quakes) <- ~long+lat
@@ -48,7 +38,7 @@ quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
 
 We can use polygons and lines objects as well. 
 
-```{r,eval=FALSE}
+```{r}
 library(maptools)
 data(wrld_simpl)
 ## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
@@ -70,16 +60,4 @@ wrld_simpl %>% as("SpatialLinesDataFrame") %>% summarise(big = max(AREA))
 This approach is limited to the simple verbs  `arrange`, `distinct`, `filter`, `mutate`, `rename`, `select`, `slice`, `transmute`, and `summarize`. Summarize either on its own or after a `group_by` collapses to a non-topological union of all sub-geometries within a group without any consideration of topology or relationships. 
 
 **BEWARE**: This is not a proven method for dealing with Spatial data, use at your own risk.
-
-
-## How does it work? 
-
-Most of it is easy, simply applying the analogous operation of the verb to the Spatial*DataFrame and subsetting/re-organizing as necessary. Some operations use the `spbabel::sptable` approach which provides a loss-less way to do what `ggplot2::fortify` does and its reverse. 
-
-
-# Issues
-
-
-**NOTE:** joins aren't really thought through or developed properly, send me your feedback / ideas / help!
-
 

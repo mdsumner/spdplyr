@@ -15,7 +15,8 @@ Imports: lazyeval, methods, spbabel
 Suggests: testthat,
     maptools,
     raster,
-    rmarkdown
+    rmarkdown,
+    knitr
 VignetteBuilder: knitr
 LazyData: yes
 License: GPL-3
