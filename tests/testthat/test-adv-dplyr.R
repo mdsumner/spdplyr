@@ -35,21 +35,23 @@ expect_silent(g <- wrld_simpl  %>% group_by(REGION)  %>% summarize(alon = mean(L
 # setdiff(x, y)	SELECT * FROM x EXCEPT SELECT * FROM y
 # 
 
-
-x1 <- poly1
-
-x1 %>% filter(NAME == "Australia")
-x1 %>% filter(POP2005 > 2e6)
-x1 %>% filter(grepl("Aust", NAME))
-x1 %>% slice(c(100, 200))
-
-x1 %>% arrange(AREA)
-x1 %>% dplyr::select(NAME, POP2005, AREA)
-x1 %>% rename(Country = NAME, Population = POP2005)
-x1 %>% distinct(AREA, .keep_all = TRUE)
-x1 %>% mutate(AREA = REGION * 2)
-x1 %>% transmute(NAME = gsub("^A", "Z", NAME))
-x1 %>% summarize(a = 'POP2005')
-
-#x1 %>% group_by(REGION)
-#x1 %>% summarize(a = POP2005)
+test_that("everthing is ok", {
+  testthat::skip_on_cran()
+  x1 <- poly1
+  
+  x1 %>% filter(NAME == "Australia")
+  x1 %>% filter(POP2005 > 2e6)
+  x1 %>% filter(grepl("Aust", NAME))
+  x1 %>% slice(c(100, 200))
+  
+  x1 %>% arrange(AREA)
+  x1 %>% dplyr::select(NAME, POP2005, AREA)
+  x1 %>% rename(Country = NAME, Population = POP2005)
+  x1 %>% distinct(AREA, .keep_all = TRUE)
+  x1 %>% mutate(AREA = REGION * 2)
+  x1 %>% transmute(NAME = gsub("^A", "Z", NAME))
+  x1 %>% summarize(a = 'POP2005')
+  
+  #x1 %>% group_by(REGION)
+  #x1 %>% summarize(a = POP2005)
+})

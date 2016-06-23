@@ -102,6 +102,7 @@ test_that("mutate works", {
 
 
 test_that("various examples", {
+  testthat::skip_on_cran()
   expect_silent(wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number()))
   expect_silent(wrld_simpl %>% transmute(alpha = paste0(FIPS, NAME)) )
   expect_silent(wrld_simpl %>% filter(NAME %in% c("New Zealand", "Australia", "Fiji")))
