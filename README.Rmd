@@ -23,12 +23,11 @@ library(spdplyr)
 
 ## Installation
 
-Spdplyr can be installed directly from github: 
+Spdplyr can be installed directly from Github: 
 
 ```{r,eval=FALSE}
 devtools::install_github("mdsumner/spdplyr")
 ```
-
 
 
 # dplyr verbs for Spatial
@@ -36,40 +35,6 @@ devtools::install_github("mdsumner/spdplyr")
 Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs. 
 
 See `?dplyr-Spatial'` for supported verbs. 
-
-```{r,eval=FALSE}
-data(quakes)
-library(sp)
-coordinates(quakes) <- ~long+lat
-library(spdplyr)
-## plot a subset of locations by number of stations
-quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
-```
-
-We can use polygons and lines objects as well. 
-
-```{r,eval=FALSE}
-library(maptools)
-data(wrld_simpl)
-## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
-worldcorner <- wrld_simpl %>% 
-  mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% 
-  filter(lat < -20, lon > 60) %>% 
-  select(NAME)
-
-## demonstrate that we have a faithful subset of the original object
-plot(worldcorner, asp = "")
-text(coordinates(worldcorner), label = worldcorner$NAME, cex = 0.6)
-
-worldcorner
-
-## we can chain together standard operations as well as dplyr specific ones
-wrld_simpl %>% as("SpatialLinesDataFrame") %>% summarise(big = max(AREA))
-```
-
-This approach is limited to the simple verbs  `arrange`, `distinct`, `filter`, `mutate`, `rename`, `select`, `slice`, `transmute`, and `summarize`. Summarize either on its own or after a `group_by` collapses to a non-topological union of all sub-geometries within a group without any consideration of topology or relationships. 
-
-**BEWARE**: This is not a proven method for dealing with Spatial data, use at your own risk.
 
 
 ## How does it work? 

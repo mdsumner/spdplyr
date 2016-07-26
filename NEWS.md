@@ -1,4 +1,4 @@
-# spdplyr dev
+# spdplyr 0.1.2
 
 * updated to use sp rather than spFromTable in line with spbabel
 
