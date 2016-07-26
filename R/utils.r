@@ -10,6 +10,7 @@ function (x, ...)
   cat("class       :", class(x), "\n")
   hasData <- FALSE
   nc <- 0
+
   if (has_data(x)) {
     hasData <- TRUE
     nc <- ncol(x@data)
@@ -30,17 +31,24 @@ function (x, ...)
     cat("variables   : ", nc, "\n", sep = "")
     if (!inherits(x, "tbl_df")) x <- tbl_df(x)
     print(x)
-  }
-  invisible(x)
+  } 
+  invisible(NULL)
 }
 
 #' Sp methods
 #' @param object Spatial object
 #' @title sp methods
-#' @rdname sp-methods
 #' @importFrom methods show .hasSlot
+#' @rdname sp-methods
 #' @export
 setMethod ('show' , 'Spatial', 
+           function(object) {
+             .print_Spatial(object)
+           }
+)
+#' @rdname sp-methods
+#' @export
+setMethod ('show' , 'SpatialPoints', 
            function(object) {
              .print_Spatial(object)
            }

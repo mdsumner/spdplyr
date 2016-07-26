@@ -3,9 +3,12 @@
 \docType{methods}
 \name{show,Spatial-method}
 \alias{show,Spatial-method}
+\alias{show,SpatialPoints-method}
 \title{sp methods}
 \usage{
 \S4method{show}{Spatial}(object)
+
+\S4method{show}{SpatialPoints}(object)
 }
 \arguments{
 \item{object}{Spatial object}
