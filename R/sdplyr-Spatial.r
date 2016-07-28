@@ -32,21 +32,24 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' wrld_simpl %>% slice(c(9, 100))
 #' wrld_simpl %>% dplyr::select(UN, FIPS)
 #' wrld_simpl %>% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME)
-#' wrld_simpl %>% distinct(REGION) %>% arrange(REGION)  ## first alphabetically in REGION
-#' wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION) ## last
+#' wrld_simpl %>% distinct(REGION, .keep_all = TRUE) %>% 
+#'    arrange(REGION)  ## first alphabetically in REGION
+#' wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION, .keep_all = TRUE) ## last
 #' 
 #' ## we don't need to use piping
 #' slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4)
 #' 
 #' 
 #' ## works with Lines
-#' #as(wrld_simpl, "SpatialLinesDataFrame") %>% mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
+#' #as(wrld_simpl, "SpatialLinesDataFrame") %>% 
+#'  # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
 #' 
 #' 
 #' ## summarise/ze can be used after group_by, or without
 #' wrld_simpl %>% filter(REGION == 150) %>% summarize(max(AREA)) 
 #' wrld_simpl %>% group_by(REGION) %>% summarize(max(AREA)) %>% 
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
+#' 
 #' @importFrom dplyr %>% arrange as_data_frame data_frame mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
@@ -214,6 +217,7 @@ distinct_.Spatial <- function(.data, ...) {
 }
 
 #' @rdname dplyr-Spatial
+#' @param y tbl to join
 #' @importFrom dplyr left_join inner_join
 #' @inheritParams dplyr::left_join
 #' @export

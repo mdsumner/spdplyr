@@ -110,7 +110,7 @@ test_that("various examples", {
   expect_silent(wrld_simpl %>% slice(c(9, 100)))
   expect_silent(wrld_simpl %>% dplyr::select(UN, FIPS))
   expect_silent(wrld_simpl %>% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME))
-  expect_silent(wrld_simpl %>% distinct(REGION) %>% arrange(REGION) )  ## first alphabetically in REGION
+  expect_silent(wrld_simpl %>% distinct(REGION, .keep_all = TRUE) %>% arrange(REGION) )  ## first alphabetically in REGION
   expect_silent(wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION, .keep_all = TRUE)) ## last
    
   ## we don't need to use piping

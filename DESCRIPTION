@@ -19,7 +19,8 @@ Suggests: testthat,
     maptools,
     raster,
     rmarkdown,
-    knitr
+    knitr,
+    covr
 VignetteBuilder: knitr
 LazyData: yes
 License: GPL-3

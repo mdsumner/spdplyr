@@ -46,6 +46,8 @@
 
 \item{x}{tbls to join}
 
+\item{y}{tbl to join}
+
 \item{by}{a character vector of variables to join by.  If \code{NULL}, the
   default, \code{join} will do a natural join, using all variables with
   common names across the two tables. A message lists the variables so
@@ -89,21 +91,24 @@ wrld_simpl \%>\% arrange(LON)
 wrld_simpl \%>\% slice(c(9, 100))
 wrld_simpl \%>\% dplyr::select(UN, FIPS)
 wrld_simpl \%>\% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME)
-wrld_simpl \%>\% distinct(REGION) \%>\% arrange(REGION)  ## first alphabetically in REGION
-wrld_simpl \%>\% arrange(REGION, desc(NAME)) \%>\% distinct(REGION) ## last
+wrld_simpl \%>\% distinct(REGION, .keep_all = TRUE) \%>\% 
+   arrange(REGION)  ## first alphabetically in REGION
+wrld_simpl \%>\% arrange(REGION, desc(NAME)) \%>\% distinct(REGION, .keep_all = TRUE) ## last
 
 ## we don't need to use piping
 slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4)
 
 
 ## works with Lines
-#as(wrld_simpl, "SpatialLinesDataFrame") \%>\% mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
+#as(wrld_simpl, "SpatialLinesDataFrame") \%>\% 
+ # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
 
 
 ## summarise/ze can be used after group_by, or without
 wrld_simpl \%>\% filter(REGION == 150) \%>\% summarize(max(AREA)) 
 wrld_simpl \%>\% group_by(REGION) \%>\% summarize(max(AREA)) \%>\% 
 plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
+
 ## group_by and summarize
 g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))

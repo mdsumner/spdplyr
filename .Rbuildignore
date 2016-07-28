@@ -7,3 +7,4 @@
 ^data-raw$
 ^nesting.rmd$
 ^appveyor\.yml$
+^codecov\.yml$
