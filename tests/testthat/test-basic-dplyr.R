@@ -89,8 +89,8 @@ test_that("select works", {
 # sample_n() and sample_frac()
 
 test_that("distinct works", {
-          expect_that(nrow(distinct(poly1, REGION)), equals(6L))
-  expect_that(distinct(poly1, REGION), is_a("SpatialPolygonsDataFrame"))
+          expect_that(nrow(distinct(poly1, REGION, .keep_all = TRUE)), equals(6L))
+  expect_that(distinct(poly1, REGION, .keep_all = TRUE), is_a("SpatialPolygonsDataFrame"))
   
           })
 
@@ -111,7 +111,7 @@ test_that("various examples", {
   expect_silent(wrld_simpl %>% dplyr::select(UN, FIPS))
   expect_silent(wrld_simpl %>% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME))
   expect_silent(wrld_simpl %>% distinct(REGION) %>% arrange(REGION) )  ## first alphabetically in REGION
-  expect_silent(wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION)) ## last
+  expect_silent(wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION, .keep_all = TRUE)) ## last
    
   ## we don't need to use piping
   expect_silent( slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4))
