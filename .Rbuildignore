@@ -8,3 +8,4 @@
 ^nesting.rmd$
 ^appveyor\.yml$
 ^codecov\.yml$
+^cran-comments\.md$
