@@ -26,7 +26,13 @@ library(spdplyr)
 
 ## Installation
 
-Spdplyr can be installed directly from Github: 
+Install from CRAN: 
+
+```{r,eval=FALSE}
+install.packages("spdplyr")
+```
+
+The development version of `spdplyr` can be installed directly from Github: 
 
 ```{r,eval=FALSE}
 devtools::install_github("mdsumner/spdplyr")

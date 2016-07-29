@@ -43,13 +43,13 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' ## works with Lines
 #' #as(wrld_simpl, "SpatialLinesDataFrame") %>% 
 #'  # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
-#' 
-#' 
+#' \donttest{
+#' \dontrun{
 #' ## summarise/ze can be used after group_by, or without
 #' wrld_simpl %>% filter(REGION == 150) %>% summarize(max(AREA)) 
 #' wrld_simpl %>% group_by(REGION) %>% summarize(max(AREA)) %>% 
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
-#' 
+#' }}
 #' @importFrom dplyr %>% arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {

@@ -102,13 +102,13 @@ slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 5
 ## works with Lines
 #as(wrld_simpl, "SpatialLinesDataFrame") \%>\% 
  # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
-
-
+\donttest{
+\dontrun{
 ## summarise/ze can be used after group_by, or without
 wrld_simpl \%>\% filter(REGION == 150) \%>\% summarize(max(AREA)) 
 wrld_simpl \%>\% group_by(REGION) \%>\% summarize(max(AREA)) \%>\% 
 plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
-
+}}
 ## group_by and summarize
 g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
