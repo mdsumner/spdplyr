@@ -126,7 +126,7 @@ test_that("various examples", {
 
 ws <- filter(wrld_simpl, NAME %in% c("Portugal", "France", "Spain"))
 ws$chNAME <- levels(ws$NAME)[ws$NAME]
-d <- data_frame(ent = c("Australia", "Portugal", "New Zealand", "France", "Spain"), AREA = seq(1.2, 2, length = 5))
+d <- tibble(ent = c("Australia", "Portugal", "New Zealand", "France", "Spain"), AREA = seq(1.2, 2, length = 5))
 test_that("joins work", {
   expect_that(all(is.na(left_join(ws@data, d)$ent)), is_true())
   expect_that(all(is.na(left_join(ws, d)$ent)), is_true())

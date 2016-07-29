@@ -50,7 +50,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' wrld_simpl %>% group_by(REGION) %>% summarize(max(AREA)) %>% 
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
 #' 
-#' @importFrom dplyr %>% arrange as_data_frame data_frame mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
+#' @importFrom dplyr %>% arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
@@ -69,6 +69,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' @export
 #' @importFrom dplyr inner_join
 #' @importFrom spbabel sptable sp 
+#' @importFrom tibble tibble
 #' @examples 
 #' ## group_by and summarize
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
@@ -95,7 +96,7 @@ summarise_.Spatial <- function(.data, ...) {
   gbomb <- spbabel::sptable(.data)
   if (inherits(.data@data, "grouped_df")) {
     groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
-    regroup <- data_frame(labs =  unlist(lapply(seq_along(attr(.data@data, "group_sizes")), function(x) rep(x, attr(.data@data, "group_sizes")[x]))), 
+    regroup <- tibble(labs =  unlist(lapply(seq_along(attr(.data@data, "group_sizes")), function(x) rep(x, attr(.data@data, "group_sizes")[x]))), 
                           inds = unlist(groups) + 1)
     
     gbomb <- gbomb  %>% 
@@ -112,6 +113,7 @@ summarise_.Spatial <- function(.data, ...) {
 }
 
 #' @importFrom dplyr group_by_
+#' @importFrom tibble as_tibble 
 #' @rdname dplyr-Spatial
 #' @export
 group_by_.Spatial <- function(.data, ...) {
@@ -119,7 +121,7 @@ group_by_.Spatial <- function(.data, ...) {
     stop("no data for distinct for a %s", class(.data))
   }
   orownames <- row.names(.data)
-  dat <- group_by_(as_data_frame(as.data.frame(.data)), ...)
+  dat <- group_by_(as_tibble(as.data.frame(.data)), ...)
   
   #groupatts <- attributes(dat)
   #groupatts$class <- "data.frame"
@@ -150,13 +152,14 @@ filter_.Spatial <- function(.data, ..., .dots) {
 
 
 #' @rdname dplyr-Spatial
+#' @importFrom tibble as_tibble 
 #' @importFrom dplyr arrange_ distinct_ rename_ select_ slice_ filter_ transmute_ mutate_ 
 #' @export
 arrange_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to arrange for a %s", class(.data))
   }
-  dat <- as_data_frame(as.data.frame(.data))
+  dat <- as_tibble(as.data.frame(.data))
   dat$order <- seq(nrow(dat))
   dat <- arrange_(dat, ...)
   .data[dat$order, ]
@@ -164,12 +167,13 @@ arrange_.Spatial <- function(.data, ...) {
 
 
 #' @rdname dplyr-Spatial
+#' @importFrom tibble as_tibble 
 #' @export
 slice_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to slice for a %s", class(.data))
   }
-  dat <-  as_data_frame(as.data.frame(.data))
+  dat <-  as_tibble(as.data.frame(.data))
   dat$order <- seq(nrow(dat))
   dat <- slice_(dat, ...)
   .data[dat$order, ]
@@ -186,19 +190,21 @@ select_.Spatial <- function(.data, ...) {
 }
 
 #' @rdname dplyr-Spatial
+#' @importFrom tibble as_tibble 
 #' @export
 rename_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to rename for a %s", class(.data))
   }
   onames <- names(.data)
-  dat <-  rename_(as_data_frame(as.data.frame(.data)), ...)
+  dat <-  rename_(as_tibble(as.data.frame(.data)), ...)
   names(.data) <- names(dat)
   .data
 }
 
 
 #' @importFrom utils tail
+#' @importFrom tibble as_tibble
 #' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ...) {
@@ -207,7 +213,7 @@ distinct_.Spatial <- function(.data, ...) {
   }
   #orownames <- rownames(.data)
   nam <- utils::tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
-  .dat <- as_data_frame(as.data.frame(.data))
+  .dat <- as_tibble(as.data.frame(.data))
   .dat[[nam]] <- seq(nrow(.data))
   dat <- distinct_(.dat, ...)
   
@@ -222,7 +228,7 @@ distinct_.Spatial <- function(.data, ...) {
 #' @inheritParams dplyr::left_join
 #' @export
 left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
-  x@data <- left_join(tbl_df(as.data.frame(x)), y, by = by, copy = copy, ...)
+  x@data <- left_join(as_tibble(as.data.frame(x)), y, by = by, copy = copy, ...)
   x
 }
 
@@ -232,7 +238,7 @@ left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
    randomkey <- paste(sample(c(letters, 1:100)), collapse = "")
    ## kludge to record which rows are kept
    x[[randomkey]] <- seq(nrow(x))
-   .data <- inner_join(tbl_df(as.data.frame(x)), y, by = by, copy = copy, ...)
+   .data <- inner_join(as_tibble(as.data.frame(x)), y, by = by, copy = copy, ...)
    x <- x[.data[[randomkey]], ]
    .data[[randomkey]] <- NULL
    x@data <- .data

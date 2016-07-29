@@ -1,7 +1,7 @@
 Package: spdplyr
 Type: Package
-Version: 0.1.1.9001
-Title: Data Manipulation Verbs for Spatial Classes 
+Version: 0.1.2
+Title: Data Manipulation Verbs for the Spatial Classes 
 Description: Methods for dplyr verbs for sp `Spatial` classes. The basic verbs that modify data attributes, 
     remove or re-arrange rows are supported and provide complete `Spatial` analogs of the input data. The group 
     by and summarize chain returns a non-topological union. There is limited support for joins, with left and 
@@ -14,7 +14,7 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: lazyeval, methods, spbabel
+Imports: lazyeval, methods, spbabel, tibble
 Suggests: testthat,
     maptools,
     raster,
