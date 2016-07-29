@@ -28,6 +28,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' wrld_simpl %>% mutate(NAME = "allthesame", REGION = row_number())
 #' wrld_simpl %>% transmute(alpha = paste0(FIPS, NAME))
 #' wrld_simpl %>% filter(NAME %in% c("New Zealand", "Australia", "Fiji"))
+#' \dontrun{
 #' wrld_simpl %>% arrange(LON)
 #' wrld_simpl %>% slice(c(9, 100))
 #' wrld_simpl %>% dplyr::select(UN, FIPS)
@@ -35,7 +36,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' wrld_simpl %>% distinct(REGION, .keep_all = TRUE) %>% 
 #'    arrange(REGION)  ## first alphabetically in REGION
 #' wrld_simpl %>% arrange(REGION, desc(NAME)) %>% distinct(REGION, .keep_all = TRUE) ## last
-#' 
+#' }
 #' ## we don't need to use piping
 #' slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 50), 4)
 #' 
@@ -43,13 +44,13 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' ## works with Lines
 #' #as(wrld_simpl, "SpatialLinesDataFrame") %>% 
 #'  # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
-#' \donttest{
+#' 
 #' \dontrun{
 #' ## summarise/ze can be used after group_by, or without
 #' wrld_simpl %>% filter(REGION == 150) %>% summarize(max(AREA)) 
 #' wrld_simpl %>% group_by(REGION) %>% summarize(max(AREA)) %>% 
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
-#' }}
+#' }
 #' @importFrom dplyr %>% arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
 #' @importFrom lazyeval all_dots
 mutate_.Spatial <-  function(.data, ..., .dots) {
@@ -72,12 +73,15 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' @importFrom tibble tibble
 #' @examples 
 #' ## group_by and summarize
+#' 
+#' \dontrun{
 #' g <- wrld_simpl  %>% group_by(REGION)  %>% 
 #'  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
 #' g %>% mutate(ar = factor(REGION)) %>% spplot("ar")
 #' w <- wrld_simpl
 #' w$ar <- factor(w$REGION)
 #' spplot(w, "ar")
+#' }
 #' \dontrun{
 #' # compare what rgeos gives
 #' ##spplot(rgeos::gUnionCascaded(w, id = w$ar))  ## good grief, is this compelling . . .
