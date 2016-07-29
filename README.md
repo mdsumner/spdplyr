@@ -10,7 +10,13 @@ spdplyr
 Installation
 ------------
 
-Spdplyr can be installed directly from Github:
+Install from CRAN:
+
+``` r
+install.packages("spdplyr")
+```
+
+The development version of `spdplyr` can be installed directly from Github:
 
 ``` r
 devtools::install_github("mdsumner/spdplyr")
