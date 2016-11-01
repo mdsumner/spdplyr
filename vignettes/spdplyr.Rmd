@@ -33,7 +33,7 @@ library(sp)
 coordinates(quakes) <- ~long+lat
 library(spdplyr)
 ## plot a subset of locations by number of stations
-quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% select(stations) %>% spplot
+quakes %>% dplyr::filter(mag <5.5 & mag > 4.5) %>% dplyr::select(stations) %>% spplot()
 ```
 
 We can use polygons and lines objects as well. 
@@ -45,7 +45,7 @@ data(wrld_simpl)
 worldcorner <- wrld_simpl %>% 
   mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% 
   filter(lat < -20, lon > 60) %>% 
-  select(NAME)
+  dplyr::select(NAME)
 
 ## demonstrate that we have a faithful subset of the original object
 plot(worldcorner, asp = "")
