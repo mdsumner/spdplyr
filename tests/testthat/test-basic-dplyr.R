@@ -38,9 +38,25 @@ test_that("filter works for all geometric types", {
 # arrange()
 # select() (and rename())
 # distinct()
-# mutate() (and transmute())
 # summarise()
 # sample_n() and sample_frac()
+
+test_that("mutate works for all geometric types", {
+  expect_that( ncol(mutate(poly1, NAME = NAME)), equals(11) )
+  expect_that( ncol(mutate(line1, NAME = NAME)), equals(11) )
+  expect_that( ncol(mutate(point1, NAME = NAME)), equals(14) )
+  expect_that( ncol(mutate(mpoint1, NAME = NAME)), equals(11) )
+
+  expect_that( ncol(mutate(poly1, NAMECOPY = NAME)), equals(12) )
+  expect_that( ncol(mutate(line1, NAMECOPY = NAME)), equals(12) )
+  expect_that( ncol(mutate(point1, NAMECOPY = NAME)), equals(15) )
+  expect_that( ncol(mutate(mpoint1, NAMECOPY = NAME)), equals(12) )
+  
+  expect_that( ncol(transmute(poly1, NAMECOPY = NAME)), equals(1) )
+  expect_that( ncol(transmute(line1, NAMECOPY = NAME)), equals(1) )
+  expect_that( ncol(transmute(point1, NAMECOPY = NAME)), equals(1) )
+  expect_that( ncol(transmute(mpoint1, NAMECOPY = NAME)), equals(1) )
+})
 
 test_that("arrange works", {
   expect_that(nrow(arrange(poly1)), equals(246L) )
