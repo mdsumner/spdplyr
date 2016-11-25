@@ -57,7 +57,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
   
   if (.hasSlot(.data, "data")) {
-    dat <- mutate_(as.data.frame(.data), .dots = dots)
+    dat <- mutate_(.data@data, .dots = dots)
   } else {
     stop("no data to mutate for a %s", class(.data))
   }
@@ -94,7 +94,7 @@ summarise_.Spatial <- function(.data, ...) {
   }
   # this should only ever return one-row objects
   # we cannot group_by on Spatial
-  dat <- summarise_(as.data.frame(.data), ...)
+  dat <- summarise_(.data@data, ...)
   
   # row.names(dat) <- "1"
   gbomb <- spbabel::sptable(.data)
@@ -125,7 +125,7 @@ group_by_.Spatial <- function(.data, ...) {
     stop("no data for distinct for a %s", class(.data))
   }
   orownames <- row.names(.data)
-  dat <- group_by_(as_tibble(as.data.frame(.data)), ...)
+  dat <- group_by_(as_tibble(.data@data), ...)
   
   #groupatts <- attributes(dat)
   #groupatts$class <- "data.frame"
@@ -150,7 +150,7 @@ filter_.Spatial <- function(.data, ..., .dots) {
     stop("no data to filter for a %s", class(.data))
   }
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  masks <- lazyeval::lazy_eval(dots, data = as.data.frame(.data@data))
+  masks <- lazyeval::lazy_eval(dots, data = .data@data)
   subset(.data, Reduce(`&`, masks))
 }
 
@@ -163,7 +163,7 @@ arrange_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to arrange for a %s", class(.data))
   }
-  dat <- as_tibble(as.data.frame(.data))
+  dat <- as_tibble(.data@data)
   dat$order <- seq(nrow(dat))
   dat <- arrange_(dat, ...)
   .data[dat$order, ]
@@ -177,7 +177,7 @@ slice_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to slice for a %s", class(.data))
   }
-  dat <-  as_tibble(as.data.frame(.data))
+  dat <-  as_tibble(.data@data)
   dat$order <- seq(nrow(dat))
   dat <- slice_(dat, ...)
   .data[dat$order, ]
@@ -189,7 +189,7 @@ select_.Spatial <- function(.data, ...) {
   if (!.hasSlot(.data, "data")) {
     stop("no data to select for a %s", class(.data))
   }
-  dat <-  select_(as.data.frame(.data), ...)
+  dat <-  select_(.data@data, ...)
   .data[, names(dat)]
 }
 
@@ -201,7 +201,7 @@ rename_.Spatial <- function(.data, ...) {
     stop("no data to rename for a %s", class(.data))
   }
   onames <- names(.data)
-  dat <-  rename_(as_tibble(as.data.frame(.data)), ...)
+  dat <-  rename_(as_tibble(.data@data), ...)
   names(.data) <- names(dat)
   .data
 }
@@ -217,7 +217,7 @@ distinct_.Spatial <- function(.data, ...) {
   }
   #orownames <- rownames(.data)
   nam <- utils::tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
-  .dat <- as_tibble(as.data.frame(.data))
+  .dat <- as_tibble(.data@data)
   .dat[[nam]] <- seq(nrow(.data))
   dat <- distinct_(.dat, ...)
   
@@ -232,7 +232,7 @@ distinct_.Spatial <- function(.data, ...) {
 #' @inheritParams dplyr::left_join
 #' @export
 left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
-  x@data <- left_join(as_tibble(as.data.frame(x)), y, by = by, copy = copy, ...)
+  x@data <- left_join(as_tibble(x@data), y, by = by, copy = copy, ...)
   x
 }
 
@@ -242,7 +242,7 @@ left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
    randomkey <- paste(sample(c(letters, 1:100)), collapse = "")
    ## kludge to record which rows are kept
    x[[randomkey]] <- seq(nrow(x))
-   .data <- inner_join(as_tibble(as.data.frame(x)), y, by = by, copy = copy, ...)
+   .data <- inner_join(as_tibble(x@data), y, by = by, copy = copy, ...)
    x <- x[.data[[randomkey]], ]
    .data[[randomkey]] <- NULL
    x@data <- .data
