@@ -190,7 +190,7 @@ select_.Spatial <- function(.data, ...) {
     stop("no data to select for a %s", class(.data))
   }
   dat <-  select_(.data@data, ...)
-  .data[, names(dat)]
+  .data[, names(dat), drop = FALSE]
 }
 
 #' @rdname dplyr-Spatial
