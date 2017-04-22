@@ -1,3 +1,7 @@
+# spdplyr dev
+
+* updated for dplyr post 0.5.0
+
 # spdplyr 0.1.2
 
 * updated to use sp rather than spFromTable in line with spbabel

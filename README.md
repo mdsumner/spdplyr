@@ -1,5 +1,5 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/mdsumner/spdplyr.svg?branch=master)](https://travis-ci.org/mdsumner/spdplyr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/spdplyr?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/spdplyr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/spdplyr)](https://cran.r-project.org/package=spdplyr) [![Coverage Status](https://img.shields.io/codecov/c/github/mdsumner/spdplyr/master.svg)](https://codecov.io/github/mdsumner/spdplyr?branch=master)
+[![Travis-CI Build Status](https://travis-ci.org/mdsumner/spdplyr.svg?branch=master)](https://travis-ci.org/mdsumner/spdplyr) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/spdplyr?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/spdplyr) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/spdplyr)](https://cran.r-project.org/package=spdplyr) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/spdplyr)](http://www.r-pkg.org/pkg/spdplyr) [![Coverage Status](https://img.shields.io/codecov/c/github/mdsumner/spdplyr/master.svg)](https://codecov.io/github/mdsumner/spdplyr?branch=master)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 spdplyr
@@ -37,4 +37,4 @@ Most of it is easy, simply applying the analogous operation of the verb to the S
 Issues
 ======
 
-**NOTE:** joins aren't really thought through or developed properly, send me your feedback / ideas / help!
+**NOTE:** joins aren't really supported. See `sf` for better joins, and perhaps for a better option than this package. I've moved on from this quite a bit and am looking for a better design than simple features can provide.

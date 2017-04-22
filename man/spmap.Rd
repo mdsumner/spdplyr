@@ -11,4 +11,3 @@ Created in /data-raw/ \code{spmap} is a subset of wrld_simpl from maptools.
 library(dplyr)
 spmap \%>\% filter(NAME == "Antarctica")
 }
-
