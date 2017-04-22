@@ -55,6 +55,6 @@ Most of it is easy, simply applying the analogous operation of the verb to the S
 # Issues
 
 
-**NOTE:** joins aren't really thought through or developed properly, send me your feedback / ideas / help!
+**NOTE:** joins aren't really supported. See `sf` for better joins, and perhaps for a better option than this package. I've moved on from this quite a bit and am looking for a better design than simple features can provide. 
 
 

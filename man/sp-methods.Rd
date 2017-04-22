@@ -16,4 +16,3 @@
 \description{
 Sp methods
 }
-

@@ -7,4 +7,3 @@
 \description{
 MultiPointsDataFrame data set
 }
-
