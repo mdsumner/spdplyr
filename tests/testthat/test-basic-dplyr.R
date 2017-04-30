@@ -31,7 +31,10 @@ test_that("filter works for all geometric types", {
   expect_that(nrow(mpoint1 %>% filter(NAME == "Australia")), equals(1L) )
   
   ## multipoint needs work, slicing here duplicates row.names so catch this warning as expected for now
-  expect_that(nrow(slice(mpoint1, 1:2)), testthat::gives_warning("some row.names duplicated"))
+  
+  ## update 2017-04-30 MDS no warning needed anymore
+  #expect_that(nrow(slice(mpoint1, 1:2)), testthat::gives_warning("some row.names duplicated"))
+  expect_silent(nrow(slice(mpoint1, 1:2)))
 })
 
 # filter() (and slice())
