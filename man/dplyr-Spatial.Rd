@@ -9,6 +9,7 @@
 \alias{summarise_.Spatial}
 \alias{summarise.Spatial}
 \alias{group_by_.Spatial}
+\alias{group_by.Spatial}
 \alias{filter_.Spatial}
 \alias{arrange_.Spatial}
 \alias{slice_.Spatial}
@@ -28,6 +29,8 @@
 \method{summarise}{Spatial}(.data, ...)
 
 \method{group_by_}{Spatial}(.data, ...)
+
+\method{group_by}{Spatial}(.data, ...)
 
 \method{filter_}{Spatial}(.data, ..., .dots)
 

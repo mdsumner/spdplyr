@@ -77,3 +77,4 @@ wrld_simpl %>% mutate_at(vars(starts_with("L")), funs(as.integer))
  spmap %>% mutate_at(vars(starts_with("L")), funs(as.integer))
 
 })
+

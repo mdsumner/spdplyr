@@ -3,6 +3,7 @@
 S3method(arrange_,Spatial)
 S3method(distinct_,Spatial)
 S3method(filter_,Spatial)
+S3method(group_by,Spatial)
 S3method(group_by_,Spatial)
 S3method(groups,Spatial)
 S3method(inner_join,Spatial)

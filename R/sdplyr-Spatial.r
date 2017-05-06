@@ -77,11 +77,12 @@ groups.Spatial <- function(x) NULL
 #' @importFrom lazyeval all_dots
 NULL
 #' @noRd
+#' @importFrom tibble as_tibble
 data_or_stop <- function(x, mess = "") {
   if (!.hasSlot(x, "data")) {
     stop("no data %s for a %s", mess, class(x))
   } 
-  x@data
+  as_tibble(x@data)
 }
 #' @export
 #' @name dplyr-Spatial
@@ -124,8 +125,6 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' }
 summarise_.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to summarize ")
-  # this should only ever return one-row objects
-  # we cannot group_by on Spatial
   dat <- summarise_(.data@data, ...)
   
   # row.names(dat) <- "1"
@@ -156,8 +155,7 @@ summarise_.Spatial <- function(.data, ...) {
 #' @importFrom dplyr inner_join mutate select
 summarise.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to summarize ")
-  # this should only ever return one-row objects
-  # we cannot group_by on Spatial
+
   dat <- summarise(.data@data, ...)
   
   # row.names(dat) <- "1"
@@ -187,26 +185,19 @@ summarise.Spatial <- function(.data, ...) {
 #' @rdname dplyr-Spatial
 #' @export
 group_by_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data for distinct for a %s", class(.data))
-  }
-  orownames <- row.names(.data)
-  dat <- group_by_(as_tibble(.data@data), ...)
-  
-  #groupatts <- attributes(dat)
-  #groupatts$class <- "data.frame"
-  #groupatts$row.names <- orownames
-  #dat <- as.data.frame(dat)
-  #attributes(dat) <- groupatts
-  .data@data <- dat
+  .data@data <- group_by_(data_or_stop(.data, " to group_by "), ...)
   .data
 }
 
-
-
-
-
-
+#' @importFrom dplyr group_by
+#' @importFrom tibble as_tibble 
+#' @rdname dplyr-Spatial
+#' @importFrom rlang .data
+#' @export
+group_by.Spatial <- function(.data, ...) {
+  .data@data <- group_by(data_or_stop(.data, " to group_by "), ...)
+  .data
+}
 
 
 #' @rdname dplyr-Spatial
@@ -219,7 +210,16 @@ filter_.Spatial <- function(.data, ..., .dots) {
   masks <- lazyeval::lazy_eval(dots, data = .data@data)
   subset(.data, Reduce(`&`, masks))
 }
-
+#' @rdname dplyr-Spatial
+#' @export
+filter.Spatial <- function(.data, ...) {
+  if (!.hasSlot(.data, "data")) {
+    stop("no data to filter for a %s", class(.data))
+  }
+  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
+  masks <- lazyeval::lazy_eval(dots, data = .data@data)
+  subset(.data, Reduce(`&`, masks))
+}
 
 #' @rdname dplyr-Spatial
 #' @importFrom tibble as_tibble 
