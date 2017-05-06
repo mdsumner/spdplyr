@@ -40,7 +40,6 @@ groups.Spatial <- function(x) NULL
 #' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
 #' @rdname dplyr-Spatial
 #' @name dplyr-Spatial
-#' @export
 #' @examples 
 #' library(sp)
 #' library(maptools)
@@ -74,16 +73,29 @@ groups.Spatial <- function(x) NULL
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
 #' }
 #' @importFrom dplyr %>% arrange mutate_ transmute_ filter_ arrange_ slice_ select_ rename_ distinct_ summarise_
+#' @importFrom dplyr     mutate
 #' @importFrom lazyeval all_dots
+NULL
+#' @noRd
+data_or_stop <- function(x, mess = "") {
+  if (!.hasSlot(x, "data")) {
+    stop("no data %s for a %s", mess, class(x))
+  } 
+  x@data
+}
+#' @export
+#' @name dplyr-Spatial
+mutate.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to mutate ")
+  .data@data <- mutate(dat, ...)
+  .data
+}
+#' @export
+#' @name dplyr-Spatial
 mutate_.Spatial <-  function(.data, ..., .dots) {
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  
-  if (.hasSlot(.data, "data")) {
-    dat <- mutate_(.data@data, .dots = dots)
-  } else {
-    stop("no data to mutate for a %s", class(.data))
-  }
-  .data@data <- dat
+  dat <- data_or_stop(.data, " to mutate ")
+  .data@data <- mutate_(dat, .dots = dots)
   .data
 }
 

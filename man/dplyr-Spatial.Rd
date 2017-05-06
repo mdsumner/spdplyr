@@ -2,6 +2,9 @@
 % Please edit documentation in R/sdplyr-Spatial.r
 \name{dplyr-Spatial}
 \alias{dplyr-Spatial}
+\alias{dplyr-Spatial}
+\alias{mutate.Spatial}
+\alias{dplyr-Spatial}
 \alias{mutate_.Spatial}
 \alias{summarise_.Spatial}
 \alias{group_by_.Spatial}
@@ -15,6 +18,8 @@
 \alias{inner_join.Spatial}
 \title{Dplyr verbs for Spatial}
 \usage{
+\method{mutate}{Spatial}(.data, ...)
+
 \method{mutate_}{Spatial}(.data, ..., .dots)
 
 \method{summarise_}{Spatial}(.data, ...)
