@@ -7,6 +7,7 @@
 \alias{dplyr-Spatial}
 \alias{mutate_.Spatial}
 \alias{summarise_.Spatial}
+\alias{summarise.Spatial}
 \alias{group_by_.Spatial}
 \alias{filter_.Spatial}
 \alias{arrange_.Spatial}
@@ -23,6 +24,8 @@
 \method{mutate_}{Spatial}(.data, ..., .dots)
 
 \method{summarise_}{Spatial}(.data, ...)
+
+\method{summarise}{Spatial}(.data, ...)
 
 \method{group_by_}{Spatial}(.data, ...)
 

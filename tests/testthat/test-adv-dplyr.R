@@ -11,8 +11,9 @@ line1 <- as(wrld_simpl, "SpatialLinesDataFrame")
 point1 <- as(line1, "SpatialPointsDataFrame")
 test_that("group by and summarize is quiet", {
   expect_silent(g <- wrld_simpl  %>% group_by(REGION) )
-  expect_silent(g %>% summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA)))
+  expect_silent(g[1:20, ] %>% summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA)))
   expect_silent(wrld_simpl[1:20, ]  %>% group_by(REGION, SUBREGION) %>% summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA)))
+  expect_silent(g[1:10, ] %>% summarise.Spatial(alon = mean(LON)))
 })
 
 

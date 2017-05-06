@@ -123,9 +123,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 #' ##plot(rgeos::gUnionCascaded(w, id = w$ar), col = rainbow(nlevels(factor(w$ar)), alpha = 0.5))
 #' }
 summarise_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data for distinct for a %s", class(.data))
-  }
+  dat <- data_or_stop(.data, " to summarize ")
   # this should only ever return one-row objects
   # we cannot group_by on Spatial
   dat <- summarise_(.data@data, ...)
@@ -151,6 +149,39 @@ summarise_.Spatial <- function(.data, ...) {
   
 }
 
+#' @importFrom dplyr summarise
+#' @rdname dplyr-Spatial
+#' @export
+#' @importFrom rlang .data
+#' @importFrom dplyr inner_join mutate select
+summarise.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to summarize ")
+  # this should only ever return one-row objects
+  # we cannot group_by on Spatial
+  dat <- summarise(.data@data, ...)
+  
+  # row.names(dat) <- "1"
+  gbomb <- spbabel::sptable(.data)
+  
+  ## prepare the groups
+  if (inherits(.data@data, "grouped_df")) {
+    groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
+    grp_sizes <- attr(.data@data, "group_sizes")
+    regroup <- tibble(labs =  unlist(lapply(seq_along(grp_sizes), function(x) rep(x, grp_sizes[x]))), 
+                      inds = unlist(groups) + 1)
+    
+    gbomb <- gbomb  %>% 
+      dplyr::inner_join(regroup, c("object_" = "inds"))  %>% 
+      dplyr::mutate(object_ = .data$labs)  %>% 
+     dplyr::select(-.data$labs)  %>% 
+      dplyr::arrange(.data$object_, .data$branch_, .data$order_)
+    
+  } else {
+    gbomb[["object_"]] <- 1
+  }
+  spbabel::sp(gbomb, attr_tab = dat, crs = proj4string(.data))
+  
+}
 #' @importFrom dplyr group_by_
 #' @importFrom tibble as_tibble 
 #' @rdname dplyr-Spatial
