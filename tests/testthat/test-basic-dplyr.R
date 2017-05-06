@@ -153,7 +153,7 @@ test_that("joins work", {
   
   ## MDS changed 2017-05-06
   #expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining character"))
-  expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining factor and character vector, coercing into character vector"))
+  expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("coercing into character vector"))
   expect_that(left_join(ws, d, c("chNAME" = "ent")), is_a(class(ws)))
   
   expect_that(nrow(inner_join(ws@data, d)), equals(0L))
