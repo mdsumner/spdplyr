@@ -1,6 +1,8 @@
-# spdplyr dev
+# spdplyr 0.1.3
 
-* updated for dplyr post 0.5.0
+* fixed a bug from using '.data@data' within a tibble() call where '.data' has a special meaning
+
+* updated tests based on minor changes in dplyr around expected warning contents
 
 # spdplyr 0.1.2
 

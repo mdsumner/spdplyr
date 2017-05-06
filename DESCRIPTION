@@ -1,11 +1,11 @@
 Package: spdplyr
 Type: Package
-Version: 0.1.2.9001
+Version: 0.1.3
 Title: Data Manipulation Verbs for the Spatial Classes 
 Description: Methods for 'dplyr' verbs for 'sp' 'Spatial' classes. The basic 
     verbs that modify data attributes, remove or re-arrange rows are supported
     and provide complete 'Spatial' analogues of the input data. The group by
-    and summarize workflow returns a non-topological spatial union. There is 
+    and summarize work flow returns a non-topological spatial union. There is 
     limited support for joins, with left and inner to copy attributes from 
     another table. 
 Authors@R: c(person("Michael D.","Sumner", role = c("aut", "cre"), email = "mdsumner@gmail.com"), 
