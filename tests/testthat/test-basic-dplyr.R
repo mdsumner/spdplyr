@@ -145,12 +145,15 @@ test_that("various examples", {
 
 ws <- filter(wrld_simpl, NAME %in% c("Portugal", "France", "Spain"))
 ws$chNAME <- levels(ws$NAME)[ws$NAME]
-d <- tibble(ent = c("Australia", "Portugal", "New Zealand", "France", "Spain"), AREA = seq(1.2, 2, length = 5))
+d <- data.frame(ent = c("Australia", "Portugal", "New Zealand", "France", "Spain"), AREA = seq(1.2, 2, length = 5), 
+                stringsAsFactors = FALSE)
 test_that("joins work", {
   expect_that(all(is.na(left_join(ws@data, d)$ent)), is_true())
   expect_that(all(is.na(left_join(ws, d)$ent)), is_true())
   
-  expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining character"))
+  ## MDS changed 2017-05-06
+  #expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("joining character"))
+  expect_that(left_join(ws@data, d, c("NAME" = "ent")), gives_warning("Column `NAME`/`ent` joining factor and character vector, coercing into character vector"))
   expect_that(left_join(ws, d, c("chNAME" = "ent")), is_a(class(ws)))
   
   expect_that(nrow(inner_join(ws@data, d)), equals(0L))
@@ -165,3 +168,4 @@ test_that("joins work", {
   expect_that(nrow(inner_join(ws, d[1:4, ], c("chNAME" = "ent"))), equals(2L))
   
 })
+
