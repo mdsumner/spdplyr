@@ -100,7 +100,8 @@ summarise_.Spatial <- function(.data, ...) {
   gbomb <- spbabel::sptable(.data)
   if (inherits(.data@data, "grouped_df")) {
     groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
-    regroup <- tibble(labs =  unlist(lapply(seq_along(attr(.data@data, "group_sizes")), function(x) rep(x, attr(.data@data, "group_sizes")[x]))), 
+    grp_sizes <- attr(.data@data, "group_sizes")
+    regroup <- tibble(labs =  unlist(lapply(seq_along(grp_sizes), function(x) rep(x, grp_sizes[x]))), 
                           inds = unlist(groups) + 1)
     
     gbomb <- gbomb  %>% 
