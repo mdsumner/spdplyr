@@ -5,7 +5,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' 
 #' Worker functions used by dplyr features. 
 #' 
-#' These will work for the Spatial-DataFrame  objects, not properly for any Spatial. 
+#' These will work for the Spatial-DataFrame  objects, though not properly for any-Spatial. 
 #' @param x input Spatial object
 #' @name dplyr-S3
 #' @export
