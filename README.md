@@ -27,14 +27,4 @@ dplyr verbs for Spatial
 
 Apply `dplyr` verbs to the attribute data of `sp` objects with dplyr verbs.
 
-See `?dplyr-Spatial'` for supported verbs.
-
-How does it work?
------------------
-
-Most of it is easy, simply applying the analogous operation of the verb to the Spatial\*DataFrame and subsetting/re-organizing as necessary. Some operations use the `spbabel::sptable` approach which provides a loss-less way to do what `ggplot2::fortify` does and its reverse.
-
-Issues
-======
-
-**NOTE:** joins aren't really supported. See `sf` for better joins, and perhaps for a better option than this package. I've moved on from this quite a bit and am looking for a better design than simple features can provide.
+See `?dplyr-Spatial` for supported verbs.
