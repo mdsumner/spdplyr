@@ -1,6 +1,7 @@
 # spdplyr 0.1.3
 
-* added methods for dplyr::groups and dplyr::tbl_vars as per https://github.com/mdsumner/spdplyr/issues/10
+* added methods for dplyr::groups and dplyr::tbl_vars as per https://github.com/mdsumner/spdplyr/issues/10, these
+  are dependent on utils::packageVersion("dplyr") > "0.5.0"
 
 * fixed a bug from using '.data@data' within a tibble() call where '.data' has a special meaning
 

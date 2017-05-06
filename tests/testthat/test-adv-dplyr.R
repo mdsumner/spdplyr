@@ -61,7 +61,7 @@ test_that("everthing is ok", {
 })
 
 test_that("mutate_all, mutate_at", {
-  
+  skip_if_not(utils::packageVersion("dplyr") > "0.5.0")
 
 library("maptools")
 library("spdplyr")

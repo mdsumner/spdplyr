@@ -21,7 +21,10 @@ Worker functions used by dplyr features.
 These will work for the Spatial-DataFrame  objects, not properly for any Spatial.
 }
 \examples{
+if (utils::packageVersion("dplyr") > "0.5.0") {
+
 spmap \%>\% mutate_if(is.numeric, as.character)
 spmap \%>\% mutate_all(funs(as.character))
 spmap \%>\% mutate_at(vars(starts_with("L")), funs(as.integer))
+}
 }
