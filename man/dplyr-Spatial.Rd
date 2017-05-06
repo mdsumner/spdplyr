@@ -78,16 +78,6 @@ it is a potentially expensive operation so you must opt into it.}
 }
 \description{
 Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details.
-
-#' @rdname dplyr-Spatial
-#' @export
-filter.Spatial <- function(.data, ...) {
-  dat <- data_or_stop(.data, " to filter ")
-  
-  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  masks <- lazyeval::lazy_eval(dots, data = dat)
-  subset(.data, Reduce(`&`, masks))
-}
 }
 \details{
 mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged.

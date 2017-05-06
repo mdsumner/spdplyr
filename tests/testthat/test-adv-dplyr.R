@@ -13,7 +13,15 @@ test_that("group by and summarize is quiet", {
   expect_silent(g <- wrld_simpl  %>% group_by(REGION) )
   expect_silent(g[1:20, ] %>% summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA)))
   expect_silent(wrld_simpl[1:20, ]  %>% group_by(REGION, SUBREGION) %>% summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA)))
-  expect_silent(g[1:10, ] %>% summarise.Spatial(alon = mean(LON)))
+  expect_silent(g[1:10, ] %>% summarise(alon = mean(LON)))
+  
+  ## make sure we are &ing togeter in filter
+  worldcorner <- wrld_simpl %>% 
+    mutate(lon = coordinates(wrld_simpl)[,1], lat = coordinates(wrld_simpl)[,2]) %>% 
+    filter(lat < -20, lon > 60) %>% 
+    dplyr::select(NAME)
+  
+  
 })
 
 
