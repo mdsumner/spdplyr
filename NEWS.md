@@ -1,8 +1,16 @@
 # spdplyr 0.1.3
 
+* added methods for dplyr::groups and dplyr::tbl_vars as per https://github.com/mdsumner/spdplyr/issues/10
+
 * fixed a bug from using '.data@data' within a tibble() call where '.data' has a special meaning
 
 * updated tests based on minor changes in dplyr around expected warning contents
+
+* fixed problem caused by drop = TRUE https://github.com/mdsumner/spdplyr/pull/13
+
+* incorporated PR  https://github.com/mdsumner/spdplyr/pull/12 to get data frame from data slot instead 
+  of using as.data.frame, and extra tests
+  
 
 # spdplyr 0.1.2
 

@@ -1,6 +1,24 @@
 setOldClass( c("tbl_df", "tbl", "data.frame" ) )
 setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 
+#' dplyr S3 methods
+#' 
+#' Worker functions used by dplyr features. 
+#' 
+#' These will work for the Spatial-DataFrame  objects, not properly for any Spatial. 
+#' @param x input Spatial object
+#' @name dplyr-S3
+#' @export
+#' @importFrom dplyr groups tbl_vars
+#' @examples 
+#' spmap %>% mutate_if(is.numeric, as.character)
+#' spmap %>% mutate_all(funs(as.character))
+#' spmap %>% mutate_at(vars(starts_with("L")), funs(as.integer))
+tbl_vars.Spatial <- function(x) names(x)
+#' @name dplyr-S3
+#' @export
+groups.Spatial <- function(x) NULL
+
 #' Dplyr verbs for Spatial
 #' 
 #' Direct application of the dplyr verbs to Spatial objects. There is no need for a conversion from and to Spatial with this approach. Not all verbs are supported, see Details. 
@@ -14,6 +32,7 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #'  summarise for points and multipoints, ... todo single Multipoint for multiple points
 #' @param .data A tbl.
 #' @param ... Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}
+#' @param .keep_all argument for \code{\link[dplyr]{distinct}}, we have to set it to TRUE
 #' @param .dots Used to work around non-standard evaluation. 
 #' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
 #' @rdname dplyr-Spatial
@@ -212,7 +231,10 @@ rename_.Spatial <- function(.data, ...) {
 #' @importFrom tibble as_tibble
 #' @rdname dplyr-Spatial
 #' @export
-distinct_.Spatial <- function(.data, ...) {
+distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
+  if (!.keep_all) {
+    warning("distinct is not supported for Spatial unless .keep_all = TRUE")
+  }
   if (!.hasSlot(.data, "data")) {
     stop("no data for distinct for a %s", class(.data))
   }
@@ -220,12 +242,13 @@ distinct_.Spatial <- function(.data, ...) {
   nam <- utils::tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
   .dat <- as_tibble(.data@data)
   .dat[[nam]] <- seq(nrow(.data))
-  dat <- distinct_(.dat, ...)
+  dat <- distinct_(.dat, ..., .keep_all = .keep_all)
   
   out <- .data[dat[[nam]], ] 
   #out[[nam]] <- NULL
   out
 }
+
 
 #' @rdname dplyr-Spatial
 #' @param y tbl to join

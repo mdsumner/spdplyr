@@ -51,11 +51,28 @@ test_that("everthing is ok", {
   x1 %>% arrange(AREA)
   x1 %>% dplyr::select(NAME, POP2005, AREA)
   x1 %>% rename(Country = NAME, Population = POP2005)
-  x1 %>% distinct(AREA, .keep_all = TRUE)
+  expect_that(x1 %>% distinct(AREA, .keep_all = TRUE) %>% nrow(), equals(204))
   x1 %>% mutate(AREA = REGION * 2)
   x1 %>% transmute(NAME = gsub("^A", "Z", NAME))
   x1 %>% summarize(a = 'POP2005')
   
   #x1 %>% group_by(REGION)
   #x1 %>% summarize(a = POP2005)
+})
+
+test_that("mutate_all, mutate_at", {
+  
+
+library("maptools")
+library("spdplyr")
+
+data(wrld_simpl)
+
+wrld_simpl %>% mutate_all(funs(as.character))
+wrld_simpl %>% mutate_at(vars(starts_with("L")), funs(as.integer))
+#wrld_simpl %>% mutate_if(vars(starts_with("L")), funs(as.integer))
+ spmap %>% mutate_if(is.numeric, as.character)
+ spmap %>% mutate_all(funs(as.character))
+ spmap %>% mutate_at(vars(starts_with("L")), funs(as.integer))
+
 })

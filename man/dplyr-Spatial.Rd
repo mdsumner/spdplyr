@@ -31,7 +31,7 @@
 
 \method{rename_}{Spatial}(.data, ...)
 
-\method{distinct_}{Spatial}(.data, ...)
+\method{distinct_}{Spatial}(.data, ..., .keep_all = FALSE)
 
 \method{left_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
 
@@ -43,6 +43,8 @@
 \item{...}{Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}}
 
 \item{.dots}{Used to work around non-standard evaluation.}
+
+\item{.keep_all}{argument for \code{\link[dplyr]{distinct}}, we have to set it to TRUE}
 
 \item{x}{tbls to join}
 
