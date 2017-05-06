@@ -203,23 +203,21 @@ group_by.Spatial <- function(.data, ...) {
 #' @rdname dplyr-Spatial
 #' @export
 filter_.Spatial <- function(.data, ..., .dots) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to filter for a %s", class(.data))
-  }
+  dat <- data_or_stop(.data, " to filter ")
+  
   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  masks <- lazyeval::lazy_eval(dots, data = .data@data)
+  masks <- lazyeval::lazy_eval(dots, data = dat)
   subset(.data, Reduce(`&`, masks))
 }
-#' @rdname dplyr-Spatial
-#' @export
-filter.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to filter for a %s", class(.data))
-  }
-  dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
-  masks <- lazyeval::lazy_eval(dots, data = .data@data)
-  subset(.data, Reduce(`&`, masks))
-}
+#' #' @rdname dplyr-Spatial
+#' #' @export
+#' filter.Spatial <- function(.data, ...) {
+#'   dat <- data_or_stop(.data, " to filter ")
+#'   
+#'   dots <- lazyeval::all_dots(.dots, ..., all_named = TRUE)
+#'   masks <- lazyeval::lazy_eval(dots, data = dat)
+#'   subset(.data, Reduce(`&`, masks))
+#' }
 
 #' @rdname dplyr-Spatial
 #' @importFrom tibble as_tibble 

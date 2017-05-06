@@ -55,7 +55,7 @@ test_that("everthing is ok", {
   expect_that(x1 %>% distinct(AREA, .keep_all = TRUE) %>% nrow(), equals(204))
   x1 %>% mutate(AREA = REGION * 2)
   x1 %>% transmute(NAME = gsub("^A", "Z", NAME))
-  x1 %>% summarize(a = 'POP2005')
+  x1[sample(nrow(x1), 10), ] %>% summarize(a = 'POP2005')
   
   #x1 %>% group_by(REGION)
   #x1 %>% summarize(a = POP2005)
