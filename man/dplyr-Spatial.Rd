@@ -11,6 +11,7 @@
 \alias{group_by_.Spatial}
 \alias{group_by.Spatial}
 \alias{filter_.Spatial}
+\alias{filter.Spatial}
 \alias{arrange_.Spatial}
 \alias{slice_.Spatial}
 \alias{select_.Spatial}
@@ -33,6 +34,8 @@
 \method{group_by}{Spatial}(.data, ...)
 
 \method{filter_}{Spatial}(.data, ..., .dots)
+
+\method{filter}{Spatial}(.data, ...)
 
 \method{arrange_}{Spatial}(.data, ...)
 

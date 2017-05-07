@@ -209,8 +209,16 @@ filter_.Spatial <- function(.data, ..., .dots) {
   masks <- lazyeval::lazy_eval(dots, data = dat)
   subset(.data, Reduce(`&`, masks))
 }
+#' @rdname dplyr-Spatial
+#' @export
+filter.Spatial <- function(.data, ...) {
+   dat <- data_or_stop(.data, " to filter ")
+   nam <- new_name_from_these(names(dat))
+   dat[[nam]] <- seq_len(nrow(dat))
+   dat <- filter(dat, ...)
+   .data[dat[[nam]], ]
+}
 
-## TODO filter and the ones below
 
 #' @rdname dplyr-Spatial
 #' @importFrom tibble as_tibble 
@@ -272,17 +280,11 @@ distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   if (!.keep_all) {
     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
   }
-  if (!.hasSlot(.data, "data")) {
-    stop("no data for distinct for a %s", class(.data))
-  }
-  #orownames <- rownames(.data)
-  nam <- utils::tail(make.names(c(names(.data), "order"), unique = TRUE), 1)
-  .dat <- as_tibble(.data@data)
-  .dat[[nam]] <- seq(nrow(.data))
-  dat <- distinct_(.dat, ..., .keep_all = .keep_all)
-  
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq(nrow(.data))
+  dat <- distinct_(dat, ..., .keep_all = .keep_all)
   out <- .data[dat[[nam]], ] 
-  #out[[nam]] <- NULL
   out
 }
 

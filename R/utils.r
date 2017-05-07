@@ -1,3 +1,8 @@
+#' @importFrom utils tail
+new_name_from_these <- function(x) {
+  utils::tail(make.names(c(x, "wasdfjsdk"), unique = TRUE), 1)
+}
+
 
 has_data <- function(x) .hasSlot(x, "data")
 
