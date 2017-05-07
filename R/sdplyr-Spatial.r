@@ -279,6 +279,7 @@ select_.Spatial <- function(.data, ...) {
   dat <-  select_(.data@data, ...)
   .data[, names(dat), drop = FALSE]
 }
+#' @importFrom dplyr select
 #' @rdname dplyr-Spatial
 #' @export
 select.Spatial <- function(.data, ...) {
@@ -298,7 +299,7 @@ rename_.Spatial <- function(.data, ...) {
   .data
 }
 #' @rdname dplyr-Spatial
-#' @importFrom tibble as_tibble 
+#' @importFrom dplyr rename
 #' @export
 rename.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to filter ")
