@@ -209,6 +209,7 @@ filter_.Spatial <- function(.data, ..., .dots) {
   masks <- lazyeval::lazy_eval(dots, data = dat)
   subset(.data, Reduce(`&`, masks))
 }
+#' @importFrom dplyr filter
 #' @rdname dplyr-Spatial
 #' @export
 filter.Spatial <- function(.data, ...) {
