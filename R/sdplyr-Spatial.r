@@ -321,6 +321,7 @@ distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   out <- .data[dat[[nam]], ] 
   out
 }
+#' @importFrom dplyr distinct
 #' @rdname dplyr-Spatial
 #' @export
 distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
