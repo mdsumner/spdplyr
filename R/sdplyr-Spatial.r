@@ -261,9 +261,9 @@ slice_.Spatial <- function(.data, ...) {
   .data
 }
 #' @rdname dplyr-Spatial
-#' @importFrom tibble as_tibble 
+#' @importFrom dplyr slice slice_
 #' @export
-slice_.Spatial <- function(.data, ...) {
+slice.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to filter ")
   nam <- new_name_from_these(names(dat))
   dat[[nam]] <- seq_len(nrow(dat))
@@ -291,18 +291,23 @@ select.Spatial <- function(.data, ...) {
 #' @importFrom tibble as_tibble 
 #' @export
 rename_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to rename for a %s", class(.data))
-  }
+  dat <- data_or_stop(.data, " to filter ")
   onames <- names(.data)
-  dat <-  rename_(as_tibble(.data@data), ...)
+  dat <-  rename_(dat, ...)
+  names(.data) <- names(dat)
+  .data
+}
+#' @rdname dplyr-Spatial
+#' @importFrom tibble as_tibble 
+#' @export
+rename.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to filter ")
+  onames <- names(.data)
+  dat <-  rename(dat, ...)
   names(.data) <- names(dat)
   .data
 }
 
-
-#' @importFrom utils tail
-#' @importFrom tibble as_tibble
 #' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
@@ -316,7 +321,19 @@ distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   out <- .data[dat[[nam]], ] 
   out
 }
-
+#' @rdname dplyr-Spatial
+#' @export
+distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
+  if (!.keep_all) {
+    warning("distinct is not supported for Spatial unless .keep_all = TRUE")
+  }
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq(nrow(.data))
+  dat <- distinct(dat, ..., .keep_all = .keep_all)
+  out <- .data[dat[[nam]], ] 
+  out
+}
 
 #' @rdname dplyr-Spatial
 #' @param y tbl to join

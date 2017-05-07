@@ -15,11 +15,13 @@
 \alias{arrange_.Spatial}
 \alias{arrange.Spatial}
 \alias{slice_.Spatial}
-\alias{slice_.Spatial}
+\alias{slice.Spatial}
 \alias{select_.Spatial}
 \alias{select.Spatial}
 \alias{rename_.Spatial}
+\alias{rename.Spatial}
 \alias{distinct_.Spatial}
+\alias{distinct.Spatial}
 \alias{left_join.Spatial}
 \alias{inner_join.Spatial}
 \title{Dplyr verbs for Spatial}
@@ -46,7 +48,7 @@
 
 \method{slice_}{Spatial}(.data, ...)
 
-\method{slice_}{Spatial}(.data, ...)
+\method{slice}{Spatial}(.data, ...)
 
 \method{select_}{Spatial}(.data, ...)
 
@@ -54,7 +56,11 @@
 
 \method{rename_}{Spatial}(.data, ...)
 
+\method{rename}{Spatial}(.data, ...)
+
 \method{distinct_}{Spatial}(.data, ..., .keep_all = FALSE)
+
+\method{distinct}{Spatial}(.data, ..., .keep_all = FALSE)
 
 \method{left_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
 
