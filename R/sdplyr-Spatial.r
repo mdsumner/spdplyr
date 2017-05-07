@@ -220,18 +220,30 @@ filter.Spatial <- function(.data, ...) {
 }
 
 
+#' @importFrom dplyr arrange_ 
 #' @rdname dplyr-Spatial
-#' @importFrom tibble as_tibble 
-#' @importFrom dplyr arrange_ distinct_ rename_ select_ slice_ filter_ transmute_ mutate_ 
 #' @export
 arrange_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to arrange for a %s", class(.data))
-  }
-  dat <- as_tibble(.data@data)
-  dat$order <- seq(nrow(dat))
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq_len(nrow(dat))
   dat <- arrange_(dat, ...)
-  .data[dat$order, ]
+  .data <- .data[dat[[nam]], ]
+  .data[[nam]] <- NULL
+  .data
+}
+
+#' @importFrom dplyr arrange 
+#' @rdname dplyr-Spatial
+#' @export
+arrange.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq_len(nrow(dat))
+  dat <- arrange(dat, ...)
+  .data <- .data[dat[[nam]], ]
+  .data[[nam]] <- NULL
+  .data
 }
 
 

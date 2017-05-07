@@ -13,6 +13,7 @@
 \alias{filter_.Spatial}
 \alias{filter.Spatial}
 \alias{arrange_.Spatial}
+\alias{arrange.Spatial}
 \alias{slice_.Spatial}
 \alias{select_.Spatial}
 \alias{rename_.Spatial}
@@ -38,6 +39,8 @@
 \method{filter}{Spatial}(.data, ...)
 
 \method{arrange_}{Spatial}(.data, ...)
+
+\method{arrange}{Spatial}(.data, ...)
 
 \method{slice_}{Spatial}(.data, ...)
 
