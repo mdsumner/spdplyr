@@ -252,22 +252,38 @@ arrange.Spatial <- function(.data, ...) {
 #' @importFrom tibble as_tibble 
 #' @export
 slice_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to slice for a %s", class(.data))
-  }
-  dat <-  as_tibble(.data@data)
-  dat$order <- seq(nrow(dat))
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq_len(nrow(dat))
   dat <- slice_(dat, ...)
-  .data[dat$order, ]
+  .data <- .data[dat[[nam]], ]
+  .data[[nam]] <- NULL
+  .data
 }
-
+#' @rdname dplyr-Spatial
+#' @importFrom tibble as_tibble 
+#' @export
+slice_.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to filter ")
+  nam <- new_name_from_these(names(dat))
+  dat[[nam]] <- seq_len(nrow(dat))
+  dat <- slice(dat, ...)
+  .data <- .data[dat[[nam]], ]
+  .data[[nam]] <- NULL
+  .data
+}
 #' @rdname dplyr-Spatial
 #' @export
 select_.Spatial <- function(.data, ...) {
-  if (!.hasSlot(.data, "data")) {
-    stop("no data to select for a %s", class(.data))
-  }
+  dat <- data_or_stop(.data, " to filter ")
   dat <-  select_(.data@data, ...)
+  .data[, names(dat), drop = FALSE]
+}
+#' @rdname dplyr-Spatial
+#' @export
+select.Spatial <- function(.data, ...) {
+  dat <- data_or_stop(.data, " to filter ")
+  dat <-  select(.data@data, ...)
   .data[, names(dat), drop = FALSE]
 }
 

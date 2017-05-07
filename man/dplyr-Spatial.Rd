@@ -15,7 +15,9 @@
 \alias{arrange_.Spatial}
 \alias{arrange.Spatial}
 \alias{slice_.Spatial}
+\alias{slice_.Spatial}
 \alias{select_.Spatial}
+\alias{select.Spatial}
 \alias{rename_.Spatial}
 \alias{distinct_.Spatial}
 \alias{left_join.Spatial}
@@ -44,7 +46,11 @@
 
 \method{slice_}{Spatial}(.data, ...)
 
+\method{slice_}{Spatial}(.data, ...)
+
 \method{select_}{Spatial}(.data, ...)
+
+\method{select}{Spatial}(.data, ...)
 
 \method{rename_}{Spatial}(.data, ...)
 
