@@ -225,7 +225,7 @@ filter.Spatial <- function(.data, ...) {
 #' @rdname dplyr-Spatial
 #' @export
 arrange_.Spatial <- function(.data, ...) {
-  dat <- data_or_stop(.data, " to filter ")
+  dat <- data_or_stop(.data, " to arrange ")
   nam <- new_name_from_these(names(dat))
   dat[[nam]] <- seq_len(nrow(dat))
   dat <- arrange_(dat, ...)
@@ -238,7 +238,7 @@ arrange_.Spatial <- function(.data, ...) {
 #' @rdname dplyr-Spatial
 #' @export
 arrange.Spatial <- function(.data, ...) {
-  dat <- data_or_stop(.data, " to filter ")
+  dat <- data_or_stop(.data, " to arrange ")
   nam <- new_name_from_these(names(dat))
   dat[[nam]] <- seq_len(nrow(dat))
   dat <- arrange(dat, ...)
@@ -315,7 +315,7 @@ distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   if (!.keep_all) {
     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
   }
-  dat <- data_or_stop(.data, " to filter ")
+  dat <- data_or_stop(.data, " to distinct ")
   nam <- new_name_from_these(names(dat))
   dat[[nam]] <- seq(nrow(.data))
   dat <- distinct_(dat, ..., .keep_all = .keep_all)
@@ -329,13 +329,42 @@ distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
   if (!.keep_all) {
     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
   }
-  dat <- data_or_stop(.data, " to filter ")
+  dat <- data_or_stop(.data, " to distinct")
   nam <- new_name_from_these(names(dat))
   dat[[nam]] <- seq(nrow(.data))
   dat <- distinct(dat, ..., .keep_all = .keep_all)
   out <- .data[dat[[nam]], ] 
   out
 }
+
+
+#' #' @rdname dplyr-Spatial
+#' #' @export
+#' distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
+#'   if (!.keep_all) {
+#'     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
+#'   }
+#'   dat <- data_or_stop(.data, " to distinct ")
+#'   nam <- new_name_from_these(names(dat))
+#'   dat[[nam]] <- seq(nrow(.data))
+#'   dat <- distinct_(dat, ..., .keep_all = .keep_all)
+#'   out <- .data[dat[[nam]], ] 
+#'   out
+#' }
+#' #' @importFrom dplyr distinct
+#' #' @rdname dplyr-Spatial
+#' #' @export
+#' distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
+#'   if (!.keep_all) {
+#'     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
+#'   }
+#'   dat <- data_or_stop(.data, " to distinct ")
+#'   nam <- new_name_from_these(names(dat))
+#'   dat[[nam]] <- seq(nrow(.data))
+#'   dat <- distinct(dat, ..., .keep_all = .keep_all)
+#'   out <- .data[dat[[nam]], ] 
+#'   out
+#' }
 
 #' @rdname dplyr-Spatial
 #' @param y tbl to join
