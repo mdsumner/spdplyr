@@ -107,8 +107,15 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.
 summarise for points and multipoints, ... todo single Multipoint for multiple points
 }
 \note{
-Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.
+Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to 
+store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.
 }
+\section{Warning}{
+
+`distinct` uses behaviour identical to `duplicated`, by coercing all the relevant values to text and determining uniqueness
+from those. `dplyr::distinct` uses a different internal method that will give different results for some cases of numeric data.
+}
+
 \examples{
 library(sp)
 library(maptools)

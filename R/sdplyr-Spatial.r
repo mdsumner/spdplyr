@@ -37,7 +37,11 @@ groups.Spatial <- function(x) NULL
 #' @param ... Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}
 #' @param .keep_all argument for \code{\link[dplyr]{distinct}}, we have to set it to TRUE
 #' @param .dots Used to work around non-standard evaluation. 
-#' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
+#' @note Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to 
+#' store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries. 
+#' @section Warning:
+#' `distinct` uses behaviour identical to `duplicated`, by coercing all the relevant values to text and determining uniqueness
+#' from those. `dplyr::distinct` uses a different internal method that will give different results for some cases of numeric data. 
 #' @rdname dplyr-Spatial
 #' @name dplyr-Spatial
 #' @examples 
@@ -312,59 +316,28 @@ rename.Spatial <- function(.data, ...) {
 #' @rdname dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
-  if (!.keep_all) {
-    warning("distinct is not supported for Spatial unless .keep_all = TRUE")
-  }
-  dat <- data_or_stop(.data, " to distinct ")
-  nam <- new_name_from_these(names(dat))
-  dat[[nam]] <- seq(nrow(.data))
-  dat <- distinct_(dat, ..., .keep_all = .keep_all)
-  out <- .data[dat[[nam]], ] 
+  dat <- data_or_stop(.data, " to distinct")
+  ## use the inputs to isolate the columns
+  dat <- dplyr::select_(dat, ...)
+  fac <- do.call(paste, dat)
+  out <- .data[!duplicated(fac), ]
+  if (!.keep_all) out <- out[, names(dat)]
   out
 }
 #' @importFrom dplyr distinct
 #' @rdname dplyr-Spatial
 #' @export
 distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
-  if (!.keep_all) {
-    warning("distinct is not supported for Spatial unless .keep_all = TRUE")
-  }
   dat <- data_or_stop(.data, " to distinct")
-  nam <- new_name_from_these(names(dat))
-  dat[[nam]] <- seq(nrow(.data))
-  dat <- distinct(dat, ..., .keep_all = .keep_all)
-  out <- .data[dat[[nam]], ] 
+  ## use the inputs to isolate the columns
+  dat <- dplyr::select(dat, ...)
+  fac <- do.call(paste, dat)
+  out <- .data[!duplicated(fac), ]
+  if (!.keep_all) out <- out[, names(dat)]
   out
 }
 
 
-#' #' @rdname dplyr-Spatial
-#' #' @export
-#' distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
-#'   if (!.keep_all) {
-#'     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
-#'   }
-#'   dat <- data_or_stop(.data, " to distinct ")
-#'   nam <- new_name_from_these(names(dat))
-#'   dat[[nam]] <- seq(nrow(.data))
-#'   dat <- distinct_(dat, ..., .keep_all = .keep_all)
-#'   out <- .data[dat[[nam]], ] 
-#'   out
-#' }
-#' #' @importFrom dplyr distinct
-#' #' @rdname dplyr-Spatial
-#' #' @export
-#' distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
-#'   if (!.keep_all) {
-#'     warning("distinct is not supported for Spatial unless .keep_all = TRUE")
-#'   }
-#'   dat <- data_or_stop(.data, " to distinct ")
-#'   nam <- new_name_from_these(names(dat))
-#'   dat[[nam]] <- seq(nrow(.data))
-#'   dat <- distinct(dat, ..., .keep_all = .keep_all)
-#'   out <- .data[dat[[nam]], ] 
-#'   out
-#' }
 
 #' @rdname dplyr-Spatial
 #' @param y tbl to join
