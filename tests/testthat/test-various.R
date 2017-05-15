@@ -7,7 +7,7 @@ DF <- wrld_simpl@data %>% transmute(NAME, a = 1)
 
 
 test_that("multiplication works", {
-  testthat::skip()
+  testthat::skip("skipping join tests")
   wrld_simpl %>% left_join(DF, by = "NAME")
   wrld_simpl %>% inner_join(DF, by = "NAME")
   wrld_simpl %>% right_join(DF, by = "NAME")
