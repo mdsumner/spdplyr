@@ -26,41 +26,41 @@
 \alias{inner_join.Spatial}
 \title{Dplyr verbs for Spatial}
 \usage{
-\method{mutate}{Spatial}(.data, ...)
+mutate.Spatial(.data, ...)
 
 \method{mutate_}{Spatial}(.data, ..., .dots)
 
 \method{summarise_}{Spatial}(.data, ...)
 
-\method{summarise}{Spatial}(.data, ...)
+summarise.Spatial(.data, ...)
 
 \method{group_by_}{Spatial}(.data, ...)
 
-\method{group_by}{Spatial}(.data, ...)
+group_by.Spatial(.data, ...)
 
 \method{filter_}{Spatial}(.data, ..., .dots)
 
-\method{filter}{Spatial}(.data, ...)
+filter.Spatial(.data, ...)
 
 \method{arrange_}{Spatial}(.data, ...)
 
-\method{arrange}{Spatial}(.data, ...)
+arrange.Spatial(.data, ...)
 
 \method{slice_}{Spatial}(.data, ...)
 
-\method{slice}{Spatial}(.data, ...)
+slice.Spatial(.data, ...)
 
 \method{select_}{Spatial}(.data, ...)
 
-\method{select}{Spatial}(.data, ...)
+select.Spatial(.data, ...)
 
 \method{rename_}{Spatial}(.data, ...)
 
-\method{rename}{Spatial}(.data, ...)
+rename.Spatial(.data, ...)
 
 \method{distinct_}{Spatial}(.data, ..., .keep_all = FALSE)
 
-\method{distinct}{Spatial}(.data, ..., .keep_all = FALSE)
+distinct.Spatial(.data, ..., .keep_all = FALSE)
 
 \method{left_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
 
@@ -80,14 +80,14 @@
 \item{y}{tbl to join}
 
 \item{by}{a character vector of variables to join by.  If \code{NULL}, the
-default, \code{*_join()} will do a natural join, using all variables with
-common names across the two tables. A message lists the variables so
-that you can check they're right (to suppress the message, simply
-explicitly list the variables that you want to join).
+  default, \code{join} will do a natural join, using all variables with
+  common names across the two tables. A message lists the variables so
+  that you can check they're right (to suppress the message, simply
+  explicitly list the variables that you want to join).
 
-To join by different variables on x and y use a named vector.
-For example, \code{by = c("a" = "b")} will match \code{x.a} to
-\code{y.b}.}
+  To join by different variables on x and y use a named vector.
+  For example, \code{by = c("a" = "b")} will match \code{x.a} to
+  \code{y.b}.}
 
 \item{copy}{If \code{x} and \code{y} are not from the same data source,
 and \code{copy} is \code{TRUE}, then \code{y} will be copied into the
@@ -107,8 +107,15 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.
 summarise for points and multipoints, ... todo single Multipoint for multiple points
 }
 \note{
-Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.
+Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to 
+store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.
 }
+\section{Warning}{
+
+`distinct` uses behaviour identical to `duplicated`, by coercing all the relevant values to text and determining uniqueness
+from those. `dplyr::distinct` uses a different internal method that will give different results for some cases of numeric data.
+}
+
 \examples{
 library(sp)
 library(maptools)
