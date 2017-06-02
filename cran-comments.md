@@ -1,6 +1,6 @@
 ## Test environments
 
-* local Windows install, R 3.4.0
+* local Ubuntu install, R 3.4.0
 * ubuntu 12.04 (on travis-ci), R 3.4.0
 * win-builder (devel)
 

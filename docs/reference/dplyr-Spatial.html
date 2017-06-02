@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dplyr verbs for Spatial — dplyr-Spatial â€¢ spdplyr</title>
+<title>Dplyr verbs for Spatial â€” dplyr-Spatial â€¢ spdplyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -108,19 +108,37 @@
 <span class='fu'>filter_</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='no'>.dots</span>)
 
 <span class='co'># S3 method for Spatial</span>
+<span class='fu'>filter</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for Spatial</span>
 <span class='fu'>arrange_</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>arrange</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for Spatial</span>
 <span class='fu'>slice_</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for Spatial</span>
+<span class='fu'>slice</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for Spatial</span>
 <span class='fu'>select_</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>select</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for Spatial</span>
 <span class='fu'>rename_</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for Spatial</span>
+<span class='fu'>rename</span>(<span class='no'>.data</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for Spatial</span>
 <span class='fu'>distinct_</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+
+<span class='co'># S3 method for Spatial</span>
+<span class='fu'>distinct</span>(<span class='no'>.data</span>, <span class='no'>...</span>, <span class='kw'>.keep_all</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for Spatial</span>
 <span class='fu'>left_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
@@ -185,23 +203,29 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.</p>
+    <p>Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to 
+store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.</p>
+    
+    <h2 class="hasAnchor" id="warning"><a class="anchor" href="#warning"></a>Warning</h2>
+
+    
+    <p>`distinct` uses behaviour identical to `duplicated`, by coercing all the relevant values to text and determining uniqueness
+from those. `dplyr::distinct` uses a different internal method that will give different results for some cases of numeric data.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>sp</span>)
-<span class='fu'>library</span>(<span class='no'>maptools</span>)
-<span class='fu'>data</span>(<span class='no'>wrld_simpl</span>)
+<span class='fu'>library</span>(<span class='no'>maptools</span>)</div><div class='output co'>#&gt; <span class='message'>Checking rgeos availability: TRUE</span></div><div class='input'><span class='fu'>data</span>(<span class='no'>wrld_simpl</span>)
 <span class='fu'>library</span>(<span class='no'>spdplyr</span>)
 <span class='fu'>library</span>(<span class='no'>raster</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘raster’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:dplyr’:</span>
+#&gt; <span class='message'>Attaching package: â€˜rasterâ€™</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from â€˜package:dplyrâ€™:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    select</span></div><div class='input'><span class='no'>wrld_simpl</span> <span class='kw'>%&gt;%</span> <span class='fu'>mutate</span>(<span class='kw'>NAME</span> <span class='kw'>=</span> <span class='st'>"allthesame"</span>, <span class='kw'>REGION</span> <span class='kw'>=</span> <span class='fu'>row_number</span>())</div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
 #&gt; features    : 246 
 #&gt; extent      : -180, 180, -90, 83.57027  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
 #&gt; variables   : 11
-#&gt; # A tibble: 246 × 11
+#&gt; # A tibble: 246 x 11
 #&gt;      FIPS   ISO2   ISO3    UN       NAME   AREA  POP2005 REGION SUBREGION
 #&gt;    &lt;fctr&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt;      &lt;chr&gt;  &lt;int&gt;    &lt;dbl&gt;  &lt;int&gt;     &lt;int&gt;
 #&gt;  1     AC     AG    ATG    28 allthesame     44    83039      1        29
@@ -219,7 +243,7 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.</p>
 #&gt; extent      : -180, 180, -90, 83.57027  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
 #&gt; variables   : 1
-#&gt; # A tibble: 246 × 1
+#&gt; # A tibble: 246 x 1
 #&gt;                    alpha
 #&gt;                    &lt;chr&gt;
 #&gt;  1 ACAntigua and Barbuda
@@ -237,7 +261,7 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.</p>
 #&gt; extent      : -180, 180, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
 #&gt; variables   : 11
-#&gt; # A tibble: 3 × 11
+#&gt; # A tibble: 3 x 11
 #&gt;     FIPS   ISO2   ISO3    UN        NAME   AREA  POP2005 REGION SUBREGION
 #&gt; * &lt;fctr&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;  &lt;int&gt;    &lt;dbl&gt;  &lt;int&gt;     &lt;int&gt;
 #&gt; 1     AS     AU    AUS    36   Australia 768230 20310208      9        53
@@ -258,7 +282,7 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.</p>
 #&gt; extent      : 20.58093, 31.58893, 59.80499, 69.92722  (xmin, xmax, ymin, ymax)
 #&gt; coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 
 #&gt; variables   : 12
-#&gt; # A tibble: 1 × 12
+#&gt; # A tibble: 1 x 12
 #&gt;     FIPS   ISO2   ISO3    UN    NAME  AREA POP2005 REGION SUBREGION    LON
 #&gt;   &lt;fctr&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt;  &lt;fctr&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;int&gt;     &lt;int&gt;  &lt;dbl&gt;
 #&gt; 1     FI     FI    FIN   246 Finland 30459 5246004    150       154 26.272
@@ -299,6 +323,8 @@ is touch and go anyway, see the examples for a what `rgeos::gUnion` does.</p>
       <li><a href="#details">Details</a></li>
 
       <li><a href="#note">Note</a></li>
+
+      <li><a href="#warning">Warning</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

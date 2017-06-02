@@ -60,7 +60,7 @@
       <h1>spdplyr</h1>
                         <h4 class="author">Michael D. Sumner</h4>
             
-            <h4 class="date">2017-05-07</h4>
+            <h4 class="date">2017-06-03</h4>
           </div>
 
     
@@ -73,23 +73,23 @@
 <p>See <code>?dplyr-Spatial'</code> for supported verbs.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(quakes)
 <span class="kw">library</span>(sp)
-<span class="kw">coordinates</span>(quakes) &lt;-<span class="st"> </span><span class="er">~</span>long+lat
+<span class="kw">coordinates</span>(quakes) &lt;-<span class="st"> </span><span class="er">~</span>long<span class="op">+</span>lat
 <span class="kw">library</span>(spdplyr)
 ## plot a subset of locations by number of stations
-quakes %&gt;%<span class="st"> </span>dplyr::<span class="kw">filter</span>(mag &lt;<span class="fl">5.5</span> &amp;<span class="st"> </span>mag &gt;<span class="st"> </span><span class="fl">4.5</span>) %&gt;%<span class="st"> </span>dplyr::<span class="kw">select</span>(stations) %&gt;%<span class="st"> </span><span class="kw">spplot</span>()</code></pre></div>
+quakes <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(mag <span class="op">&lt;</span><span class="fl">5.5</span> <span class="op">&amp;</span><span class="st"> </span>mag <span class="op">&gt;</span><span class="st"> </span><span class="fl">4.5</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(stations) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spplot</span>()</code></pre></div>
 <p><img src="spdplyr_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 <p>We can use polygons and lines objects as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(maptools)
 <span class="kw">data</span>(wrld_simpl)
 ## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select
-worldcorner &lt;-<span class="st"> </span>wrld_simpl %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lon =</span> <span class="kw">coordinates</span>(wrld_simpl)[,<span class="dv">1</span>], <span class="dt">lat =</span> <span class="kw">coordinates</span>(wrld_simpl)[,<span class="dv">2</span>]) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw">filter</span>(lat &lt;<span class="st"> </span>-<span class="dv">20</span>, lon &gt;<span class="st"> </span><span class="dv">60</span>) %&gt;%<span class="st"> </span>
-<span class="st">  </span>dplyr::<span class="kw">select</span>(NAME)
+worldcorner &lt;-<span class="st"> </span>wrld_simpl <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lon =</span> <span class="kw">coordinates</span>(wrld_simpl)[,<span class="dv">1</span>], <span class="dt">lat =</span> <span class="kw">coordinates</span>(wrld_simpl)[,<span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(lat <span class="op">&lt;</span><span class="st"> </span><span class="op">-</span><span class="dv">20</span>, lon <span class="op">&gt;</span><span class="st"> </span><span class="dv">60</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(NAME)
 
 ## demonstrate that we have a faithful subset of the original object
 <span class="kw">plot</span>(worldcorner, <span class="dt">asp =</span> <span class="st">""</span>)
-<span class="kw">text</span>(<span class="kw">coordinates</span>(worldcorner), <span class="dt">label =</span> worldcorner$NAME, <span class="dt">cex =</span> <span class="fl">0.6</span>)</code></pre></div>
+<span class="kw">text</span>(<span class="kw">coordinates</span>(worldcorner), <span class="dt">label =</span> worldcorner<span class="op">$</span>NAME, <span class="dt">cex =</span> <span class="fl">0.6</span>)</code></pre></div>
 <p><img src="spdplyr_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 worldcorner
@@ -98,7 +98,7 @@ worldcorner
 <span class="co">#&gt; extent      : -178.6131, 179.0769, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)</span>
 <span class="co">#&gt; coord. ref. :  +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 </span>
 <span class="co">#&gt; variables   : 1</span>
-<span class="co">#&gt; # A tibble: 6 × 1</span>
+<span class="co">#&gt; # A tibble: 6 x 1</span>
 <span class="co">#&gt;                                  NAME</span>
 <span class="co">#&gt;                                &lt;fctr&gt;</span>
 <span class="co">#&gt; 1                           Australia</span>
@@ -109,13 +109,13 @@ worldcorner
 <span class="co">#&gt; 6                         New Zealand</span>
 
 ## we can chain together standard operations as well as dplyr specific ones
-wrld_simpl %&gt;%<span class="st"> </span><span class="kw">as</span>(<span class="st">"SpatialLinesDataFrame"</span>) %&gt;%<span class="st"> </span><span class="kw">summarise</span>(<span class="dt">big =</span> <span class="kw">max</span>(AREA))
+wrld_simpl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as</span>(<span class="st">"SpatialLinesDataFrame"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">big =</span> <span class="kw">max</span>(AREA))
 <span class="co">#&gt; class       : SpatialLinesDataFrame </span>
 <span class="co">#&gt; features    : 1 </span>
 <span class="co">#&gt; extent      : -180, 180, -90, 83.57027  (xmin, xmax, ymin, ymax)</span>
 <span class="co">#&gt; coord. ref. : +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 </span>
 <span class="co">#&gt; variables   : 1</span>
-<span class="co">#&gt; # A tibble: 1 × 1</span>
+<span class="co">#&gt; # A tibble: 1 x 1</span>
 <span class="co">#&gt;       big</span>
 <span class="co">#&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 1638094</span></code></pre></div>

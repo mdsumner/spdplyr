@@ -73,24 +73,14 @@
 <p>Install from CRAN:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">"spdplyr"</span>)</code></pre></div>
 <p>The development version of <code>spdplyr</code> can be installed directly from Github:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"mdsumner/spdplyr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"mdsumner/spdplyr"</span>)</code></pre></div>
 </div>
 </div>
 <div id="dplyr-verbs-for-spatial" class="section level1">
 <h1 class="hasAnchor">
 <a href="#dplyr-verbs-for-spatial" class="anchor"></a>dplyr verbs for Spatial</h1>
 <p>Apply <code>dplyr</code> verbs to the attribute data of <code>sp</code> objects with dplyr verbs.</p>
-<p>See <code>?dplyr-Spatial'</code> for supported verbs.</p>
-<div id="how-does-it-work" class="section level2">
-<h2 class="hasAnchor">
-<a href="#how-does-it-work" class="anchor"></a>How does it work?</h2>
-<p>Most of it is easy, simply applying the analogous operation of the verb to the Spatial*DataFrame and subsetting/re-organizing as necessary. Some operations use the <code>spbabel::sptable</code> approach which provides a loss-less way to do what <code>ggplot2::fortify</code> does and its reverse.</p>
-</div>
-</div>
-<div id="issues" class="section level1">
-<h1 class="hasAnchor">
-<a href="#issues" class="anchor"></a>Issues</h1>
-<p><strong>NOTE:</strong> joins aren’t really supported. See <code>sf</code> for better joins, and perhaps for a better option than this package. I’ve moved on from this quite a bit and am looking for a better design than simple features can provide.</p>
+<p>See <code>?dplyr-Spatial</code> for supported verbs.</p>
 </div>
 </div>
   </div>

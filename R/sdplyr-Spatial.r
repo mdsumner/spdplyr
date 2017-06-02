@@ -105,7 +105,7 @@ mutate_.Spatial <-  function(.data, ..., .dots) {
 }
 
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 #' @importFrom dplyr inner_join
 #' @importFrom spbabel sptable sp 
@@ -153,7 +153,7 @@ summarise_.Spatial <- function(.data, ...) {
 }
 
 #' @importFrom dplyr summarise
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr inner_join mutate select
@@ -186,7 +186,7 @@ summarise.Spatial <- function(.data, ...) {
 }
 #' @importFrom dplyr group_by_
 #' @importFrom tibble as_tibble 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 group_by_.Spatial <- function(.data, ...) {
   .data@data <- group_by_(data_or_stop(.data, " to group_by "), ...)
@@ -195,7 +195,7 @@ group_by_.Spatial <- function(.data, ...) {
 
 #' @importFrom dplyr group_by
 #' @importFrom tibble as_tibble 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @importFrom rlang .data
 #' @export
 group_by.Spatial <- function(.data, ...) {
@@ -204,7 +204,7 @@ group_by.Spatial <- function(.data, ...) {
 }
 
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 filter_.Spatial <- function(.data, ..., .dots) {
   dat <- data_or_stop(.data, " to filter ")
@@ -214,7 +214,7 @@ filter_.Spatial <- function(.data, ..., .dots) {
   subset(.data, Reduce(`&`, masks))
 }
 #' @importFrom dplyr filter
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 filter.Spatial <- function(.data, ...) {
    dat <- data_or_stop(.data, " to filter ")
@@ -226,7 +226,7 @@ filter.Spatial <- function(.data, ...) {
 
 
 #' @importFrom dplyr arrange_ 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 arrange_.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to arrange ")
@@ -239,7 +239,7 @@ arrange_.Spatial <- function(.data, ...) {
 }
 
 #' @importFrom dplyr arrange 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 arrange.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to arrange ")
@@ -252,7 +252,7 @@ arrange.Spatial <- function(.data, ...) {
 }
 
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @importFrom tibble as_tibble 
 #' @export
 slice_.Spatial <- function(.data, ...) {
@@ -264,7 +264,7 @@ slice_.Spatial <- function(.data, ...) {
   .data[[nam]] <- NULL
   .data
 }
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @importFrom dplyr slice slice_
 #' @export
 slice.Spatial <- function(.data, ...) {
@@ -276,7 +276,7 @@ slice.Spatial <- function(.data, ...) {
   .data[[nam]] <- NULL
   .data
 }
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 select_.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to filter ")
@@ -284,7 +284,7 @@ select_.Spatial <- function(.data, ...) {
   .data[, names(dat), drop = FALSE]
 }
 #' @importFrom dplyr select
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 select.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to filter ")
@@ -292,7 +292,7 @@ select.Spatial <- function(.data, ...) {
   .data[, names(dat), drop = FALSE]
 }
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @importFrom tibble as_tibble 
 #' @export
 rename_.Spatial <- function(.data, ...) {
@@ -302,7 +302,7 @@ rename_.Spatial <- function(.data, ...) {
   names(.data) <- names(dat)
   .data
 }
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @importFrom dplyr rename
 #' @export
 rename.Spatial <- function(.data, ...) {
@@ -313,7 +313,7 @@ rename.Spatial <- function(.data, ...) {
   .data
 }
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   dat <- data_or_stop(.data, " to distinct")
@@ -325,7 +325,7 @@ distinct_.Spatial <- function(.data, ..., .keep_all = FALSE) {
   out
 }
 #' @importFrom dplyr distinct
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
 distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
   dat <- data_or_stop(.data, " to distinct")
@@ -339,7 +339,7 @@ distinct.Spatial <- function(.data, ..., .keep_all = FALSE) {
 
 
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @param y tbl to join
 #' @importFrom dplyr left_join inner_join
 #' @inheritParams dplyr::left_join
@@ -349,7 +349,7 @@ left_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
   x
 }
 
-#' @rdname dplyr-Spatial
+#' @name dplyr-Spatial
 #' @export
  inner_join.Spatial <- function (x, y, by = NULL, copy = FALSE, ...) {
    randomkey <- paste(sample(c(letters, 1:100)), collapse = "")

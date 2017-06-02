@@ -6,61 +6,79 @@
 \alias{mutate.Spatial}
 \alias{dplyr-Spatial}
 \alias{mutate_.Spatial}
+\alias{dplyr-Spatial}
 \alias{summarise_.Spatial}
+\alias{dplyr-Spatial}
 \alias{summarise.Spatial}
+\alias{dplyr-Spatial}
 \alias{group_by_.Spatial}
+\alias{dplyr-Spatial}
 \alias{group_by.Spatial}
+\alias{dplyr-Spatial}
 \alias{filter_.Spatial}
+\alias{dplyr-Spatial}
 \alias{filter.Spatial}
+\alias{dplyr-Spatial}
 \alias{arrange_.Spatial}
+\alias{dplyr-Spatial}
 \alias{arrange.Spatial}
+\alias{dplyr-Spatial}
 \alias{slice_.Spatial}
+\alias{dplyr-Spatial}
 \alias{slice.Spatial}
+\alias{dplyr-Spatial}
 \alias{select_.Spatial}
+\alias{dplyr-Spatial}
 \alias{select.Spatial}
+\alias{dplyr-Spatial}
 \alias{rename_.Spatial}
+\alias{dplyr-Spatial}
 \alias{rename.Spatial}
+\alias{dplyr-Spatial}
 \alias{distinct_.Spatial}
+\alias{dplyr-Spatial}
 \alias{distinct.Spatial}
+\alias{dplyr-Spatial}
 \alias{left_join.Spatial}
+\alias{dplyr-Spatial}
 \alias{inner_join.Spatial}
 \title{Dplyr verbs for Spatial}
 \usage{
-mutate.Spatial(.data, ...)
+\method{mutate}{Spatial}(.data, ...)
 
 \method{mutate_}{Spatial}(.data, ..., .dots)
 
 \method{summarise_}{Spatial}(.data, ...)
 
-summarise.Spatial(.data, ...)
+\method{summarise}{Spatial}(.data, ...)
 
 \method{group_by_}{Spatial}(.data, ...)
 
-group_by.Spatial(.data, ...)
+\method{group_by}{Spatial}(.data, ...)
 
 \method{filter_}{Spatial}(.data, ..., .dots)
 
-filter.Spatial(.data, ...)
+\method{filter}{Spatial}(.data, ...)
 
 \method{arrange_}{Spatial}(.data, ...)
 
-arrange.Spatial(.data, ...)
+\method{arrange}{Spatial}(.data, ...)
 
 \method{slice_}{Spatial}(.data, ...)
 
-slice.Spatial(.data, ...)
+\method{slice}{Spatial}(.data, ...)
 
 \method{select_}{Spatial}(.data, ...)
 
-select.Spatial(.data, ...)
+\method{select}{Spatial}(.data, ...)
 
 \method{rename_}{Spatial}(.data, ...)
 
-rename.Spatial(.data, ...)
+\method{rename}{Spatial}(.data, ...)
 
 \method{distinct_}{Spatial}(.data, ..., .keep_all = FALSE)
 
-distinct.Spatial(.data, ..., .keep_all = FALSE)
+\method{distinct}{Spatial}(.data, ..., .keep_all = FALSE)
 
 \method{left_join}{Spatial}(x, y, by = NULL, copy = FALSE, ...)
 
@@ -80,14 +98,14 @@ distinct.Spatial(.data, ..., .keep_all = FALSE)
 \item{y}{tbl to join}
 
 \item{by}{a character vector of variables to join by.  If \code{NULL}, the
-  default, \code{join} will do a natural join, using all variables with
-  common names across the two tables. A message lists the variables so
-  that you can check they're right (to suppress the message, simply
-  explicitly list the variables that you want to join).
+default, \code{*_join()} will do a natural join, using all variables with
+common names across the two tables. A message lists the variables so
+that you can check they're right (to suppress the message, simply
+explicitly list the variables that you want to join).
 
-  To join by different variables on x and y use a named vector.
-  For example, \code{by = c("a" = "b")} will match \code{x.a} to
-  \code{y.b}.}
+To join by different variables on x and y use a named vector.
+For example, \code{by = c("a" = "b")} will match \code{x.a} to
+\code{y.b}.}
 
 \item{copy}{If \code{x} and \code{y} are not from the same data source,
 and \code{copy} is \code{TRUE}, then \code{y} will be copied into the
