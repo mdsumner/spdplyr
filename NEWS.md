@@ -1,3 +1,7 @@
+# spdplyr 0.2.0
+
+* Fix for dplyr 0.8.0. 
+
 # spdplyr 0.1.3
 
 * added methods for dplyr::groups and dplyr::tbl_vars as per https://github.com/mdsumner/spdplyr/issues/10, these
