@@ -3,7 +3,6 @@
 \name{dplyr-S3}
 \alias{dplyr-S3}
 \alias{tbl_vars.Spatial}
-\alias{dplyr-S3}
 \alias{groups.Spatial}
 \title{dplyr S3 methods}
 \usage{
