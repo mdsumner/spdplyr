@@ -159,6 +159,10 @@ summarise_.Spatial <- function(.data, ...) {
 #' @importFrom rlang .data
 #' @importFrom dplyr inner_join mutate select
 #' @importFrom utils packageVersion
+#' @rawNamespace 
+#' if(utils::packageVersion("dplyr") >= "0.8.0") {
+#' importFrom(dplyr, group_rows)
+#' }
 summarise.Spatial <- function(.data, ...) {
   dat <- data_or_stop(.data, " to summarize ")
 
