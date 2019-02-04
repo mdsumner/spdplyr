@@ -176,7 +176,7 @@ summarise.Spatial <- function(.data, ...) {
     groups <- attr(.data@data, "indices")  ## only robust for single-level group_by for now
     if (is.null(groups)) {
      if (utils::packageVersion("dplyr") >= "0.8.0")  {
-       groups <- dplyr::group_rows(.data@data)  
+       groups <- group_rows(.data@data)  
      } else {
        groups <- attr(.data@data, "groups")[[".rows"]]
      }
@@ -184,7 +184,7 @@ summarise.Spatial <- function(.data, ...) {
     grp_sizes <- dplyr::group_size(.data@data)
     if (is.null(grp_sizes)) {
       if (utils::packageVersion("dplyr") >= "0.8.0")  {
-        grp_sizes <- dplyr::group_rows(.data@data)  
+        grp_sizes <- group_rows(.data@data)  
       } else {
         groups <- lengths(attr(.data@data, "groups")[[".rows"]])
       }
