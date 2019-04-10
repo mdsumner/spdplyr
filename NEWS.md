@@ -1,3 +1,7 @@
+# spdplyr 0.3.0
+
+* Can no longer support `mutate_at` and `mutate_if`. 
+
 # spdplyr 0.2.0
 
 * Fix for dplyr 0.8.0. 

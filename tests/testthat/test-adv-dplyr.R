@@ -69,20 +69,5 @@ test_that("everthing is ok", {
   #x1 %>% summarize(a = POP2005)
 })
 
-test_that("mutate_all, mutate_at", {
-  skip_if_not(utils::packageVersion("dplyr") > "0.5.0")
 
-library("maptools")
-library("spdplyr")
-
-data(wrld_simpl)
-
-wrld_simpl %>% mutate_all(funs(as.character))
-wrld_simpl %>% mutate_at(vars(starts_with("L")), funs(as.integer))
-#wrld_simpl %>% mutate_if(vars(starts_with("L")), funs(as.integer))
- spmap %>% mutate_if(is.numeric, as.character)
- spmap %>% mutate_all(funs(as.character))
- spmap %>% mutate_at(vars(starts_with("L")), funs(as.integer))
-
-})
 

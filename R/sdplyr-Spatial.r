@@ -1,6 +1,7 @@
 setOldClass( c("tbl_df", "tbl", "data.frame" ) )
 setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
-
+#' @importFrom utils globalVariables
+utils::globalVariables("group_rows")
 #' dplyr S3 methods
 #' 
 #' Worker functions used by dplyr features. 
@@ -10,13 +11,6 @@ setOldClass( c("grouped_df", "tbl_df", "tbl", "data.frame" ) )
 #' @name dplyr-S3
 #' @export
 #' @importFrom dplyr groups tbl_vars
-#' @examples 
-#' if (utils::packageVersion("dplyr") > "0.5.0") {
-#' 
-#' spmap %>% mutate_if(is.numeric, as.character)
-#' spmap %>% mutate_all(funs(as.character))
-#' spmap %>% mutate_at(vars(starts_with("L")), funs(as.integer))
-#' }
 tbl_vars.Spatial <- function(x) names(x)
 #' @name dplyr-S3
 #' @export
