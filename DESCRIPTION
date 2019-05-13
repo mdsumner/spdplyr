@@ -18,13 +18,16 @@ Depends:
     dplyr,
     sp
 Imports: lazyeval, methods, rlang, spbabel, tibble, utils
-Suggests: testthat,
+Suggests: 
+    testthat,
     maptools,
     raster,
     rmarkdown,
     knitr,
-    covr
+    covr,
+    spelling
 VignetteBuilder: knitr
 LazyData: yes
 License: GPL-3
 RoxygenNote: 6.1.1
+Language: en-US
