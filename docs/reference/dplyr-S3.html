@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -136,45 +136,6 @@
     <p>These will work for the Spatial-DataFrame  objects, though not properly for any-Spatial.</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='kw pkg'>utils</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/packageDescription'>packageVersion</a></span>(<span class='st'>"dplyr"</span>) <span class='kw'>&gt;</span> <span class='st'>"0.5.0"</span>) {
-
-<span class='no'>spmap</span> <span class='kw'>%&gt;%</span> <span class='fu'>mutate_if</span>(<span class='no'>is.numeric</span>, <span class='no'>as.character</span>)
-<span class='no'>spmap</span> <span class='kw'>%&gt;%</span> <span class='fu'>mutate_all</span>(<span class='fu'>funs</span>(<span class='no'>as.character</span>))
-<span class='no'>spmap</span> <span class='kw'>%&gt;%</span> <span class='fu'>mutate_at</span>(<span class='fu'>vars</span>(<span class='fu'>starts_with</span>(<span class='st'>"L"</span>)), <span class='fu'>funs</span>(<span class='no'>as.integer</span>))
-}</div><div class='output co'>#&gt; <span class='warning'>Warning: funs() is soft deprecated as of dplyr 0.8.0</span>
-#&gt; <span class='warning'>please use list() instead</span>
-#&gt; <span class='warning'></span>
-#&gt; <span class='warning'># Before:</span>
-#&gt; <span class='warning'>funs(name = f(.)</span>
-#&gt; <span class='warning'></span>
-#&gt; <span class='warning'># After: </span>
-#&gt; <span class='warning'>list(name = ~f(.))</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; class       : SpatialPolygonsDataFrame 
-#&gt; features    : 15 
-#&gt; extent      : -180, 180, -90, 5.913054  (xmin, xmax, ymin, ymax)
-#&gt; coord. ref. : +proj=longlat +ellps=WGS84 
-#&gt; variables   : 17
-#&gt; </span><span style='color: #949494;'># A tibble: 15 x 17</span><span>
-#&gt;    object_ branch_ island_ order_    x_      y_ FIPS  ISO2  ISO3     UN NAME 
-#&gt;      </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;fct&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       9      28 TRUE         1  143. -</span><span style='color: #BB0000;'>10.9</span><span>   AS    AU    AUS      36 Aust…
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>      20     251 TRUE         1  160.  -</span><span style='color: #BB0000;'>9.43</span><span>  BP    SB    SLB      90 Solo…
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>      61    </span><span style='text-decoration: underline;'>1</span><span>203 TRUE         1  178. -</span><span style='color: #BB0000;'>17.4</span><span>   FJ    FJ    FJI     242 Fiji 
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>      95    </span><span style='text-decoration: underline;'>1</span><span>806 TRUE         1  175.  -</span><span style='color: #BB0000;'>1.55</span><span>  KR    KI    KIR     296 Kiri…
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     124    </span><span style='text-decoration: underline;'>2</span><span>034 TRUE         1  164. -</span><span style='color: #BB0000;'>20.3</span><span>   NC    NC    NCL     540 New …
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     143    </span><span style='text-decoration: underline;'>2</span><span>101 TRUE         1  168. -</span><span style='color: #BB0000;'>29.1</span><span>   NF    NF    NFK     574 Norf…
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     145    </span><span style='text-decoration: underline;'>2</span><span>104 TRUE       245  101. -</span><span style='color: #BB0000;'>66.1</span><span>   AY    AQ    ATA      10 Anta…
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     150    </span><span style='text-decoration: underline;'>2</span><span>270 TRUE         1  106. -</span><span style='color: #BB0000;'>10.5</span><span>   KT    CX    CXR     162 Chri…
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     152    </span><span style='text-decoration: underline;'>2</span><span>278 TRUE         1  167. -</span><span style='color: #BB0000;'>15.2</span><span>   NH    VU    VUT     548 Vanu…
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>     157    </span><span style='text-decoration: underline;'>2</span><span>410 TRUE         1  167.  -</span><span style='color: #BB0000;'>0.552</span><span> NR    NR    NRU     520 Nauru
-#&gt; </span><span style='color: #BCBCBC;'>11</span><span>     160    </span><span style='text-decoration: underline;'>2</span><span>417 TRUE         1  173. -</span><span style='color: #BB0000;'>40.5</span><span>   NZ    NZ    NZL     554 New …
-#&gt; </span><span style='color: #BCBCBC;'>12</span><span>     167    </span><span style='text-decoration: underline;'>2</span><span>476 TRUE         1  142.  -</span><span style='color: #BB0000;'>2.97</span><span>  PP    PG    PNG     598 Papu…
-#&gt; </span><span style='color: #BCBCBC;'>13</span><span>     203    </span><span style='text-decoration: underline;'>2</span><span>994 TRUE         1  179.  -</span><span style='color: #BB0000;'>8.55</span><span>  TV    TV    TUV     798 Tuva…
-#&gt; </span><span style='color: #BCBCBC;'>14</span><span>     225    </span><span style='text-decoration: underline;'>3</span><span>392 TRUE        15  118.  -</span><span style='color: #BB0000;'>0.780</span><span> ID    ID    IDN     360 Indo…
-#&gt; </span><span style='color: #BCBCBC;'>15</span><span>     229    </span><span style='text-decoration: underline;'>3</span><span>670 TRUE         1  127.  -</span><span style='color: #BB0000;'>8.48</span><span>  TT    TL    TLS     626 Timo…
-#&gt; </span><span style='color: #949494;'># … with 6 more variables: AREA </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span style='color: #949494;'>, POP2005 </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, REGION </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span style='color: #949494;'>,
-#&gt; #   SUBREGION </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span style='color: #949494;'>, LON </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span style='color: #949494;'>, LAT </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -182,9 +143,7 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#details">Details</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>

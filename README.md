@@ -5,8 +5,9 @@ Status](https://travis-ci.org/mdsumner/spdplyr.svg?branch=master)](https://travi
 Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/spdplyr?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/spdplyr)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/spdplyr)](https://cran.r-project.org/package=spdplyr)
 [![CRAN RStudio mirror
-downloads](http://cranlogs.r-pkg.org/badges/spdplyr)](http://www.r-pkg.org/pkg/spdplyr)[![Coverage
-Status](https://img.shields.io/codecov/c/github/mdsumner/spdplyr/master.svg)](https://codecov.io/github/mdsumner/spdplyr?branch=master)
+downloads](http://cranlogs.r-pkg.org/badges/spdplyr)](http://www.r-pkg.org/pkg/spdplyr)
+[![Codecov test
+coverage](https://codecov.io/gh/mdsumner/spdplyr/branch/master/graph/badge.svg)](https://codecov.io/gh/mdsumner/spdplyr?branch=master)
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # spdplyr
