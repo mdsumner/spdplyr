@@ -1,3 +1,10 @@
+## spdplyr 0.3.0
+
+This release provides simple changes to enable working with the upcoming
+dplyr 0.8.1. 
+
+Thank you. 
+
 ## Test environments
 
 * local Ubuntu install, R 3.6.0
