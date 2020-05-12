@@ -2,7 +2,7 @@
 % Please edit documentation in R/sdplyr-package.r
 \docType{package}
 \name{spdplyr-package}
-\title{Data Manipulation Verbs for Spatial Classes.}
+\title{dplyr for sp}
 \description{
 Data Manipulation Verbs for Spatial Classes.
 }
@@ -27,7 +27,7 @@ The spdplyr package provides methods for the dplyr verbs.
 
 \section{I. dplyr-Spatial}{
  dplyr verbs operating directly on Spatial objects
-The implementation of \code{group_by} requires that sp objects are able use the object extending class "data.frame", 
+The implementation of \code{group_by} requires that sp objects are able use the object extending class "data.frame",
 \code{summarise} acts on the attributes in the table according to the expressions use and on the geometry by performing a non-topological union.
 }
 

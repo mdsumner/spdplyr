@@ -1,7 +1,10 @@
+#' dplyr for sp
+#'
 #' Data Manipulation Verbs for Spatial Classes.
 #'
+#'
 #' @aliases NULL
-#' @details The spdplyr package provides methods for the dplyr verbs. 
+#' @details The spdplyr package provides methods for the dplyr verbs.
 #' @section O. dplyr verbs:
 #'  \tabular{ll}{
 #'   \code{\link[dplyr]{filter}} \tab  filter   \cr
@@ -15,29 +18,29 @@
 #'   \code{\link[dplyr]{group_by}} \tab group_by \cr
 #'   \code{\link[dplyr]{summarise}} \tab summarise (or summarize) \cr
 #'  }
-#'  
+#'
 #' @section I. dplyr-Spatial: dplyr verbs operating directly on Spatial objects
-#' The implementation of \code{group_by} requires that sp objects are able use the object extending class "data.frame", 
-#' \code{summarise} acts on the attributes in the table according to the expressions use and on the geometry by performing a non-topological union. 
+#' The implementation of \code{group_by} requires that sp objects are able use the object extending class "data.frame",
+#' \code{summarise} acts on the attributes in the table according to the expressions use and on the geometry by performing a non-topological union.
 #' @name spdplyr-package
 #' @docType package
 NULL
 
 
 #' MultiPointsDataFrame data set
-#' 
+#'
 
 #' @name mpoint1
 #' @docType data
 #' @rdname mpoint1
 NULL
 
-#' "South-east" map data. 
-#' 
-#' Created in /data-raw/ \code{spmap} is a subset of wrld_simpl from maptools. 
+#' "South-east" map data.
+#'
+#' Created in /data-raw/ \code{spmap} is a subset of wrld_simpl from maptools.
 #' @name spmap
 #' @docType data
-#' @examples 
+#' @examples
 #' library(dplyr)
 #' spmap %>% filter(NAME == "Antarctica")
 NULL

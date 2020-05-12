@@ -1,3 +1,10 @@
+# spdplyr 0.4.0
+
+* Add `transmute.Spatial()`. 
+
+* Remove all old dplyr `verbs_()` now deprecated. 
+
+
 # spdplyr 0.3.0
 
 * Fix for dpylr 0.8.1, can no longer support `mutate_at` and `mutate_if`. 

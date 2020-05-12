@@ -1,6 +1,0 @@
-                        Data Manipulation Verbs for Spatial Classes.
-dplyr-S3                dplyr S3 methods
-dplyr-Spatial           Dplyr verbs for Spatial
-mpoint1                 MultiPointsDataFrame data set
-show,Spatial-method     sp methods
-spmap                   "South-east" map data.

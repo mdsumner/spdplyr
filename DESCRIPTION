@@ -1,6 +1,6 @@
 Package: spdplyr
 Type: Package
-Version: 0.3.0
+Version: 0.4.0
 Title: Data Manipulation Verbs for the Spatial Classes 
 Description: Methods for 'dplyr' verbs for 'sp' 'Spatial' classes. The basic 
     verbs that modify data attributes, remove or re-arrange rows are supported
@@ -29,5 +29,5 @@ Suggests:
 VignetteBuilder: knitr
 LazyData: yes
 License: GPL-3
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Language: en-US

@@ -3,22 +3,14 @@
 \name{dplyr-Spatial}
 \alias{dplyr-Spatial}
 \alias{mutate.Spatial}
-\alias{mutate_.Spatial}
-\alias{summarise_.Spatial}
+\alias{transmute.Spatial}
 \alias{summarise.Spatial}
-\alias{group_by_.Spatial}
 \alias{group_by.Spatial}
-\alias{filter_.Spatial}
 \alias{filter.Spatial}
-\alias{arrange_.Spatial}
 \alias{arrange.Spatial}
-\alias{slice_.Spatial}
 \alias{slice.Spatial}
-\alias{select_.Spatial}
 \alias{select.Spatial}
-\alias{rename_.Spatial}
 \alias{rename.Spatial}
-\alias{distinct_.Spatial}
 \alias{distinct.Spatial}
 \alias{left_join.Spatial}
 \alias{inner_join.Spatial}
@@ -26,37 +18,21 @@
 \usage{
 \method{mutate}{Spatial}(.data, ...)
 
-\method{mutate_}{Spatial}(.data, ..., .dots)
-
-\method{summarise_}{Spatial}(.data, ...)
+\method{transmute}{Spatial}(.data, ...)
 
 \method{summarise}{Spatial}(.data, ...)
 
-\method{group_by_}{Spatial}(.data, ...)
-
 \method{group_by}{Spatial}(.data, ...)
-
-\method{filter_}{Spatial}(.data, ..., .dots)
 
 \method{filter}{Spatial}(.data, ...)
 
-\method{arrange_}{Spatial}(.data, ...)
-
 \method{arrange}{Spatial}(.data, ...)
-
-\method{slice_}{Spatial}(.data, ...)
 
 \method{slice}{Spatial}(.data, ...)
 
-\method{select_}{Spatial}(.data, ...)
-
 \method{select}{Spatial}(.data, ...)
 
-\method{rename_}{Spatial}(.data, ...)
-
 \method{rename}{Spatial}(.data, ...)
-
-\method{distinct_}{Spatial}(.data, ..., .keep_all = FALSE)
 
 \method{distinct}{Spatial}(.data, ..., .keep_all = FALSE)
 
@@ -69,23 +45,31 @@
 
 \item{...}{Name-value pairs of expressions. See \code{\link[dplyr]{mutate_}}}
 
-\item{.dots}{Used to work around non-standard evaluation.}
-
 \item{.keep_all}{argument for \code{\link[dplyr]{distinct}}, we have to set it to TRUE}
 
-\item{x}{tbls to join}
+\item{x}{A pair of data frames, data frame extensions (e.g. a tibble), or
+lazy data frames (e.g. from dbplyr or dtplyr). See \emph{Methods}, below, for
+more details.}
 
 \item{y}{tbl to join}
 
-\item{by}{a character vector of variables to join by.  If \code{NULL}, the
-default, \code{*_join()} will do a natural join, using all variables with
-common names across the two tables. A message lists the variables so
-that you can check they're right (to suppress the message, simply
-explicitly list the variables that you want to join).
+\item{by}{A character vector of variables to join by.
 
-To join by different variables on x and y use a named vector.
-For example, \code{by = c("a" = "b")} will match \code{x.a} to
-\code{y.b}.}
+If \code{NULL}, the default, \verb{*_join()} will perform a natural join, using all
+variables in common across \code{x} and \code{y}. A message lists the variables so that you
+can check they're correct; suppress the message by supplying \code{by} explicitly.
+
+To join by different variables on \code{x} and \code{y}, use a named vector.
+For example, \code{by = c("a" = "b")} will match \code{x$a} to \code{y$b}.
+
+To join by multiple variables, use a vector with length > 1.
+For example, \code{by = c("a", "b")} will match \code{x$a} to \code{y$a} and \code{x$b} to
+\code{y$b}. Use a named vector to match different variables in \code{x} and \code{y}.
+For example, \code{by = c("a" = "b", "c" = "d")} will match \code{x$a} to \code{y$b} and
+\code{x$c} to \code{y$d}.
+
+To perform a cross-join, generating all combinations of \code{x} and \code{y},
+use \code{by = character()}.}
 
 \item{copy}{If \code{x} and \code{y} are not from the same data source,
 and \code{copy} is \code{TRUE}, then \code{y} will be copied into the
@@ -98,14 +82,14 @@ Direct application of the dplyr verbs to Spatial objects. There is no need for a
 \details{
 mutate, transmute, filter, arrange, slice, select, rename, distinct all work with attributes on the "data" slot and leave the geometry unchanged.
 
-summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge, and it takes no account of the calculations done on attributes. 
+summarise collapses to a grouped geometries by listing all subgeometries together, it does not perform any topological union or merge, and it takes no account of the calculations done on attributes.
 This is a brutal collapse of all the data, and is identical to what is seen with spplot(x, "group"). The behaviour of geometric collapse like this
 is touch and go anyway, see the examples for a what `rgeos::gUnion` does.
 
-summarise for points and multipoints, ... todo single Multipoint for multiple points
+ summarise for points and multipoints, ... todo single Multipoint for multiple points
 }
 \note{
-Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to 
+Beware that attributes stored on Spatial objects *are not* linked to the geometry. Attributes are often used to
 store the area or perimeter length or centroid values but these may be completely unmatched to the underlying geometries.
 }
 \section{Warning}{
@@ -118,8 +102,8 @@ from those. `dplyr::distinct` uses a different internal method that will give di
 library(sp)
 library(maptools)
 data(wrld_simpl)
-library(spdplyr) 
-library(raster)  
+library(spdplyr)
+library(raster)
 wrld_simpl \%>\% mutate(NAME = "allthesame", REGION = row_number())
 wrld_simpl \%>\% transmute(alpha = paste0(FIPS, NAME))
 wrld_simpl \%>\% filter(NAME \%in\% c("New Zealand", "Australia", "Fiji"))
@@ -128,7 +112,7 @@ wrld_simpl \%>\% arrange(LON)
 wrld_simpl \%>\% slice(c(9, 100))
 wrld_simpl \%>\% dplyr::select(UN, FIPS)
 wrld_simpl \%>\% rename(`TM_WORLD_BORDERS_SIMPL0.2NAME` = NAME)
-wrld_simpl \%>\% distinct(REGION, .keep_all = TRUE) \%>\% 
+wrld_simpl \%>\% distinct(REGION, .keep_all = TRUE) \%>\%
    arrange(REGION)  ## first alphabetically in REGION
 wrld_simpl \%>\% arrange(REGION, desc(NAME)) \%>\% distinct(REGION, .keep_all = TRUE) ## last
 }
@@ -137,19 +121,19 @@ slice(filter(mutate(wrld_simpl, likepiping = FALSE), abs(LON - 5) < 35 & LAT > 5
 
 
 ## works with Lines
-#as(wrld_simpl, "SpatialLinesDataFrame") \%>\% 
+#as(wrld_simpl, "SpatialLinesDataFrame") \%>\%
  # mutate(perim = rgeos::gLength(wrld_simpl, byid = TRUE))
 
 \dontrun{
 ## summarise/ze can be used after group_by, or without
-wrld_simpl \%>\% filter(REGION == 150) \%>\% summarize(max(AREA)) 
-wrld_simpl \%>\% group_by(REGION) \%>\% summarize(max(AREA)) \%>\% 
+wrld_simpl \%>\% filter(REGION == 150) \%>\% summarize(max(AREA))
+wrld_simpl \%>\% group_by(REGION) \%>\% summarize(max(AREA)) \%>\%
 plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
 }
 ## group_by and summarize
 
 \dontrun{
-g <- wrld_simpl  \%>\% group_by(REGION)  \%>\% 
+g <- wrld_simpl  \%>\% group_by(REGION)  \%>\%
  summarize(alon = mean(LON), mxlat = max(LAT), mxarea = max(AREA))
 g \%>\% mutate(ar = factor(REGION)) \%>\% spplot("ar")
 w <- wrld_simpl

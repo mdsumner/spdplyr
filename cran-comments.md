@@ -1,9 +1,7 @@
-## spdplyr 0.3.0
+## spdplyr 0.4.0
 
-This release provides simple changes to enable working with the upcoming
-dplyr 0.8.1. 
+This release to align to upcoming dplyr 1.0.0. 
 
-Thank you. 
 
 ## Test environments
 
@@ -17,4 +15,4 @@ Thank you.
 
 ## Reverse dependencies
 
-Packages rbgm and tabularaster pass check against this version of spdplyr. 
+No revdeps. 
