@@ -2,12 +2,10 @@
 
 This release to align to upcoming dplyr 1.0.0. 
 
-
 ## Test environments
 
-* local Ubuntu install, R 3.6.0
-* ubuntu 14.04 (on travis-ci), R 3.5.2
-* win-builder (devel)
+* local Ubuntu install, R 3.6.3
+* win-builder (devel and release)
 
 ## R CMD check results
 
