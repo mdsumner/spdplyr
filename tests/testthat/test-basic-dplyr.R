@@ -7,6 +7,8 @@ context("dplyr-Spatial")
 library(maptools)
 library(spdplyr)
 data(wrld_simpl)
+wrld_simpl@proj4string@projargs <- "+proj=longlat +datum=WGS84"
+
 poly1 <- wrld_simpl
 line1 <- as(wrld_simpl, "SpatialLinesDataFrame")
 point1 <- as(line1, "SpatialPointsDataFrame")
