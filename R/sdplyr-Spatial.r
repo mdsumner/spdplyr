@@ -70,7 +70,6 @@ groups.Spatial <- function(x) NULL
 #' plot(col = rainbow(nlevels(factor(wrld_simpl$REGION)), alpha = 0.3))
 #' }
 #' @importFrom dplyr %>%    arrange mutate transmute filter slice select rename distinct summarise
-#' @importFrom lazyeval all_dots
 NULL
 #' @noRd
 #' @importFrom tibble as_tibble

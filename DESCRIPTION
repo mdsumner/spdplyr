@@ -17,7 +17,7 @@ Depends:
     R (>= 3.2.3),
     dplyr,
     sp
-Imports: lazyeval, methods, rlang, spbabel, tibble, utils
+Imports: methods, rlang, spbabel, tibble, utils
 Suggests: 
     testthat,
     maptools,
