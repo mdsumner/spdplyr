@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">spdplyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/spdplyr.html">Get started</a>
 </li>
@@ -55,8 +51,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/mdsumner/spdplyr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/mdsumner/spdplyr/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -70,78 +66,86 @@
 
       
 
-      </header><script src="spdplyr_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>spdplyr</h1>
-                        <h4 class="author">Michael D. Sumner</h4>
+                        <h4 data-toc-skip class="author">Michael D.
+Sumner</h4>
             
-            <h4 class="date">2020-05-12</h4>
+            <h4 data-toc-skip class="date">2023-04-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/mdsumner/spdplyr/blob/master/vignettes/spdplyr.Rmd"><code>vignettes/spdplyr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mdsumner/spdplyr/blob/HEAD/vignettes/spdplyr.Rmd" class="external-link"><code>vignettes/spdplyr.Rmd</code></a></small>
       <div class="hidden name"><code>spdplyr.Rmd</code></div>
 
     </div>
 
     
     
-<div id="dplyr-verbs-for-spatial" class="section level1">
-<h1 class="hasAnchor">
-<a href="#dplyr-verbs-for-spatial" class="anchor"></a>dplyr verbs for Spatial</h1>
-<p>Apply <code>dplyr</code> verbs to the attribute data of <code>sp</code> objects with dplyr verbs.</p>
+<div class="section level2">
+<h2 id="dplyr-verbs-for-spatial">dplyr verbs for Spatial<a class="anchor" aria-label="anchor" href="#dplyr-verbs-for-spatial"></a>
+</h2>
+<p>Apply <code>dplyr</code> verbs to the attribute data of
+<code>sp</code> objects with dplyr verbs.</p>
 <p>See <code>?dplyr-Spatial'</code> for supported verbs.</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">quakes</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">sp</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html">coordinates</a></span>(<span class="no">quakes</span>) <span class="kw">&lt;-</span> ~<span class="no">long</span>+<span class="no">lat</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">spdplyr</span>)
-<span class="co">## plot a subset of locations by number of stations</span>
-<span class="no">quakes</span> <span class="kw">%&gt;%</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">mag</span> <span class="kw">&lt;</span><span class="fl">5.5</span> <span class="kw">&amp;</span> <span class="no">mag</span> <span class="kw">&gt;</span> <span class="fl">4.5</span>) <span class="kw">%&gt;%</span> <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">stations</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/spplot.html">spplot</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">quakes</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">quakes</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="op">~</span><span class="va">long</span><span class="op">+</span><span class="va">lat</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mdsumner/spdplyr" class="external-link">spdplyr</a></span><span class="op">)</span></span>
+<span><span class="co">## plot a subset of locations by number of stations</span></span>
+<span><span class="va">quakes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">mag</span> <span class="op">&lt;</span><span class="fl">5.5</span> <span class="op">&amp;</span> <span class="va">mag</span> <span class="op">&gt;</span> <span class="fl">4.5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">stations</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/spplot.html" class="external-link">spplot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spdplyr_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <p>We can use polygons and lines objects as well.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">maptools</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="no">wrld_simpl</span>)
-<span class="co">## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select</span>
-<span class="no">worldcorner</span> <span class="kw">&lt;-</span> <span class="no">wrld_simpl</span> <span class="kw">%&gt;%</span>
-  <span class="fu">mutate</span>(<span class="kw">lon</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html">coordinates</a></span>(<span class="no">wrld_simpl</span>)[,<span class="fl">1</span>], <span class="kw">lat</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html">coordinates</a></span>(<span class="no">wrld_simpl</span>)[,<span class="fl">2</span>]) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">lat</span> <span class="kw">&lt;</span> -<span class="fl">20</span>, <span class="no">lon</span> <span class="kw">&gt;</span> <span class="fl">60</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">dplyr</span><span class="kw ns">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">NAME</span>)
-
-<span class="co">## demonstrate that we have a faithful subset of the original object</span>
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">worldcorner</span>, <span class="kw">asp</span> <span class="kw">=</span> <span class="st">""</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/sp/man/gridlines.html">text</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html">coordinates</a></span>(<span class="no">worldcorner</span>), <span class="kw">label</span> <span class="kw">=</span> <span class="no">worldcorner</span>$<span class="no">NAME</span>, <span class="kw">cex</span> <span class="kw">=</span> <span class="fl">0.6</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://maptools.r-forge.r-project.org/" class="external-link">maptools</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wrld_simpl</span><span class="op">)</span></span>
+<span><span class="co">## put the centre-of-mass centroid on wrld_simpl as an attribute and filter/select</span></span>
+<span><span class="va">worldcorner</span> <span class="op">&lt;-</span> <span class="va">wrld_simpl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">wrld_simpl</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">wrld_simpl</span><span class="op">)</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">lat</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">20</span>, <span class="va">lon</span> <span class="op">&gt;</span> <span class="fl">60</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">NAME</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## demonstrate that we have a faithful subset of the original object</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">worldcorner</span>, asp <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">worldcorner</span><span class="op">)</span>, label <span class="op">=</span> <span class="va">worldcorner</span><span class="op">$</span><span class="va">NAME</span>, cex <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spdplyr_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">
-<span class="no">worldcorner</span>
-<span class="co">#&gt; class       : SpatialPolygonsDataFrame </span>
-<span class="co">#&gt; features    : 6 </span>
-<span class="co">#&gt; extent      : -178.6131, 179.0769, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; variables   : 1</span>
-<span class="co">#&gt; # A tibble: 6 x 1</span>
-<span class="co">#&gt;   NAME                               </span>
-<span class="co">#&gt;   &lt;fct&gt;                              </span>
-<span class="co">#&gt; 1 Australia                          </span>
-<span class="co">#&gt; 2 New Caledonia                      </span>
-<span class="co">#&gt; 3 Norfolk Island                     </span>
-<span class="co">#&gt; 4 French Southern and Antarctic Lands</span>
-<span class="co">#&gt; 5 Heard Island and McDonald Islands  </span>
-<span class="co">#&gt; 6 New Zealand</span>
-
-<span class="co">## we can chain together standard operations as well as dplyr specific ones</span>
-<span class="no">wrld_simpl</span> <span class="kw">%&gt;%</span> <span class="fu">as</span>(<span class="st">"SpatialLinesDataFrame"</span>) <span class="kw">%&gt;%</span> <span class="fu">summarise</span>(<span class="kw">big</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="no">AREA</span>))
-<span class="co">#&gt; Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded datum WGS_1984 in CRS definition,</span>
-<span class="co">#&gt;  but +towgs84= values preserved</span>
-<span class="co">#&gt; Warning in showSRID(uprojargs, format = "PROJ", multiline = "NO"): Discarded datum Unknown based on WGS84 ellipsoid in CRS definition,</span>
-<span class="co">#&gt;  but +towgs84= values preserved</span>
-<span class="co">#&gt; class       : SpatialLinesDataFrame </span>
-<span class="co">#&gt; features    : 1 </span>
-<span class="co">#&gt; extent      : -180, 180, -90, 83.57027  (xmin, xmax, ymin, ymax)</span>
-<span class="co">#&gt; variables   : 1</span>
-<span class="co">#&gt; # A tibble: 1 x 1</span>
-<span class="co">#&gt;       big</span>
-<span class="co">#&gt;     &lt;int&gt;</span>
-<span class="co">#&gt; 1 1638094</span></pre></body></html></div>
-<p>This approach is limited to the simple verbs <code>arrange</code>, <code>distinct</code>, <code>filter</code>, <code>mutate</code>, <code>rename</code>, <code>select</code>, <code>slice</code>, <code>transmute</code>, and <code>summarize</code>. Summarize either on its own or after a <code>group_by</code> collapses to a non-topological union of all sub-geometries within a group without any consideration of topology or relationships.</p>
-<p><strong>BEWARE</strong>: This is not a proven method for dealing with Spatial data, use at your own risk.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">worldcorner</span></span>
+<span><span class="co">#&gt; class       : SpatialPolygonsDataFrame </span></span>
+<span><span class="co">#&gt; features    : 6 </span></span>
+<span><span class="co">#&gt; extent      : -178.6131, 179.0769, -54.74973, -10.05167  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; variables   : 1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 1</span></span></span>
+<span><span class="co">#&gt;   NAME                               </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Australia                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> New Caledonia                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Norfolk Island                     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> French Southern and Antarctic Lands</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Heard Island and McDonald Islands  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> New Zealand</span></span>
+<span></span>
+<span><span class="co">## we can chain together standard operations as well as dplyr specific ones</span></span>
+<span><span class="va">wrld_simpl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="st">"SpatialLinesDataFrame"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>big <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; class       : SpatialLinesDataFrame </span></span>
+<span><span class="co">#&gt; features    : 1 </span></span>
+<span><span class="co">#&gt; extent      : -180, 180, -90, 83.57027  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; variables   : 1</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 1</span></span></span>
+<span><span class="co">#&gt;       big</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1<span style="text-decoration: underline;">638</span>094</span></span></code></pre></div>
+<p>This approach is limited to the simple verbs <code>arrange</code>,
+<code>distinct</code>, <code>filter</code>, <code>mutate</code>,
+<code>rename</code>, <code>select</code>, <code>slice</code>,
+<code>transmute</code>, and <code>summarize</code>. Summarize either on
+its own or after a <code>group_by</code> collapses to a non-topological
+union of all sub-geometries within a group without any consideration of
+topology or relationships.</p>
+<p><strong>BEWARE</strong>: This is not a proven method for dealing with
+Spatial data, use at your own risk.</p>
 </div>
   </div>
 
@@ -156,11 +160,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Michael D. Sumner.</p>
+  <p></p>
+<p>Developed by Michael D. Sumner.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -168,6 +174,8 @@
 
   
 
+
+  
 
   </body>
 </html>

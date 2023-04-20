@@ -1,16 +1,16 @@
-## spdplyr 0.4.0
+## Email on 2023-04-19
 
-This release to align to upcoming dplyr 1.0.0. 
+Hello, can we please archive spdplyr? 
 
-## Test environments
+https://CRAN.R-project.org/package=spdplyr 
 
-* local Ubuntu install, R 3.6.3
-* win-builder (devel and release)
+The goals it had are no longer relevant, no one is using it as far as I can tell and there are better alternatives, it will be difficult to update it to work going forward, and there's a hard deadline on the current version when {maptools} is retired later this year. 
 
-## R CMD check results
+Thanks so much. 
 
-0 errors | 0 warnings | 0 notes
+Cheers, Mike
 
-## Reverse dependencies
 
-No revdeps. 
+Was done same day. 
+
+
